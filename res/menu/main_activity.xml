@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+	<item
+	    android:id="@+id/main_menu_update"
+	    android:orderInCategory="1"
+	    android:showAsAction="never"
+	    android:title="版本更新"/>
+	
+	<item 
+	    android:id="@+id/main_menu_speech_recognition"
+	    android:orderInCategory="2"
+	    android:showAsAction="never"
+	    android:title="听曲识词"/>
+	
+	<item
+	    android:id="@+id/main_menu_others"
+	    android:orderInCategory="2"
+	    android:showAsAction="never"
+	    android:title="设置"/>
+
+</menu>

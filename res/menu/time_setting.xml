@@ -1,0 +1,40 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.runcom.jiazhangbang.Welcome" >
+
+    <group
+        android:checkableBehavior="single"
+        android:enabled="true" >
+        <item
+            android:id="@+id/action_5"
+            android:checkable="true"
+            android:orderInCategory="1"
+            android:showAsAction="never"
+            android:title="五分钟后关闭"/>
+        <item
+            android:id="@+id/action_15"
+            android:checkable="true"
+            android:orderInCategory="2"
+            android:showAsAction="never"
+            android:title="十五分钟后关闭"/>
+        <item
+            android:id="@+id/action_30"
+            android:checkable="true"
+            android:orderInCategory="3"
+            android:showAsAction="never"
+            android:title="半个小时后关闭"/>
+        <item
+            android:id="@+id/action_60"
+            android:checkable="true"
+            android:orderInCategory="4"
+            android:showAsAction="never"
+            android:title="一个小时后关闭"/>
+        <item
+            android:id="@+id/action_oo"
+            android:checkable="true"
+            android:orderInCategory="5"
+            android:showAsAction="never"
+            android:title="不关闭"/>
+    </group>
+
+</menu>

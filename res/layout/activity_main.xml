@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D7CDBB" >
+
+    <Spinner
+        android:id="@+id/main_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:spinnerMode="dropdown" >
+    </Spinner>
+
+    <ImageView
+        android:id="@+id/Chinese_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/math_imageView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="5dp"
+        android:contentDescription="语文"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/math_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:contentDescription="数学"
+        android:src="@drawable/ic_launcher" />
+
+    <ImageView
+        android:id="@+id/English_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/Chinese_imageView"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="17dp"
+        android:contentDescription="英语"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/Chinese_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Chinese_imageView"
+        android:layout_below="@+id/Chinese_imageView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="17dp"
+        android:gravity="left"
+        android:text="n年级语文" />
+
+    <TextView
+        android:id="@+id/math_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Chinese_textView"
+        android:layout_alignBottom="@+id/Chinese_textView"
+        android:layout_centerHorizontal="true"
+        android:text="n年级数学" />
+
+    <TextView
+        android:id="@+id/English_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/math_textView"
+        android:layout_alignRight="@+id/English_imageView"
+        android:layout_marginRight="15dp"
+        android:gravity="right"
+        android:text="n年级英语" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/math_textView"
+        android:layout_marginTop="27dp" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal" >
+
+            <TextView
+                android:id="@+id/course_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="培训课程" />
+
+            <TextView
+                android:id="@+id/animation_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/course_textView"
+                android:layout_below="@+id/course_textView"
+                android:layout_marginTop="57dp"
+                android:text="动画配音" />
+
+            <TextView
+                android:id="@+id/story_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/animation_textView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="57dp"
+                android:text="听故事" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

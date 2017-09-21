@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#25CB73"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/recite_text_main_listview_item_recite_contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="内容"
+        android:textSize="27sp" />
+
+</LinearLayout>

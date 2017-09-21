@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.runcom.jiazhangbang.play.LyricView
+        android:id="@+id/LyricShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_showName"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="#969696"
+        android:enabled="true" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout1"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_alignStart="@+id/linearLayout1"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/textView1_curr_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:text="当前时间" />
+
+        <SeekBar
+            android:id="@+id/seekBar1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <TextView
+            android:id="@+id/textView1_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:text="总时间" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_showName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignStart="@+id/linearLayout2"
+        android:gravity="center"
+        android:text="@string/hello_world" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="上一曲"
+            android:onClick="previous"
+            android:src="@drawable/play_previous" />
+
+        <ImageButton
+            android:id="@+id/media_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="播放/暂停"
+            android:onClick="play"
+            android:src="@drawable/play_pause" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="下一曲"
+            android:onClick="next"
+            android:src="@drawable/play_next" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BDBBB9" >
+
+    <ScrollView
+        android:id="@+id/recite_text_main_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fadingEdge="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="60.0dip"
+            android:paddingLeft="0.0dip"
+            android:paddingRight="0.0dip"
+            android:paddingTop="10.0dip" >
+
+            <LinearLayout
+                android:id="@+id/top_relative"
+                android:layout_width="fill_parent"
+                android:layout_height="99dp"
+                android:layout_weight="0.0"
+                android:background="#BDBBB9"
+                android:orientation="vertical"
+                android:paddingEnd="10.0dip"
+                android:paddingLeft="10.0dip"
+                android:paddingRight="10.0dip"
+                android:paddingTop="0.0dip"
+                android:visibility="gone" >
+
+                <Switch
+                    android:id="@+id/SequenceSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="顺序播放" />
+
+                <Switch
+                    android:id="@+id/RandomSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="随机播放" />
+
+                <Switch
+                    android:id="@+id/CountSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="字数播放" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000"
+                android:text="基本设置"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TableLayout
+                    android:id="@+id/MorePageTableLayout_Follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#BDBBB9"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="1.0dip"
+                    android:shrinkColumns="1"
+                    android:stretchColumns="0" >
+
+                    <TableRow
+                        android:id="@+id/more_page_row1"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_account_textView"
+                            android:layout_width="22dp"
+                            android:layout_height="57dp"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dp"
+                            android:text="两个词语间隔秒数"
+                            android:textColor="#ff333333"
+                            android:textSize="16sp" />
+
+                        <NumberPicker
+                            android:id="@+id/setting_intervalNumberPicker"
+                            android:layout_width="wrap_content"
+                            
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
+                    <TableRow
+                        android:id="@+id/more_page_row2"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_mark_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="57dp"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="每个词语阅读次数" 
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <NumberPicker
+                            android:id="@+id/setting_frequencyNumberPicker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
+                    <TableRow
+                        android:id="@+id/more_page_row3"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip"
+                        android:visibility="gone" >
+
+                        <TextView
+                            android:id="@+id/setting_log_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17dp"
+                            android:text="允许中间查看词语"
+                            android:textColor="#ff333333"
+                            android:textSize="16sp" />
+
+                        <Switch
+                            android:id="@+id/setting_wordShow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal|center_vertical" />
+                    </TableRow>
+                </TableLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000000" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TableLayout
+                    android:id="@+id/MorePageTableLayout_Client"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#BDBBB9"
+                    android:paddingLeft="1.0dip"
+                    android:shrinkColumns="0"
+                    android:stretchColumns="0" >
+
+                    <TableRow
+                        android:id="@+id/more_page_row4"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_clearCache_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="清除缓存"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:id="@+id/setting_clearCache_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/setting_detail" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
+                    <TableRow
+                        android:id="@+id/more_page_row5"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_opinion_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="意见反馈"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:id="@+id/setting_opinion_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/setting_detail" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
+                    <TableRow
+                        android:id="@+id/more_page_row6"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_checkUpdate_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="检查更新"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:id="@+id/setting_checkUpdate_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/setting_detail" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+
+                    <TableRow
+                        android:id="@+id/more_page_row7"
+                        android:layout_width="fill_parent"
+                        android:layout_marginLeft="2.0dip"
+                        android:layout_marginRight="2.0dip"
+                        android:paddingBottom="16.0dip"
+                        android:paddingTop="16.0dip" >
+
+                        <TextView
+                            android:id="@+id/setting_aboutUs_textView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:gravity="center_vertical"
+                            android:includeFontPadding="false"
+                            android:paddingLeft="17.0dip"
+                            android:text="关于我们"
+                            android:textColor="#ff333333"
+                            android:textSize="16.0sp" />
+
+                        <ImageView
+                            android:id="@+id/setting_aboutUs_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="right"
+                            android:gravity="center_vertical"
+                            android:paddingRight="20.0dip"
+                            android:src="@drawable/setting_detail" />
+                    </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="1dp"
+                        android:background="#000000" />
+                </TableLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

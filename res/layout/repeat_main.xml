@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/listenText_topLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:background="#696969"
+        android:gravity="top" >
+
+        <Spinner
+            android:id="@+id/listenText_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#696969"
+            android:gravity="top"
+            android:spinnerMode="dialog" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/listenText_spinner"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/listen_text_down" />
+    </RelativeLayout>
+
+    <com.runcom.jiazhangbang.listenText.LyricView
+        android:id="@+id/listenText_lyricShow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/listen_write_textView_nameShow"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/listenText_topLinearLayout"
+        android:background="#969696"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:verticalScrollbarPosition="defaultPosition" >
+
+        <TextView
+            android:id="@+id/listenText_lyricView_textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:lineSpacingExtra="30sp"
+            android:textColor="#25CB73"
+            android:textSize="22sp" />
+    </com.runcom.jiazhangbang.listenText.LyricView>
+
+    <TextView
+        android:id="@+id/listen_write_textView_nameShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listenText_linearLayout_seekbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal"
+        android:text="" />
+
+    <LinearLayout
+        android:id="@+id/listenText_linearLayout_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_above="@+id/listenText_linearLayout_control"
+        android:layout_alignLeft="@+id/listenText_linearLayout_control"
+        android:layout_alignStart="@+id/listenText_linearLayout_control"
+        android:gravity="center" >
+
+        <TextView
+            android:id="@+id/listenText_textView_curr_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp" />
+
+        <SeekBar
+            android:id="@+id/listenText_seekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <TextView
+            android:id="@+id/listenText_textView_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/listenText_linearLayout_control"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center" >
+
+        <ImageButton
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
+            android:onClick="previousText"
+            android:src="@drawable/listen_text_previous_text" />
+
+        <ImageButton
+            android:id="@+id/media_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="playText"
+            android:src="@drawable/play_pause" />
+
+        <ImageButton
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
+            android:onClick="nextText"
+            android:src="@drawable/listen_text_next_text" />
+
+        <ImageButton
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
+            android:onClick="detailSetting"
+            android:src="@drawable/listen_text_detail" />
+    </LinearLayout>
+
+</RelativeLayout>
