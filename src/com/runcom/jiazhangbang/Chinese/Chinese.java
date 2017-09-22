@@ -15,6 +15,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findNewWords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenText;
 import com.runcom.jiazhangbang.listenWrite.ListenWriteBackups;
+import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
 import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.reciteText.ReciteText;
 import com.runcom.jiazhangbang.repeat.Repeat;
@@ -60,7 +61,7 @@ public class Chinese extends Activity
 	public void ListenAndWrite(View v )
 	{
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenWriteBackups.class);
+		intent.setClass(getApplicationContext() ,ListenWritePhaseChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();

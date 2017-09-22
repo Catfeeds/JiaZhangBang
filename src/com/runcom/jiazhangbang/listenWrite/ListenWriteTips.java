@@ -49,9 +49,8 @@ public class ListenWriteTips extends Activity
 
 		intent = getIntent();
 		selected = intent.getIntExtra("selected" ,1);// 年级
-		units = (int) intent.getLongExtra("id" ,1);// 单元
-		phase = units / 8 + 1;
-		units %= 8;
+		phase = intent.getIntExtra("phase" , 1);//上下册
+		units = intent.getIntExtra("id" ,1);// 单元
 		++ units;
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -59,9 +58,9 @@ public class ListenWriteTips extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上学期第" + units + "单元";
+		String content = "听写 " + selected + "年级上册第" + units + "单元";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下学期第" + units + "单元";
+			content = "听写 " + selected + "年级下册第" + units + "单元";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

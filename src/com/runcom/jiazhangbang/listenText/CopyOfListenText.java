@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -49,7 +50,7 @@ import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenText extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
+public class CopyOfListenText extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
 	// spinner
 	private Spinner spinner;
@@ -134,13 +135,12 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 	 */
 	private void initData()
 	{
-		// final TreeMap < String , String > map =
-		// Util.getMap(getApplicationContext());
-		// map.put("course" ,Util.ChineseCourse);
-		// map.put("grade" ,selected + "");
-		// map.put("phase" , "2");
-		// map.put("unit" , "4");
-		// map.put("text" , "");
+		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("course" ,Util.ChineseCourse);
+		map.put("grade" ,selected + "");
+		map.put("phase" ,"2");
+		map.put("unit" ,"4");
+//		map.put("text" ,"");
 		OkHttpUtils.get().url(Util.SERVERADDRESS_listenText).build().execute(new Callback < String >()
 		{
 			@Override

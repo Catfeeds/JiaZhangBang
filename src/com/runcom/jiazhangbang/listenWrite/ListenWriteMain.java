@@ -479,6 +479,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				// e.printStackTrace();
 				Toast.makeText(getApplicationContext() ,"音频出错 已自动跳过" ,Toast.LENGTH_SHORT).show();
 				currentIndex += frequencyValue;
+				notifyDataAdapter();
+				start();
 				Log.d("LOG" ,"bug了");
 			}
 		}
@@ -524,36 +526,41 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			handlerPlay.postDelayed(this ,intervalValue * 1000);
 		}
 	};
+	
+	public void notifyDataAdapter()
+	{
+		int currentIndexTrue = (currentIndex + 1) / frequencyValue + (0 == ((currentIndex + 1) % frequencyValue) ? -1 : 0);
+		
+		if(currentIndex < playList.size())
+		{
+			Log.d("currentIndexLog" ,"currentIndexTrue:" + currentIndexTrue + ":currentIndex:" + currentIndex);
+			if(0 == currentIndex)
+				myListenWriteMainAdapter.setItemisSelectedMap(0 ,true);
+			else
+			{
+				if(currentIndexTrue > 0 && myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue - 1))
+					myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue - 1 ,false);
+				
+				boolean isSelect = myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue);
+				if( !isSelect)
+					myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,true);
+			}
+			myListenWriteMainAdapter.notifyDataSetChanged();
+		}
+		else
+		{
+			myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,false);
+			myListenWriteMainAdapter.notifyDataSetChanged();
+		}
+		
+	}
 
 	private Runnable runnableView = new Runnable()
 	{
 		@Override
 		public void run()
 		{
-			int currentIndexTrue = (currentIndex + 1) / frequencyValue + (0 == ((currentIndex + 1) % frequencyValue) ? -1 : 0);
-
-			if(currentIndex < playList.size())
-			{
-				Log.d("currentIndexLog" ,"currentIndexTrue:" + currentIndexTrue + ":currentIndex:" + currentIndex);
-				if(0 == currentIndex)
-					myListenWriteMainAdapter.setItemisSelectedMap(0 ,true);
-				else
-				{
-					if(currentIndexTrue > 0 && myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue - 1))
-						myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue - 1 ,false);
-
-					boolean isSelect = myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue);
-					if( !isSelect)
-						myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,true);
-				}
-				myListenWriteMainAdapter.notifyDataSetChanged();
-			}
-			else
-			{
-				myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,false);
-				myListenWriteMainAdapter.notifyDataSetChanged();
-			}
-
+			notifyDataAdapter();
 			handlerView.postDelayed(this ,100);
 		}
 	};
