@@ -1,4 +1,4 @@
-package com.runcom.jiazhangbang.listenWrite;
+package com.runcom.jiazhangbang.listenText;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -26,13 +26,13 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenText.MyAudio;
+import com.runcom.jiazhangbang.listenWrite.MyListenWriteAdapter;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenWriteBackups extends Activity
+public class ListenTextBackups extends Activity
 {
 	private MyListenWriteAdapter myListenWriteMainAdapter;
 	private MyAudio myAudio;
@@ -58,9 +58,9 @@ public class ListenWriteBackups extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上册";
+		String content = "听课文 " + selected + "年级上册";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下册";
+			content = "听课文 " + selected + "年级下册";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -122,51 +122,7 @@ public class ListenWriteBackups extends Activity
 					}
 					return result;
 				}
-
 			});
-
-			// String [] contents =
-			// { "上册          第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元",
-			// "第七单元", "第八单元", "下册          第一单元", "第二单元", "第三单元", "第四单元",
-			// "第五单元", "第六单元", "第七单元", "第八单元" };
-			// OkHttpUtils.get().url(Util.SERVERADDRESS_listenWriteBackups).build().execute(new
-			// Callback < String >()
-			// {
-			// @Override
-			// public void onError(Call arg0 , Exception arg1 , int arg2 )
-			// {
-			// }
-			//
-			// @Override
-			// public void onResponse(String arg0 , int arg1 )
-			// {
-			// initOnClick();
-			// }
-			//
-			// @Override
-			// public String parseNetworkResponse(Response arg0 , int arg1 )
-			// throws Exception
-			// {
-			// // String response = arg0.body().string().trim();
-			// // JSONObject jsonObject = new JSONObject(response);
-			//
-			// // String source = jsonObject.getString("source");
-			// // contents = source.split(",|，");
-			// String [] contents =
-			// { "第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元", "第七单元", "第八单元"
-			// };
-			// myListenWriteContentArrayList.clear();
-			// for(int i = 0 ; i < contents.length ; i ++ )
-			// {
-			// myAudio = new MyAudio();
-			// myAudio.setName(contents[i]);
-			// myListenWriteContentArrayList.add(myAudio);
-			// }
-			//
-			// return null;
-			// }
-			//
-			// });
 		}
 	}
 
@@ -179,7 +135,6 @@ public class ListenWriteBackups extends Activity
 		{
 			myAudio = new MyAudio();
 			myAudio.setName(contents[i]);
-			// myAudio.setId(i);
 			myListenWriteContentArrayList.add(myAudio);
 		}
 
@@ -203,7 +158,7 @@ public class ListenWriteBackups extends Activity
 				intent.putExtra("selected" ,selected);// 年级
 				intent.putExtra("phase" ,phase);// 上下册
 				intent.putExtra("id" ,(long) ++ id);// 单元
-				intent.setClass(getApplicationContext() ,ListenWriteTips.class);
+				intent.setClass(getApplicationContext() ,CopyOfListenText.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
 					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();

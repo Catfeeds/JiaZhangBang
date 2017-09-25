@@ -34,7 +34,7 @@ import com.umeng.analytics.MobclickAgent;
 public class ListenWriteTips extends Activity
 {
 	private Intent intent;
-	private int selected , units;
+	private int selected , unit;
 	private int phase = 1;// 1：上学期;2：下学期
 	private int intervalValue , frequencyValue;
 	private int counts;
@@ -50,17 +50,16 @@ public class ListenWriteTips extends Activity
 		intent = getIntent();
 		selected = intent.getIntExtra("selected" ,1);// 年级
 		phase = intent.getIntExtra("phase" , 1);//上下册
-		units = intent.getIntExtra("id" ,1);// 单元
-		++ units;
+		unit = intent.getIntExtra("id" ,1);// 单元
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上册第" + units + "单元";
+		String content = "听写 " + selected + "年级上册第" + unit + "单元";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下册第" + units + "单元";
+			content = "听写 " + selected + "年级下册第" + unit + "单元";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -80,9 +79,8 @@ public class ListenWriteTips extends Activity
 			map.put("course" ,Util.ChineseCourse);
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
-			map.put("unit" ,units + "");
-			// System.out.println(Util.REALSERVER + "getphrase.php?" +
-			// URL.getParameter(map));
+			map.put("unit" ,unit + "");
+//			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
@@ -102,7 +100,7 @@ public class ListenWriteTips extends Activity
 					{
 						textView_start.setEnabled(false);
 						textView_reset.setEnabled(false);
-						Toast.makeText(getApplicationContext() ,config[1] ,Toast.LENGTH_LONG).show();
+//						Toast.makeText(getApplicationContext() ,config[1] ,Toast.LENGTH_LONG).show();
 					}
 					else
 						initView();
@@ -158,7 +156,7 @@ public class ListenWriteTips extends Activity
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);
 				intent.putExtra("phase" ,phase);
-				intent.putExtra("units" ,units);
+				intent.putExtra("units" ,unit);
 				intent.setClass(getApplicationContext() ,ListenWriteMain.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
@@ -178,7 +176,7 @@ public class ListenWriteTips extends Activity
 			{
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);
-				intent.putExtra("units" ,units);
+				intent.putExtra("units" ,unit);
 				intent.setClass(getApplicationContext() ,PlaySetting.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{

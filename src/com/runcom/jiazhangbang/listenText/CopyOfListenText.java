@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -47,6 +48,7 @@ import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
+import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -60,8 +62,8 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , textView;
 	// private List < String > play_list = new ArrayList < String >();
-	List < String > play_list_copy = new ArrayList < String >();
-	List < MyAudio > play_list = new ArrayList < MyAudio >();
+	private List < String > play_list_copy = new ArrayList < String >();
+	private List < MyAudio > play_list = new ArrayList < MyAudio >();
 	MyAudio myAudio;
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
@@ -78,8 +80,8 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
 	private String lyricsPath;
-	int selected;
-
+	private int selected , phase , unit;
+	private Intent intent;
 	// 歌词处理
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
@@ -89,7 +91,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 
-	int newIndex = 0;
+	private int newIndex = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -97,7 +99,10 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text);
 
-		selected = getIntent().getIntExtra("selected" ,0);
+		intent = getIntent();
+		selected = intent.getIntExtra("selected" ,1);
+		phase = intent.getIntExtra("phase" ,1);
+		unit = (int) intent.getLongExtra("id" ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -105,7 +110,9 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听课文" + selected + "年级";
+		String content = "听课文" + selected + "年级上册第" + unit + "单元";
+		if(2 == phase)
+			content = "听课文" + selected + "年级下册第" + unit + "单元";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -138,9 +145,9 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
 		map.put("grade" ,selected + "");
-		map.put("phase" ,"2");
-		map.put("unit" ,"4");
-//		map.put("text" ,"");
+		map.put("phase" ,phase + "");
+		map.put("unit" ,"-1");
+		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.SERVERADDRESS_listenText).build().execute(new Callback < String >()
 		{
 			@Override
@@ -160,6 +167,10 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
+				// System.out.println(jsonObject.toString());
+				// JSONArray jsonArray = jsonObject.getJSONArray("");
+				// System.out.println(jsonArray.toString());
+
 				String source = jsonObject.getString("source");
 				String lyric = jsonObject.getString("lyric");
 				String name = jsonObject.getString("name");

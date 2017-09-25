@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/listenWrite_phaseChose_textView_secondPhase"
+        android:id="@+id/listenText_phaseChose_textView_secondPhase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -17,11 +17,11 @@
         android:textSize="57sp" />
 
     <TextView
-        android:id="@+id/listenWrite_phaseChose_textView_firstPhase"
+        android:id="@+id/listenText_phaseChose_textView_firstPhase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/listenWrite_phaseChose_textView_secondPhase"
-        android:layout_alignLeft="@+id/listenWrite_phaseChose_textView_secondPhase"
+        android:layout_above="@+id/listenText_phaseChose_textView_secondPhase"
+        android:layout_alignLeft="@+id/listenText_phaseChose_textView_secondPhase"
         android:layout_marginBottom="23dp"
         android:background="@color/yes"
         android:onClick="firstPhase"

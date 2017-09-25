@@ -61,6 +61,21 @@
             android:parentActivityName="com.runcom.jiazhangbang.mainActivity.MainActivity" >
         </activity>
         <activity
+            android:name="com.runcom.jiazhangbang.listenText.ListenTextPhaseChose"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.listenText.ListenTextBackups"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.listenText.ListenTextPhaseChose" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.listenText.CopyOfListenText"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.listenText.ListenTextBackups" >
+        </activity>
+        <activity
             android:name="com.runcom.jiazhangbang.listenText.ListenText"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >

@@ -13,8 +13,7 @@ import android.widget.Toast;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findNewWords.FindNewWords;
-import com.runcom.jiazhangbang.listenText.ListenText;
-import com.runcom.jiazhangbang.listenWrite.ListenWriteBackups;
+import com.runcom.jiazhangbang.listenText.ListenTextPhaseChose;
 import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
 import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.reciteText.ReciteText;
@@ -33,7 +32,7 @@ public class Chinese extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
-		selected = getIntent().getIntExtra("selected" ,0);
+		selected = getIntent().getIntExtra("selected" ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -48,7 +47,7 @@ public class Chinese extends Activity
 	public void ListenText(View v )
 	{
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenText.class);
+		intent.setClass(getApplicationContext() ,ListenTextPhaseChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
