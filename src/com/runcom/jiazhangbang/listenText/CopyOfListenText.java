@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -62,11 +63,12 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , textView;
 	// private List < String > play_list = new ArrayList < String >();
-	private List < String > play_list_copy = new ArrayList < String >();
+	private List < String > play_list_title = new ArrayList < String >();
+	private List < String > play_list_id = new ArrayList < String >();
 	private List < MyAudio > play_list = new ArrayList < MyAudio >();
-	MyAudio myAudio;
-	public MediaPlayer mp;
-	int currIndex = 0;// 表示当前播放的音乐索引
+	private MyAudio myAudio;
+	private MediaPlayer mp;
+	private int currIndex = 0;// 表示当前播放的音乐索引
 	private boolean seekBarFlag = true;// 控制进度条线程标记
 
 	// 定义当前播放器的状态
@@ -134,21 +136,22 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		mp.setOnBufferingUpdateListener(this);
 
-		initData();
+		initTitle();
 	}
 
 	/**
 	 * 初始化数据
 	 */
-	private void initData()
+	private void initTitle()
 	{
 		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
 		map.put("grade" ,selected + "");
 		map.put("phase" ,phase + "");
-		map.put("unit" ,"-1");
-		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
-		OkHttpUtils.get().url(Util.SERVERADDRESS_listenText).build().execute(new Callback < String >()
+		map.put("unit" ,unit + "");
+		// System.out.println(Util.REALSERVER + "gettextlist.php?" +
+		// URL.getParameter(map));
+		OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
@@ -158,8 +161,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				initSpinner();
-				Log.d("执行LOG" ,"我执行了" + arg0);
+				initLrcMp3();
 			}
 
 			@Override
@@ -167,42 +169,104 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
-				// System.out.println(jsonObject.toString());
-				// JSONArray jsonArray = jsonObject.getJSONArray("");
-				// System.out.println(jsonArray.toString());
 
-				String source = jsonObject.getString("source");
-				String lyric = jsonObject.getString("lyric");
-				String name = jsonObject.getString("name");
-				play_list.clear();
-				play_list_copy.clear();
-				for(int i = 1 ; i <= 8 ; i ++ )
+				play_list_title.clear();
+				play_list_id.clear();
+				// System.out.println(jsonObject.toString());
+				JSONArray jsonArray = jsonObject.getJSONArray("textlist");
+				JSONObject textListJsonObject = null;
+				for(int i = 0 , leng = jsonArray.length() ; i < leng ; i ++ )
 				{
-					myAudio = new MyAudio();
-					myAudio.setId(i);
-					myAudio.setName(name + i);
-					String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
-					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
-						new LrcFileDownloader(lyric_copy).start();
-					myAudio.setLyric(lyric_copy);
-					String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
-					myAudio.setSource(source_copy);
-					play_list.add(myAudio);
-					play_list_copy.add(myAudio.getName());
+					textListJsonObject = new JSONObject(jsonArray.getString(i));
+					String parts = textListJsonObject.getString("parts");
+					int part = Integer.valueOf(parts);
+					if(1 == part)
+					{
+						play_list_title.add(textListJsonObject.getString("title"));
+						play_list_id.add(textListJsonObject.getString("id"));
+					}
+					else
+						if(1 < part)
+						{
+							JSONArray subjsonArray = new JSONArray(textListJsonObject.getJSONArray("partlist"));
+							for(int k = 0 , length = subjsonArray.length() ; k < length ; k ++ )
+							{
+								JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
+								play_list_title.add(subjsonObject.getString("title"));
+								play_list_id.add(subjsonObject.getString("id"));
+							}
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
+							System.exit(0);
+						}
 				}
 
-				Log.d("执行LOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
-				return "initData";
+				return null;
 			}
 
 		});
 
 	}
 
+	private void initLrcMp3()
+	{
+		TreeMap < String , String > map = null;
+		play_list.clear();
+		final int leng = play_list_id.size();
+		for(int i = 0 ; i < leng ; i ++ )
+		{
+			final int ii = i;
+			map = Util.getMap(getApplicationContext());
+			map.put("textid" ,play_list_id.get(i));
+			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
+			// URL.getParameter(map));
+			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+			{
+
+				@Override
+				public void onError(Call arg0 , Exception arg1 , int arg2 )
+				{
+				}
+
+				@Override
+				public void onResponse(String arg0 , int arg1 )
+				{
+					if(leng - 1 == ii)
+						initSpinner();
+				}
+
+				@Override
+				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+				{
+					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
+					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
+
+					myAudio = new MyAudio();
+					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("text");
+					// System.out.println(lyric_copy);
+					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
+						new LrcFileDownloader(lyric_copy).start();
+					myAudio.setLyric(lyric_copy);
+					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
+					// System.out.println(source_copy);
+					myAudio.setSource(source_copy);
+					play_list.add(myAudio);
+					return null;
+				}
+
+			});
+
+		}
+
+	}
+
 	private void initSpinner()
 	{
 		ArrayAdapter < String > adapter;
-		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
+		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_title);
 
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -222,7 +286,8 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		});
 	}
 
-	public String getName(String url )
+	@SuppressWarnings("unused")
+	private String getName(String url )
 	{
 		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
 	}

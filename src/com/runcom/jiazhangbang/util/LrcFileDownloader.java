@@ -39,8 +39,8 @@ public class LrcFileDownloader extends Thread
 				// 获得网络字节输入流对象
 				InputStream is = conn.getInputStream();
 				File saveFilePath = new File(Util.LYRICSPATH + lyric.substring(lyric.lastIndexOf("/") + 1));
-				Log.d("LOG" ,"1:" + saveFilePath.toString());
-				if(!saveFilePath.getParentFile().exists())
+				// Log.d("LOG" ,"1:" + saveFilePath.toString());
+				if( !saveFilePath.getParentFile().exists())
 				{
 					saveFilePath.getParentFile().mkdirs();
 				}
@@ -48,7 +48,7 @@ public class LrcFileDownloader extends Thread
 				{
 					// 建立内存到硬盘的连接
 					fos = new FileOutputStream(saveFilePath);
-					Log.d("LOG" ,"2: " + saveFilePath.toString());
+					// Log.d("LOG" ,"2: " + saveFilePath.toString());
 					// 老三样 写文件
 					byte [] b = new byte [1024];
 					int len = 0;
