@@ -5,6 +5,7 @@ package com.runcom.jiazhangbang.reciteText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -36,6 +37,7 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -68,6 +70,9 @@ public class ReciteTextMain extends Activity implements Checkable
 	private int [] counts = new int [dataMax];
 	private float ans = 0.0f;
 
+	private int selected , phase , unit;
+	private String name , id;
+
 	// String [] scores = { "第00次成绩:         50" ,
 	// "第01次成绩:          57", "第02次成绩:          77", "第03次成绩:          87",
 	// "第04次成绩:          97",
@@ -91,7 +96,11 @@ public class ReciteTextMain extends Activity implements Checkable
 		setContentView(R.layout.recite_text_main);
 
 		intent = getIntent();
-		String name = intent.getStringExtra("name");
+		selected = intent.getIntExtra("selected" ,1);
+		phase = intent.getIntExtra("phase" ,1);
+		unit = intent.getIntExtra("unit" ,1);
+		id = intent.getStringExtra("id");
+		name = intent.getStringExtra("name");
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -99,6 +108,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
+
 		actionbar.setTitle(name);
 
 		Arrays.fill(counts ,0);
@@ -110,28 +120,20 @@ public class ReciteTextMain extends Activity implements Checkable
 	 */
 	private void initView()
 	{
-		// contents_textView = (TextView)
-		// findViewById(R.id.recite_text_main_text);
-		// String tempString = "start...\n";
-		// int i;
-		// for(i = 0 ; i < 7 ; i ++ )
-		// {
-		// tempString += "\u3000\u3000" + i +
-		// "adsfasdf爱疯阿斯顿发生大事的发生的发生的发生发送到发送到发送到发送到发送到分。\n";
-		// }
-		// tempString += "end...\n";
-		//
-		// contents_editText = (EditText)
-		// findViewById(R.id.recite_text_main_edit_text_score);
-		// contents_textView.setText(tempString);
-
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
-			OkHttpUtils.get().url(Util.SERVERADDRESS_reciteTextMain).build().execute(new Callback < String >()
+		{
+			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("selected" ,selected + "");
+			map.put("phase" ,phase + "");
+			map.put("unit" ,unit + "");
+			map.put("id" ,id);
+			System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
+			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
@@ -148,6 +150,8 @@ public class ReciteTextMain extends Activity implements Checkable
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
+
+					// TODO
 					JSONObject jsonObject = new JSONObject(arg0.body().string());
 					String [] contents = jsonObject.getString("source").split("\n");
 					myTextContentArraylist.clear();
@@ -162,6 +166,7 @@ public class ReciteTextMain extends Activity implements Checkable
 				}
 
 			});
+		}
 
 		autoJudge_textView = (TextView) findViewById(R.id.recite_text_main_textview_autojudge);
 		autoJudge_textView.setOnClickListener(new OnClickListener()
@@ -274,12 +279,12 @@ public class ReciteTextMain extends Activity implements Checkable
 				{
 					counts[position] = 1;
 					// myListViewMainAdapter.
-//					view.setBackgroundColor(getResources().getColor(R.color.yes));
+					// view.setBackgroundColor(getResources().getColor(R.color.yes));
 				}
 				else
 				{
 					counts[position] = 0;
-//					view.setBackgroundColor(getResources().getColor(R.color.no));
+					// view.setBackgroundColor(getResources().getColor(R.color.no));
 				}
 				boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
 				myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);

@@ -3,12 +3,13 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
@@ -17,7 +18,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +37,8 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -46,17 +46,16 @@ import com.umeng.analytics.MobclickAgent;
  * @author Administrator
  * 
  */
-public class ReciteText extends Activity
+public class ReciteTextChose extends Activity
 {
-
-	Intent intent = new Intent();
-	int selected;
-
-	String source , lyric , name;
+	private Intent intent = new Intent();
+	private int selected;
+	private int phase;
+	private int unit;
 	private SwipeMenuListView listView;
-	MyText myText = new MyText();
-	ArrayList < MyText > textList = new ArrayList < MyText >();
-	MyListViewAdapter adapter;
+	private MyText myText = new MyText();
+	private ArrayList < MyText > textList = new ArrayList < MyText >();
+	private MyListViewAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -64,7 +63,10 @@ public class ReciteText extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_listview);
 
-		selected = getIntent().getIntExtra("selected" ,1);
+		intent = getIntent();
+		selected = intent.getIntExtra("selected" ,1);
+		phase = intent.getIntExtra("phase" ,1);
+		unit = intent.getIntExtra("unit" ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -72,7 +74,9 @@ public class ReciteText extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "背课文  " + selected + "年级";
+		String content = "背课文  " + selected + "年级上册";
+		if(2 == phase)
+			content = "背课文  " + selected + "年级下册";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -87,7 +91,14 @@ public class ReciteText extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
-			OkHttpUtils.get().url(Util.SERVERADDRESS_reciteText).build().execute(new Callback < String >()
+		{
+			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("course" ,Util.ChineseCourse);
+			map.put("grade" ,selected + "");
+			map.put("phase" ,phase + "");
+			map.put("unit" ,unit + "");
+			System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
+			OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
@@ -103,27 +114,47 @@ public class ReciteText extends Activity
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
-					JSONObject jsonObject = new JSONObject(arg0.body().string());
-					source = jsonObject.getString("source");
-					lyric = jsonObject.getString("lyric");
-					name = jsonObject.getString("name");
+					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
 					textList.clear();
-					for(int i = 0 ; i < 16 ; i ++ )
+
+					JSONArray jsonArray = jsonObject.getJSONArray("textlist");
+					JSONObject textListJsonObject = null;
+					for(int i = 0 , leng = jsonArray.length() ; i < leng ; i ++ )
 					{
-						int index = (i % 8 + 1);
+						textListJsonObject = new JSONObject(jsonArray.getString(i));
+						String parts = textListJsonObject.getString("parts");
+						int part = Integer.valueOf(parts);
 						myText = new MyText();
-						lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) + "/00" + index + ".lrc";
-						myText.setLyric(lyric);
-						if( !new File(Util.LYRICSPATH + lyric.substring(lyric.lastIndexOf("/") + 1)).exists())
-							new LrcFileDownloader(lyric).start();
-						myText.setName(name + (i + 1));
-						myText.setMode("全文背诵" + (i + 1));
-						myText.setSource(source.substring(0 ,source.lastIndexOf("/")) + "/00" + index + ".mp3");
-						textList.add(myText);
+						if(1 == part)
+						{
+							myText.setId(textListJsonObject.getString("id"));
+							myText.setName(textListJsonObject.getString("title"));
+							myText.setMode(textListJsonObject.getString("desc"));
+							textList.add(myText);
+						}
+						else
+							if(1 < part)
+							{
+								JSONArray subjsonArray = new JSONArray(textListJsonObject.getJSONArray("partlist"));
+								for(int k = 0 , length = subjsonArray.length() ; k < length ; k ++ )
+								{
+									JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
+									myText.setId(subjsonObject.getString("id"));
+									myText.setName(subjsonObject.getString("title"));
+									myText.setMode(subjsonObject.getString("desc"));
+									textList.add(myText);
+								}
+							}
+							else
+							{
+								Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
+								System.exit(0);
+							}
 					}
 					return null;
 				}
 			});
+		}
 	}
 
 	private void initListView()
@@ -140,16 +171,12 @@ public class ReciteText extends Activity
 			{
 				Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
 				Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-				String source = textList.get(arg2).getSource();
-				open_intent.putExtra("source" ,source);
-				String lyric = textList.get(arg2).getLyric();
-				open_intent.putExtra("lyric" ,lyric);
-				String name = textList.get(arg2).getName();
-				open_intent.putExtra("name" ,name);
-				Log.d("LOG" ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name);
-				Toast.makeText(getApplicationContext() ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name ,Toast.LENGTH_SHORT).show();
+				open_intent.putExtra("selected" ,selected);
+				open_intent.putExtra("phase" ,phase);
+				open_intent.putExtra("unit" ,arg2 + 1);
+				open_intent.putExtra("name" ,textList.get(arg2).getName());
+				open_intent.putExtra("id" ,textList.get(arg2).getId());
 				startActivity(open_intent);
-//				Toast.makeText(getApplicationContext() ,"您单击了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
 			}
 
 		});
@@ -214,14 +241,11 @@ public class ReciteText extends Activity
 					case 0:
 						Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-						String source = textList.get(position).getSource();
-						open_intent.putExtra("source" ,source);
-						String lyric = textList.get(position).getLyric();
-						open_intent.putExtra("lyric" ,lyric);
-						String name = textList.get(position).getName();
-						open_intent.putExtra("name" ,name);
-						Log.d("LOG" ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name);
-						Toast.makeText(getApplicationContext() ,"audio: " + source + "\nlyric: " + lyric + "\nname: " + name ,Toast.LENGTH_SHORT).show();
+						open_intent.putExtra("selected" ,selected);
+						open_intent.putExtra("phase" ,phase);
+						open_intent.putExtra("unit" ,position + 1);
+						open_intent.putExtra("name" ,textList.get(position).getName());
+						open_intent.putExtra("id" ,textList.get(position).getId());
 						startActivity(open_intent);
 						break;
 					case 1:

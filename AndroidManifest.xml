@@ -116,14 +116,24 @@
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWrite" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.reciteText.ReciteText"
+            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
         <activity
+            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextUnitChose"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextChose"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextUnitChose" >
+        </activity>
+        <activity
             android:name="com.runcom.jiazhangbang.reciteText.ReciteTextMain"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteText" >
+            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextChose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.findNewWords.FindNewWords"

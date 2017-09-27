@@ -16,7 +16,7 @@ import com.runcom.jiazhangbang.findNewWords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextPhaseChose;
 import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
 import com.runcom.jiazhangbang.notification.MyNotification;
-import com.runcom.jiazhangbang.reciteText.ReciteText;
+import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.welcome.Welcome;
@@ -73,7 +73,7 @@ public class Chinese extends Activity
 	public void ReciteText(View v )
 	{
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ReciteText.class);
+		intent.setClass(getApplicationContext() ,ReciteTextPhaseChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
