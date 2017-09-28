@@ -35,7 +35,7 @@ public class ReciteTextPhaseChose extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听课文 " + selected + "年级";
+		String content = "背课文 " + selected + "年级";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

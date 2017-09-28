@@ -3,6 +3,7 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -37,6 +38,7 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
@@ -55,6 +57,7 @@ public class ReciteTextChose extends Activity
 	private SwipeMenuListView listView;
 	private MyText myText = new MyText();
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
+	private ArrayList < String > lrcList = new ArrayList < String >();
 	private MyListViewAdapter adapter;
 
 	@Override
@@ -74,9 +77,9 @@ public class ReciteTextChose extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "背课文  " + selected + "年级上册";
+		String content = "背课文  " + selected + "年级上册第" + unit + "单元";
 		if(2 == phase)
-			content = "背课文  " + selected + "年级下册";
+			content = "背课文  " + selected + "年级下册第" + unit + "单元";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -97,7 +100,8 @@ public class ReciteTextChose extends Activity
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
-			System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
+			// System.out.println(Util.REALSERVER + "gettextlist.php?" +
+			// URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
@@ -108,7 +112,7 @@ public class ReciteTextChose extends Activity
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					initListView();
+					initTextLrc();
 				}
 
 				@Override
@@ -157,6 +161,48 @@ public class ReciteTextChose extends Activity
 		}
 	}
 
+	private void initTextLrc()
+	{
+		TreeMap < String , String > map = null;
+		final int leng = textList.size();
+		for(int i = 0 ; i < leng ; i ++ )
+		{
+			final int ii = i;
+			map = Util.getMap(getApplicationContext());
+			map.put("textid" ,textList.get(i).getId());
+			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
+			// URL.getParameter(map));
+			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+			{
+
+				@Override
+				public void onError(Call arg0 , Exception arg1 , int arg2 )
+				{
+				}
+
+				@Override
+				public void onResponse(String arg0 , int arg1 )
+				{
+					if(ii == leng - 1)
+						initListView();
+				}
+
+				@Override
+				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+				{
+					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
+					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
+					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("text");
+					lrcList.add(lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1));
+					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
+						new LrcFileDownloader(lyric_copy).start();
+					return null;
+				}
+			});
+		}
+	}
+
 	private void initListView()
 	{
 		listView = (SwipeMenuListView) findViewById(R.id.recitText_swipeMenu_listView);
@@ -169,13 +215,16 @@ public class ReciteTextChose extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
-				Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,"您点击了" +
+				// textList.get(arg2).getName().toString()
+				// ,Toast.LENGTH_SHORT).show();
 				Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
 				open_intent.putExtra("selected" ,selected);
 				open_intent.putExtra("phase" ,phase);
 				open_intent.putExtra("unit" ,arg2 + 1);
 				open_intent.putExtra("name" ,textList.get(arg2).getName());
 				open_intent.putExtra("id" ,textList.get(arg2).getId());
+				open_intent.putExtra("lrc" ,lrcList.get(arg2));
 				startActivity(open_intent);
 			}
 
@@ -239,17 +288,22 @@ public class ReciteTextChose extends Activity
 				switch(index)
 				{
 					case 0:
-						Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
+						// Toast.makeText(getApplicationContext() ,"您点击了" +
+						// textList.get(position).getName().toString()
+						// ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
 						open_intent.putExtra("selected" ,selected);
 						open_intent.putExtra("phase" ,phase);
 						open_intent.putExtra("unit" ,position + 1);
 						open_intent.putExtra("name" ,textList.get(position).getName());
 						open_intent.putExtra("id" ,textList.get(position).getId());
+						open_intent.putExtra("lrc" ,lrcList.get(position));
 						startActivity(open_intent);
 						break;
 					case 1:
-						Toast.makeText(getApplicationContext() ,"正在分享" + textList.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
+						// Toast.makeText(getApplicationContext() ,"正在分享" +
+						// textList.get(position).getName().toString() + "..."
+						// ,Toast.LENGTH_SHORT).show();
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");

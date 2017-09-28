@@ -49,7 +49,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 {
 	private long startTime , endTime;
 	private Intent intent;
-	private int selected , phase , units;
+	private int selected , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int leng;
 	private String [] phraseContent , voiceContent;
@@ -86,7 +86,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		intent = getIntent();
 		selected = intent.getIntExtra("selected" ,1);
 		phase = intent.getIntExtra("phase" ,1);
-		units = intent.getIntExtra("units" ,1);
+		unit = intent.getIntExtra("units" ,1);
 
 		// 两个词语间隔秒数
 		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
@@ -99,9 +99,9 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上学期第" + units + "单元";
+		String content = "听写 " + selected + "年级上学期第" + unit + "单元";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下学期第" + units + "单元";
+			content = "听写 " + selected + "年级下学期第" + unit + "单元";
 		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -151,7 +151,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			map.put("course" ,Util.ChineseCourse);
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
-			map.put("unit" ,units + "");
+			map.put("unit" ,unit + "");
 			// System.out.println(Util.REALSERVER + "getphrase.php?" +
 			// URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
@@ -526,11 +526,11 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			handlerPlay.postDelayed(this ,intervalValue * 1000);
 		}
 	};
-	
+
 	public void notifyDataAdapter()
 	{
 		int currentIndexTrue = (currentIndex + 1) / frequencyValue + (0 == ((currentIndex + 1) % frequencyValue) ? -1 : 0);
-		
+
 		if(currentIndex < playList.size())
 		{
 			Log.d("currentIndexLog" ,"currentIndexTrue:" + currentIndexTrue + ":currentIndex:" + currentIndex);
@@ -540,7 +540,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			{
 				if(currentIndexTrue > 0 && myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue - 1))
 					myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue - 1 ,false);
-				
+
 				boolean isSelect = myListenWriteMainAdapter.getisSelectedAt(currentIndexTrue);
 				if( !isSelect)
 					myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,true);
@@ -552,7 +552,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			myListenWriteMainAdapter.setItemisSelectedMap(currentIndexTrue ,false);
 			myListenWriteMainAdapter.notifyDataSetChanged();
 		}
-		
+
 	}
 
 	private Runnable runnableView = new Runnable()

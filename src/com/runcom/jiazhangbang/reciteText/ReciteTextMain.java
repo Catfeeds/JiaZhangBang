@@ -5,12 +5,7 @@ package com.runcom.jiazhangbang.reciteText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TreeMap;
-
-import okhttp3.Call;
-import okhttp3.Response;
-
-import org.json.JSONObject;
+import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -33,11 +28,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gr.okhttp.OkHttpUtils;
-import com.gr.okhttp.callback.Callback;
+import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.listenText.LrcRead;
+import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.util.NetUtil;
-import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -66,12 +61,16 @@ public class ReciteTextMain extends Activity implements Checkable
 	private MyListViewMainAdapter myListViewMainAdapter;
 	private MyTextContent myTextContent = new MyTextContent();
 	private ArrayList < MyTextContent > myTextContentArraylist = new ArrayList < MyTextContent >();
-	private int dataMax = 27;
-	private int [] counts = new int [dataMax];
-	private float ans = 0.0f;
+	private int dataMax;
+	private int [] counts = null;
+	private String [] scores = new String [11];
+	private int note = 0 , temp = 0;
+	private float ans = 100.0f;
 
-	private int selected , phase , unit;
-	private String name , id;
+	// private int selected , phase , unit;
+	private String name , lrc;
+
+	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 
 	// String [] scores = { "第00次成绩:         50" ,
 	// "第01次成绩:          57", "第02次成绩:          77", "第03次成绩:          87",
@@ -96,11 +95,12 @@ public class ReciteTextMain extends Activity implements Checkable
 		setContentView(R.layout.recite_text_main);
 
 		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,1);
-		phase = intent.getIntExtra("phase" ,1);
-		unit = intent.getIntExtra("unit" ,1);
-		id = intent.getStringExtra("id");
+		// selected = intent.getIntExtra("selected" ,1);
+		// phase = intent.getIntExtra("phase" ,1);
+		// unit = intent.getIntExtra("unit" ,1);
+		// id = intent.getStringExtra("id");
 		name = intent.getStringExtra("name");
+		lrc = intent.getStringExtra("lrc");
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -108,10 +108,10 @@ public class ReciteTextMain extends Activity implements Checkable
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-
+		new Text2Speech(getApplicationContext() , name).play();
 		actionbar.setTitle(name);
 
-		Arrays.fill(counts ,0);
+		Arrays.fill(scores ,"       暂无");
 		initView();
 	}
 
@@ -127,45 +127,75 @@ public class ReciteTextMain extends Activity implements Checkable
 		}
 		else
 		{
-			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
-			map.put("selected" ,selected + "");
-			map.put("phase" ,phase + "");
-			map.put("unit" ,unit + "");
-			map.put("id" ,id);
-			System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
-			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+			try
 			{
-				@Override
-				public void onError(Call arg0 , Exception arg1 , int arg2 )
-				{
-				}
+				LrcRead lrcRead = new LrcRead();
+				lrcRead.Read(Util.LYRICSPATH + lrc ,Util.lyricChinese);
+				LyricList = lrcRead.GetLyricContent();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			dataMax = LyricList.size();
+			counts = new int [dataMax];
+			Arrays.fill(counts ,0);
+			for(int i = 0 ; i < dataMax ; i ++ )
+			{
+				myTextContent = new MyTextContent();
+				myTextContent.setName((i + 1) + "\u3000\u3000" + LyricList.get(i).getLyric());
+				myTextContentArraylist.add(myTextContent);
+			}
+			initListview();
 
-				@Override
-				public void onResponse(String arg0 , int arg1 )
-				{
-					initListview();
-					dataMax = Integer.parseInt(arg0);
-				}
-
-				@Override
-				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
-				{
-
-					// TODO
-					JSONObject jsonObject = new JSONObject(arg0.body().string());
-					String [] contents = jsonObject.getString("source").split("\n");
-					myTextContentArraylist.clear();
-					for(int i = 0 ; i < contents.length ; i ++ )
-					{
-						myTextContent = new MyTextContent();
-						myTextContent.setName((i + 1) + "\u3000\u3000" + contents[i]);
-						myTextContentArraylist.add(myTextContent);
-					}
-
-					return "" + contents.length;
-				}
-
-			});
+			// final TreeMap < String , String > map =
+			// Util.getMap(getApplicationContext());
+			// // map.put("selected" ,selected + "");
+			// // map.put("phase" ,phase + "");
+			// // map.put("unit" ,unit + "");
+			// map.put("id" ,id);
+			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
+			// URL.getParameter(map));
+			// OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" +
+			// URL.getParameter(map)).build().execute(new Callback < String >()
+			// {
+			// @Override
+			// public void onError(Call arg0 , Exception arg1 , int arg2 )
+			// {
+			// }
+			//
+			// @Override
+			// public void onResponse(String arg0 , int arg1 )
+			// {
+			// initListview();
+			// dataMax = Integer.parseInt(arg0);
+			// // dataMax = Integer.valueOf(arg0);
+			// }
+			//
+			// @Override
+			// public String parseNetworkResponse(Response arg0 , int arg1 )
+			// throws Exception
+			// {
+			// JSONObject jsonObject = new
+			// JSONObject(arg0.body().string().trim());
+			// JSONObject jsonObject_attr = new
+			// JSONObject(jsonObject.getString("attr"));
+			// JSONObject jsonObject_partlist = new
+			// JSONObject(jsonObject_attr.getString("partlist"));
+			//
+			// String [] contents = jsonObject.getString("source").split("\n");
+			// myTextContentArraylist.clear();
+			// for(int i = 0 ; i < contents.length ; i ++ )
+			// {
+			// myTextContent = new MyTextContent();
+			// myTextContent.setName((i + 1) + "\u3000\u3000" + contents[i]);
+			// myTextContentArraylist.add(myTextContent);
+			// }
+			//
+			// return "" + contents.length;
+			// }
+			//
+			// });
 		}
 
 		autoJudge_textView = (TextView) findViewById(R.id.recite_text_main_textview_autojudge);
@@ -175,7 +205,6 @@ public class ReciteTextMain extends Activity implements Checkable
 			public void onClick(View v )
 			{
 				int right = 0;
-				// int [] paragraph = {0};
 				String paragraph = "";
 				for(int i = 0 ; i < dataMax ; i ++ )
 					if(0 == counts[i])
@@ -196,9 +225,17 @@ public class ReciteTextMain extends Activity implements Checkable
 			@Override
 			public void onClick(View v )
 			{
+				int right = 0;
+				for(int i = 0 ; i < dataMax ; i ++ )
+					if(0 == counts[i])
+						right ++ ;
+				ans = (float) (right * 1.0 / dataMax) * 100;
 				Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分" ,Toast.LENGTH_SHORT).show();
-				// scores[note] = "第" + note + "次成绩：          " + ans;
-				// ++ note;
+				if(temp > 10)
+					temp = 0;
+				scores[temp] = "第" + (note + 1) + "次成绩：          " + ans;
+				++ temp;
+				++ note;
 			}
 		});
 
@@ -212,10 +249,10 @@ public class ReciteTextMain extends Activity implements Checkable
 				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this , R.style.NoBackGroundDialog);
 				builder.setIcon(R.drawable.ic_launcher);
 				getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-				for(int i = 0 ; i < 28 ; i ++ )
-				{
-					scores[i] = "第" + i + "次成绩：          " + ans;
-				}
+				// for(int i = 0 , leng = scores.length ; i < leng ; i ++ )
+				// {
+				// scores[i] = "第" + i + "次成绩：          " + ans;
+				// }
 				builder.setTitle("您的历史成绩");
 				builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
 				{
@@ -251,10 +288,6 @@ public class ReciteTextMain extends Activity implements Checkable
 
 	}
 
-	String [] scores = new String [28];
-	int note = 0;
-
-	// private View whichSelecte = null;
 	private void initListview()
 	{
 		listView = (ListView) findViewById(R.id.recite_text_main_listview);

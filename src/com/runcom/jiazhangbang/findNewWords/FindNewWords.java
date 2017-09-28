@@ -46,13 +46,14 @@ import com.umeng.analytics.MobclickAgent;
 public class FindNewWords extends Activity
 {
 
-	Intent intent = new Intent();
-	int selected;
-	String contents;
+	private Intent intent = new Intent();
+	private int selected;
+	private String contents;
 
-	AutoCompleteTextView autoCompleteTextView;
-	TextView contentsShowTextView;
-	ImageView delete_imageView , search_imageView;
+	private AutoCompleteTextView autoCompleteTextView;
+	private TextView contentsShowTextView;
+	private ImageView delete_imageView , search_imageView;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -108,8 +109,8 @@ public class FindNewWords extends Activity
 			@Override
 			public void afterTextChanged(Editable s )
 			{
-//				contents = s.toString();
-//				loadingData(s.toString());
+				// contents = s.toString();
+				// loadingData(s.toString());
 			}
 		});
 		autoCompleteTextView.setOnItemClickListener(new OnItemClickListener()
@@ -117,8 +118,8 @@ public class FindNewWords extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-//				contents = parent.getItemAtPosition(position).toString();
-//				loadingData(contents);
+				// contents = parent.getItemAtPosition(position).toString();
+				// loadingData(contents);
 			}
 		});
 
@@ -142,34 +143,35 @@ public class FindNewWords extends Activity
 			}
 		});
 	}
-	
+
 	@SuppressLint("SetJavaScriptEnabled")
-	public void translate(View v)
+	public void translate(View v )
 	{
 		contents = autoCompleteTextView.getText().toString();
-//		intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://fanyi.baidu.com/#zh/en/" + contents));
+		// intent = new Intent(Intent.ACTION_VIEW,
+		// Uri.parse("http://fanyi.baidu.com/#zh/en/" + contents));
 		intent = new Intent(this , FindNewWordsWeb.class);
 		intent.putExtra("contents" ,contents);
-	    if(contents.trim().isEmpty())
-	    	Toast.makeText(getApplicationContext() , "内容为空" , Toast.LENGTH_SHORT).show();
-	    else
-	    	startActivity(intent);
+		if(contents.trim().isEmpty())
+			Toast.makeText(getApplicationContext() ,"内容为空" ,Toast.LENGTH_SHORT).show();
+		else
+			startActivity(intent);
 	}
-	
-	public void text2Speech(View v)
+
+	public void text2Speech(View v )
 	{
 		contents = autoCompleteTextView.getText().toString();
 		if(contents.trim().isEmpty())
-			Toast.makeText(this , "内容为空" , Toast.LENGTH_SHORT).show();
+			Toast.makeText(this ,"内容为空" ,Toast.LENGTH_SHORT).show();
 		else
-			new Text2Speech(getApplicationContext() ,contents).play();
+			new Text2Speech(getApplicationContext() , contents).play();
 	}
 
 	private void loadingData(String contents )
 	{
 		String realContents = "\n\n 解释:\n\n\t" + "asdfasdfasadasdfaf\n详见翻译" + "\n";
 		if(contents.trim().isEmpty())
-			Toast.makeText(this , "内容为空" , Toast.LENGTH_SHORT).show();
+			Toast.makeText(this ,"内容为空" ,Toast.LENGTH_SHORT).show();
 		else
 			contentsShowTextView.setText("\n " + autoCompleteTextView.getText().toString() + realContents);
 	}

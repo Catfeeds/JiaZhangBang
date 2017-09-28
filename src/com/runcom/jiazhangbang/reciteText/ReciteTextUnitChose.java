@@ -155,7 +155,9 @@ public class ReciteTextUnitChose extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
-				Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(arg2).getName().toString() ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,"您点击了" +
+				// textList.get(arg2).getName().toString()
+				// ,Toast.LENGTH_SHORT).show();
 				Intent open_intent = new Intent(getApplicationContext() , ReciteTextChose.class);
 				// open_intent.putExtra("source"
 				// ,textList.get(arg2).getSource());
@@ -227,7 +229,9 @@ public class ReciteTextUnitChose extends Activity
 				switch(index)
 				{
 					case 0:
-						Toast.makeText(getApplicationContext() ,"您点击了" + textList.get(position).getName().toString() ,Toast.LENGTH_SHORT).show();
+						// Toast.makeText(getApplicationContext() ,"您点击了" +
+						// textList.get(position).getName().toString()
+						// ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextChose.class);
 						open_intent.putExtra("selected" ,selected);
 						open_intent.putExtra("phase" ,phase);
@@ -235,7 +239,9 @@ public class ReciteTextUnitChose extends Activity
 						startActivity(open_intent);
 						break;
 					case 1:
-						Toast.makeText(getApplicationContext() ,"正在分享" + textList.get(position).getName().toString() + "..." ,Toast.LENGTH_SHORT).show();
+						// Toast.makeText(getApplicationContext() ,"正在分享" +
+						// textList.get(position).getName().toString() + "..."
+						// ,Toast.LENGTH_SHORT).show();
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
