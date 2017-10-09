@@ -245,7 +245,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
 					myAudio = new MyAudio();
-					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("text");
+					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					// System.out.println(lyric_copy);
 					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
 						new LrcFileDownloader(lyric_copy).start();

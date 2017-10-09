@@ -16,88 +16,95 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.umeng.analytics.MobclickAgent;
 
 /**
- * @author           Administrator
- * @copyright        wgcwgc
- * @date             2017-5-12
- * @time             上午9:35:14
- * @project_name     JiaZhangBang
- * @package_name     com.runcom.jiazhangbang.findNewWords
- * @file_name        FindNewWordsWeb.java
- * @type_name        FindNewWordsWeb
- * @enclosing_type   
- * @tags             
- * @todo             
- * @others           
- *
+ * @author Administrator
+ * @copyright wgcwgc
+ * @date 2017-5-12
+ * @time 上午9:35:14
+ * @project_name JiaZhangBang
+ * @package_name com.runcom.jiazhangbang.findNewWords
+ * @file_name FindNewWordsWeb.java
+ * @type_name FindNewWordsWeb
+ * @enclosing_type
+ * @tags
+ * @todo
+ * @others
+ * 
  */
 
 public class FindNewWordsWeb extends Activity
 {
 	WebView webView;
 	Intent intent;
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
-	    // TODO Auto-generated method stub
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.find_new_words_webview);
-	    
-	    ActionBar actionbar = getActionBar();
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.find_new_words_webview);
+
+		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "翻译";
-//		new Text2Speech(getApplicationContext() , content).play();
+		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
-	    
-	    webView = (WebView) findViewById(R.id.find_new_words_contnets_show_webview);
+
+		webView = (WebView) findViewById(R.id.find_new_words_contnets_show_webview);
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
 		settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 		webView.loadUrl("http://fanyi.baidu.com/#zh/en/" + getIntent().getStringExtra("contents"));
-		 //覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
-	       webView.setWebViewClient(new WebViewClient()
-	       {
-	    	   @Override
-	        public boolean shouldOverrideUrlLoading(WebView view, String url)
-	        {
-	            // TODO Auto-generated method stub
-	               //返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
-	             view.loadUrl(url);
-	            return true;
-	        }
-	       });
-	       
-	       webView.setWebChromeClient(new WebChromeClient() {
-	            @Override
-	            public void onProgressChanged(WebView view, int newProgress) {
-	                // TODO Auto-generated method stub
-	                if (newProgress == 100)
-	                {
-	                    // 网页加载完成
-//	                	Toast.makeText(getApplicationContext() , "网页加载完成" , Toast.LENGTH_SHORT).show();
-	                }
-	                else
-	                {
-	                    // 加载中
-//	                	Toast.makeText(getApplicationContext() , "加载中..." , Toast.LENGTH_SHORT).show();
-	                }
+		// 覆盖WebView默认使用第三方或系统默认浏览器打开网页的行为，使网页用WebView打开
+		webView.setWebViewClient(new WebViewClient()
+		{
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view , String url )
+			{
+				// TODO Auto-generated method stub
+				// 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
+				view.loadUrl(url);
+				return true;
+			}
+		});
 
-	            }
-	        });
+		webView.setWebChromeClient(new WebChromeClient()
+		{
+			@Override
+			public void onProgressChanged(WebView view , int newProgress )
+			{
+				// TODO Auto-generated method stub
+				if(newProgress == 100)
+				{
+					// 网页加载完成
+					// Toast.makeText(getApplicationContext() , "网页加载完成" ,
+					// Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					// 加载中
+					// Toast.makeText(getApplicationContext() , "加载中..." ,
+					// Toast.LENGTH_SHORT).show();
+				}
+
+			}
+		});
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{

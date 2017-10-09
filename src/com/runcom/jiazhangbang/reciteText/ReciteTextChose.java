@@ -193,7 +193,7 @@ public class ReciteTextChose extends Activity
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
-					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("text");
+					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					lrcList.add(lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1));
 					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
 						new LrcFileDownloader(lyric_copy).start();
