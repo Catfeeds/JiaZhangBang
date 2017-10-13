@@ -15,11 +15,9 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findNewWords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextPhaseChose;
 import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
-import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
-import com.runcom.jiazhangbang.welcome.Welcome;
 import com.umeng.analytics.MobclickAgent;
 
 public class Chinese extends Activity
@@ -137,12 +135,11 @@ public class Chinese extends Activity
 
 	public void ComingSoon(View v )
 	{
-		MyNotification.myNotification(getApplicationContext());
-		// Toast.makeText(getApplicationContext() ,"Coming soon !"
-		// ,Toast.LENGTH_SHORT).show();
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,Welcome.class);
-		startActivity(intent);
+		// MyNotification.myNotification(getApplicationContext());
+		// intent.putExtra("selected" ,selected);
+		// intent.setClass(getApplicationContext() ,Welcome.class);
+		// startActivity(intent);
+		Toast.makeText(getApplicationContext() ,"coming soon..." ,Toast.LENGTH_SHORT).show();
 		new Text2Speech(getApplicationContext() , "¾´ÇëÆÚ´ý...").play();
 		// this.finish();
 	}

@@ -1,8 +1,6 @@
 package com.runcom.jiazhangbang.mainActivity;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -35,7 +33,6 @@ import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
 import com.runcom.jiazhangbang.setting.PlaySetting;
-import com.runcom.jiazhangbang.util.GetServerResult;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -116,7 +113,6 @@ public class MainActivity extends Activity
 			}
 		});
 
-		// final String urlString = "https://www.baidu.com/img/bd_logo1.png";
 		math_imageView.setOnClickListener(new OnClickListener()
 		{
 
@@ -124,9 +120,6 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
-				// new MyTask(MainActivity.this ,
-				// urlString.substring(urlString.lastIndexOf("/"))).execute(urlString);
-				// 1.创建SpeechSynthesizer对象, 第二个参数：本地合成时传InitListener
 				new Text2Speech(getApplicationContext() , selected + "年级数学").play();
 			}
 		});
@@ -139,23 +132,6 @@ public class MainActivity extends Activity
 			{
 				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
 				new Text2Speech(getApplicationContext() , selected + "年级英语").play();
-
-				// String filepath = SDCardHelper.getSDCardPath() +
-				// File.separator + "&abc_record/pictures" + File.separator +
-				// urlString.substring(urlString.lastIndexOf("/"));
-				// byte [] data = SDCardHelper.loadFileFromSDCard(filepath);
-				// if(data != null)
-				// {// 如果已经有旧的数据,就直接从SD卡中读取出来显示在ImageView中
-				// Bitmap bm = BitmapFactory.decodeByteArray(data ,0
-				// ,data.length);
-				// English_imageView.setImageBitmap(bm);
-				// }
-				// else
-				// {
-				// Toast.makeText(getApplicationContext() ,"没有该图片！"
-				// ,Toast.LENGTH_LONG).show();
-				// }
-
 			}
 		});
 
@@ -171,23 +147,6 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				Toast.makeText(getApplicationContext() ,"培训课程..." ,Toast.LENGTH_SHORT).show();
-				// String [] content =
-				// { "唐朝", "西藏", "大臣", "求婚", "断定", "豌豆", "耕种", "沼泽", "技艺", "吩咐",
-				// "饶恕", "规矩", "胆瓶", "金币" };
-				// for(int j = 0 ; j < content.length ; j ++ )
-				// {
-				// Toast.makeText(getApplicationContext() ,content[j]
-				// ,Toast.LENGTH_SHORT).show();
-				// new Text2Speech(getApplicationContext() , content[j]).play();
-				// try
-				// {
-				// Thread.sleep(5000);
-				// }
-				// catch(InterruptedException e)
-				// {
-				// e.printStackTrace();
-				// }
-				// }
 			}
 		});
 
@@ -206,24 +165,6 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				Toast.makeText(getApplicationContext() ,"听故事..." ,Toast.LENGTH_SHORT).show();
-				Map < String , String > map = new HashMap < String , String >();
-				map.put("course" ,"1");
-				map.put("grade" ,"4");
-				map.put("phase" ,"2");
-				map.put("unit" ,"1");
-				
-				String contents = null;
-				contents = GetServerResult.getResponseString(getApplicationContext() ,"gettextlist" ,map);
-				try
-				{
-					JSONObject jsonObject = new JSONObject(contents);
-					String result = jsonObject.getString("result");
-					System.out.println("result:" + result + "\ncontents:" + contents);
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
 			}
 		});
 	}

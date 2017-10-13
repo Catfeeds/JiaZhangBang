@@ -3,6 +3,12 @@
  */
 package com.runcom.jiazhangbang.findNewWords;
 
+import java.util.TreeMap;
+
+import org.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.Response;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -23,8 +29,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gr.okhttp.OkHttpUtils;
+import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.util.URL;
+import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -66,7 +76,6 @@ public class FindNewWords extends Activity
 		setContentView(R.layout.find_new_words_main);
 
 		selected = getIntent().getIntExtra("selected" ,1);
-
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
@@ -86,6 +95,33 @@ public class FindNewWords extends Activity
 	 */
 	private void initData()
 	{
+		TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("course" , Util.ChineseCourse);
+		map.put("grade" , selected + "");
+		map.put("phase" , "1");
+		OkHttpUtils.get().url(Util.REALSERVER + "getphase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+		{
+
+			@Override
+            public void onError(Call arg0 , Exception arg1 , int arg2 )
+            {
+            }
+
+			@Override
+            public void onResponse(String arg0 , int arg1 )
+            {
+	            
+            }
+
+			@Override
+            public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+            {
+				String response = arg0.body().string().trim();
+				JSONObject jsonObject = new JSONObject(response);
+	            return null;
+            }
+			
+		});
 
 		String [] autoCompleteTextViewArrayString =
 		{ "abc", "wgc", "wgcwgc", "bbc", "java", "android", "And", "bbb", "autoComplete", "asdfasdfasdfasdfasdf" };
