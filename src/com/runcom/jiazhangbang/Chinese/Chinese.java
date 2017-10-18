@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.findNewWords.FindNewWords;
+import com.runcom.jiazhangbang.findnewwords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextPhaseChose;
 import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
 import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.runcom.jiazhangbang.findNewWords;
+package com.runcom.jiazhangbang.findnewwords;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;

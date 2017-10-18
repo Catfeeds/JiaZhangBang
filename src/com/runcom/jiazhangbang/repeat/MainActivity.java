@@ -566,7 +566,7 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 		}
 
 	}
-
+ 
 	// 计时器异步更新界面
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler()

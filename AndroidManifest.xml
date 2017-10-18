@@ -136,7 +136,7 @@
             android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextChose" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.findNewWords.FindNewWords"
+            android:name="com.runcom.jiazhangbang.findnewwords.FindNewWords"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
@@ -151,9 +151,9 @@
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.findNewWords.FindNewWordsWeb"
+            android:name="com.runcom.jiazhangbang.findnewwords.FindNewWordsWeb"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.findNewWords.FindNewWords" >
+            android:parentActivityName="com.runcom.jiazhangbang.findnewwords.FindNewWords" >
         </activity>
     </application>
 
