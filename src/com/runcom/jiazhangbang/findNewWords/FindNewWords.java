@@ -365,17 +365,22 @@ public class FindNewWords extends Activity
 
 	private void loadingData(String contents )
 	{
-		String content = autoCompleteTextView.getText().toString();
-		content = newWordsMap.get(content);
-		String realContents = "\n\t" + autoCompleteTextView.getText().toString();
-		if(contents.trim().isEmpty())
+		String content = newWordsMap.get(contents);
+		if(contents.trim().isEmpty() || contents.equals(""))
 		{
 			Toast.makeText(this ,"内容为空" ,Toast.LENGTH_SHORT).show();
+			contentsShowTextView.setText("");
 		}
 		else
-		{
-			contentsShowTextView.setText(realContents + "\n\n" + content);
-		}
+			if(content.equals("") || content.isEmpty())
+			{
+				Toast.makeText(this ,"课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
+				contentsShowTextView.setText("null");
+			}
+			else
+			{
+				contentsShowTextView.setText("\n\t" + contents + "\n\n" + content);
+			}
 	}
 
 	/**
