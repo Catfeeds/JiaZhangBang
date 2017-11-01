@@ -48,7 +48,7 @@ public class PlaySetting extends Activity
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listen_wirte_setting_and_help);
+		setContentView(R.layout.activity_main_setting_and_help);
 
 		ActionBar actionbar = getActionBar();
 		// 显示返回箭头默认是不显示的

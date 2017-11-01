@@ -103,17 +103,24 @@
         <activity
             android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteTips"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteBackups" >
+            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteBackups"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteMain"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.setting.ListenWriteTipsPlaySetting"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.setting.PlaySetting"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWrite" >
+            android:parentActivityName="com.runcom.jiazhangbang.mainActivity.MainActivity" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose"

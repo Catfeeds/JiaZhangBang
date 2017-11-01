@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -26,9 +25,9 @@ public class ListenWritePhaseChose extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_phase_chose);
 		intent = getIntent();
-		
+
 		selected = intent.getIntExtra("selected" ,1);
-		
+
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
@@ -36,16 +35,16 @@ public class ListenWritePhaseChose extends Activity
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "ÌýÐ´ " + selected + "Äê¼¶";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
-		
+
 	}
-	
-	public void firstPhase(View v)
+
+	public void firstPhase(View v )
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
-		intent.putExtra("phase" , 1);
+		intent.putExtra("phase" ,1);
 		intent.setClass(getApplicationContext() ,ListenWriteBackups.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
@@ -55,13 +54,13 @@ public class ListenWritePhaseChose extends Activity
 		else
 			startActivity(intent);
 	}
-	
-	public void secondPhase(View v)
+
+	public void secondPhase(View v )
 	{
-		
+
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
-		intent.putExtra("phase" , 2);
+		intent.putExtra("phase" ,2);
 		intent.setClass(getApplicationContext() ,ListenWriteBackups.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
@@ -70,7 +69,7 @@ public class ListenWritePhaseChose extends Activity
 		}
 		else
 			startActivity(intent);
-		
+
 	}
 
 	@Override

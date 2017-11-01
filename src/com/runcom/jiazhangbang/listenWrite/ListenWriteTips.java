@@ -22,9 +22,8 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.setting.PlaySetting;
+import com.runcom.jiazhangbang.setting.ListenWriteTipsPlaySetting;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
@@ -49,7 +48,7 @@ public class ListenWriteTips extends Activity
 
 		intent = getIntent();
 		selected = intent.getIntExtra("selected" ,1);// 年级
-		phase = intent.getIntExtra("phase" , 1);//上下册
+		phase = intent.getIntExtra("phase" ,1);// 上下册
 		unit = intent.getIntExtra("id" ,1);// 单元
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -60,7 +59,7 @@ public class ListenWriteTips extends Activity
 		String content = "听写 " + selected + "年级上册第" + unit + "单元";
 		if(2 == phase)
 			content = "听写 " + selected + "年级下册第" + unit + "单元";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initData();
@@ -80,7 +79,8 @@ public class ListenWriteTips extends Activity
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
-//			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
+			// System.out.println(Util.REALSERVER + "getphrase.php?" +
+			// URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
@@ -100,7 +100,8 @@ public class ListenWriteTips extends Activity
 					{
 						textView_start.setEnabled(false);
 						textView_reset.setEnabled(false);
-//						Toast.makeText(getApplicationContext() ,config[1] ,Toast.LENGTH_LONG).show();
+						// Toast.makeText(getApplicationContext() ,config[1]
+						// ,Toast.LENGTH_LONG).show();
 					}
 					else
 						initView();
@@ -177,7 +178,7 @@ public class ListenWriteTips extends Activity
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);
 				intent.putExtra("units" ,unit);
-				intent.setClass(getApplicationContext() ,PlaySetting.class);
+				intent.setClass(getApplicationContext() ,ListenWriteTipsPlaySetting.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
 					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -201,6 +202,9 @@ public class ListenWriteTips extends Activity
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
+				// Toast.makeText(getApplicationContext()
+				// ,"onOptionsItemSelected..." ,Toast.LENGTH_SHORT).show();
+				// System.out.println("onOptionsItemSelected...");
 				onBackPressed();
 				break;
 		}
@@ -213,7 +217,10 @@ public class ListenWriteTips extends Activity
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			finish();
+			// Toast.makeText(getApplicationContext() ,"onKeyDown..."
+			// ,Toast.LENGTH_SHORT).show();
+			// System.out.println("onKeyDown...");
+			this.finish();
 			return true;
 		}
 		return super.onKeyDown(keyCode ,event);
@@ -222,6 +229,9 @@ public class ListenWriteTips extends Activity
 	@Override
 	public void onResume()
 	{
+		// Toast.makeText(getApplicationContext() ,"onResume..."
+		// ,Toast.LENGTH_SHORT).show();
+		// System.out.println("onResume...");
 		initView();
 		super.onResume();
 		MobclickAgent.onResume(this);

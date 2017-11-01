@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -36,7 +37,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
@@ -102,7 +102,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		String content = "听写 " + selected + "年级上学期第" + unit + "单元";
 		if(2 == phase)
 			content = "听写 " + selected + "年级下学期第" + unit + "单元";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		timer.schedule(task ,0 ,1000);
@@ -152,8 +152,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
-			// System.out.println(Util.REALSERVER + "getphrase.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
@@ -234,14 +233,15 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			// Log.d("log*********" ,"1***" + newWords.getName());
 			// Toast.makeText(getApplicationContext() , newWords.getName()
 			// ,Toast.LENGTH_SHORT).show();
-			String stars = "";
-			for(int j = 0 ; j < phraseContent[i].length() ; j ++ )
-			{
-				stars += "*";
-			}
+			// String stars = "";
+			// for(int j = 0 ; j < phraseContent[i].length() ; j ++ )
+			// {
+			// stars += "*";
+			// }
 			newWordsStar = new NewWords();
 			newWordsStar.setId(i);
-			newWordsStar.setName(stars);
+			// newWordsStar.setName(stars);
+			newWordsStar.setName((i + 1) + "");
 			newWordsListStar.add(newWordsStar);
 			// Log.d("log*********" ,"2***" + newWordsStar.getName());
 			// Toast.makeText(getApplicationContext() , newWords.getName()
@@ -268,7 +268,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				Toast.makeText(getApplicationContext() ,newWordsList.get(position).getId() + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,( newWordsList.get(position).getId() + 1 ) + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -584,8 +584,18 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				// if(mp != null || mp.isPlaying())
-				mp.stop();
+				if(mp != null || mp.isPlaying())
+					mp.stop();
+				try
+				{
+					runnableView.wait();
+				}
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				// Toast.makeText(getApplicationContext()
+				// ,"onOptiosItemSelected..." ,Toast.LENGTH_SHORT).show();
 				onBackPressed();
 				break;
 		}
@@ -598,9 +608,30 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			// if(mp != null || mp.isPlaying())
-			mp.stop();
-			finish();
+			if(mp != null || mp.isPlaying())
+				mp.stop();
+
+			try
+			{
+				Thread.sleep(5000);
+			}
+			catch(InterruptedException e1)
+			{
+				e1.printStackTrace();
+			}
+
+			try
+			{
+				runnableView.wait();
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+
+			// Toast.makeText(getApplicationContext() ,"onKeyDown..."
+			// ,Toast.LENGTH_SHORT).show();
+			ListenWriteMain.this.finish();
 			return true;
 		}
 		return super.onKeyDown(keyCode ,event);
@@ -618,6 +649,12 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	{
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig )
+	{
+		super.onConfigurationChanged(newConfig);
 	}
 
 }

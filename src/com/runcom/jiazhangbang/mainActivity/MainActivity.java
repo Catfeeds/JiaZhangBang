@@ -29,7 +29,6 @@ import com.gr.okhttp.callback.Callback;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.voice.Speech2Text;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
 import com.runcom.jiazhangbang.setting.PlaySetting;
@@ -105,7 +104,8 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				new Text2Speech(getApplicationContext() , selected + "年级语文").play();
+				// new Text2Speech(getApplicationContext() , selected +
+				// "年级语文").play();
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
@@ -120,7 +120,8 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
-				new Text2Speech(getApplicationContext() , selected + "年级数学").play();
+				// new Text2Speech(getApplicationContext() , selected +
+				// "年级数学").play();
 			}
 		});
 
@@ -131,7 +132,8 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
-				new Text2Speech(getApplicationContext() , selected + "年级英语").play();
+				// new Text2Speech(getApplicationContext() , selected +
+				// "年级英语").play();
 			}
 		});
 

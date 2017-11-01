@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.util.NetUtil;
@@ -61,7 +60,7 @@ public class ListenWriteBackups extends Activity
 		String content = "听写 " + selected + "年级上册";
 		if(2 == phase)
 			content = "听写 " + selected + "年级下册";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initData();
@@ -202,7 +201,9 @@ public class ListenWriteBackups extends Activity
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);// 年级
 				intent.putExtra("phase" ,phase);// 上下册
-				intent.putExtra("id" ,(long) ++ id);// 单元
+				intent.putExtra("id" ,++ position);// 单元
+				// System.out.println("**********************************position:"
+				// + position + "id:" + id);
 				intent.setClass(getApplicationContext() ,ListenWriteTips.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{

@@ -86,7 +86,7 @@ public class ListenWriteCopy extends Activity
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = " 听写 " + selected + "年级";
-		new Text2Speech(getApplicationContext() , content).play();
+//		new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 		// 两个词语间隔秒数
 		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
