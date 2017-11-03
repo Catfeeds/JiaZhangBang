@@ -48,7 +48,7 @@
                         android:includeFontPadding="false"
                         android:text="两个词语间隔秒数"
                         android:textColor="#ff333333"
-                        android:textSize="16sp" />
+                        android:textSize="22sp" />
 
                     <NumberPicker
                         android:id="@+id/setting_intervalNumberPicker"
@@ -79,7 +79,7 @@
                         android:includeFontPadding="false"
                         android:text="每个词语阅读次数"
                         android:textColor="#ff333333"
-                        android:textSize="16sp" />
+                        android:textSize="22sp" />
 
                     <NumberPicker
                         android:id="@+id/setting_frequencyNumberPicker"

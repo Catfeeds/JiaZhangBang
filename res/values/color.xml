@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="yes">#7DCBE7</color>
     <color name="no">#25CB73</color>
-    
+    <color name="black">#000000</color>
+    <color name="write">#ffffff</color>
+    <color name="activity_main_setting_and_help_background">#ffffff</color>
+    <color name="activity_main_setting_and_help_background_backup">#BDBBB9</color>
+    <color name="activity_chinese_background_backup">#80B547</color>
+    <color name="activity_chinese_background">#ffffff</color>
+
 </resources>

@@ -64,7 +64,7 @@ public class ListenWriteTips extends Activity
 
 		initData();
 	}
-
+	
 	private void initData()
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)

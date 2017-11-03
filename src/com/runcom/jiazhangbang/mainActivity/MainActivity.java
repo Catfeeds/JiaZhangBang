@@ -55,6 +55,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+//		ActionBar actionbar = getActionBar();
+//		if(actionbar != null)
+//        {
+//	        actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//	        actionbar.setCustomView(R.layout.activity_main_actionbar_custom);
+//        }
+//		actionbar.setTitle(R.string.app_name);
+//		actionbar.setIcon(R.drawable.ic_interface);
+		
 		// SpeechUtility.createUtility(this ,"appid=590aeb53");
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
 		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,R.layout.simple_spinner_item);
@@ -235,25 +244,45 @@ public class MainActivity extends Activity
 	public boolean onOptionsItemSelected(MenuItem item )
 	{
 		int id = item.getItemId();
-		if(id == R.id.main_menu_update)
+		switch(id)
 		{
-			update();
-		}
-		else
-			if(id == R.id.main_menu_speech_recognition)
-			{
+			case R.id.main_menu_update:
+				update();
+				break;
+			case R.id.main_menu_others:
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext() ,PlaySetting.class);
+				startActivity(intent);
+				break;
+			case R.id.main_menu_speech_recognition:
 				new Speech2Text(MainActivity.this).play();
-				// new Test(MainActivity.this).btnVoice();
-			}
-			else
-				if(id == R.id.main_menu_others)
-				{
-					// Toast.makeText(getApplicationContext() ,"设置"
-					// ,Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent();
-					intent.setClass(getApplicationContext() ,PlaySetting.class);
-					startActivity(intent);
-				}
+				break;
+			case R.id.main_menu_newConversation:
+				Toast.makeText(getApplicationContext() ,"新会话" ,Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+		}
+
+		// if(id == R.id.main_menu_update)
+		// {
+		// update();
+		// }
+		// else
+		// if(id == R.id.main_menu_speech_recognition)
+		// {
+		// new Speech2Text(MainActivity.this).play();
+		// // new Test(MainActivity.this).btnVoice();
+		// }
+		// else
+		// if(id == R.id.main_menu_others)
+		// {
+		// // Toast.makeText(getApplicationContext() ,"设置"
+		// // ,Toast.LENGTH_SHORT).show();
+		// Intent intent = new Intent();
+		// intent.setClass(getApplicationContext() ,PlaySetting.class);
+		// startActivity(intent);
+		// }
 		return super.onOptionsItemSelected(item);
 	}
 
