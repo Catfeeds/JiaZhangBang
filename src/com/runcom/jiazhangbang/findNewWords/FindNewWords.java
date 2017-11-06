@@ -94,7 +94,7 @@ public class FindNewWords extends Activity
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "查生词  " + selected + "年级";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initView();

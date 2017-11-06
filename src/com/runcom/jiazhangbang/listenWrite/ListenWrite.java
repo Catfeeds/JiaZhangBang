@@ -44,7 +44,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
@@ -110,7 +109,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = " ÌýÐ´ " + selected + "Äê¼¶";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initPlayView();
@@ -124,7 +123,7 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		mp.setOnErrorListener(this);
 		mp.setOnBufferingUpdateListener(this);
 		// spinner
-		
+
 		spinner = (Spinner) findViewById(R.id.listenText_spinner);
 		btnPlay = (ImageButton) findViewById(R.id.media_play);
 		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);

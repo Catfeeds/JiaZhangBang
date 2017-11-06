@@ -29,6 +29,40 @@
                 android:stretchColumns="0" >
 
                 <TableRow
+                    android:id="@+id/more_page_row3"
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:paddingBottom="16.0dip"
+                    android:paddingTop="16.0dip" >
+
+                    <TextView
+                        android:id="@+id/setting_speech_recognition_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:paddingLeft="17.0dip"
+                        android:text="听曲识词"
+                        android:textColor="#ff333333"
+                        android:textSize="16.0sp" />
+
+                    <ImageView
+                        android:id="@+id/setting_speech_recognition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:src="@drawable/setting_detail" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000" />
+
+                <TableRow
                     android:id="@+id/more_page_row4"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"

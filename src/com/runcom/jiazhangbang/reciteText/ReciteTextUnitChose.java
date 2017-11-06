@@ -32,7 +32,6 @@ import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
@@ -69,7 +68,7 @@ public class ReciteTextUnitChose extends Activity
 		String content = "背课文  " + selected + "年级上册";
 		if(2 == phase)
 			content = "背课文  " + selected + "年级下册";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initData();

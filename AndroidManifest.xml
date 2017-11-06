@@ -151,9 +151,9 @@
             android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.repeat.MainActivity"
+            android:name="com.runcom.jiazhangbang.repeat.RepeatMainActivity"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.Chinese.Chinese" >
+            android:parentActivityName="com.runcom.jiazhangbang.repeat.Repeat" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.findnewwords.FindNewWordsWeb"

@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenWrite.MyListenWriteAdapter;
 import com.runcom.jiazhangbang.util.NetUtil;
@@ -61,7 +60,7 @@ public class ListenTextBackups extends Activity
 		String content = "听课文 " + selected + "年级上册";
 		if(2 == phase)
 			content = "听课文 " + selected + "年级下册";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initData();

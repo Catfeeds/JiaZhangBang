@@ -55,7 +55,6 @@ import android.widget.VideoView;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
@@ -147,7 +146,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = " ¸ú¶Á " + selected + "Äê¼¶";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		initPlayView();
@@ -226,7 +225,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 					}
 
 					Log.d("Ö´ÐÐLOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
-					return "initData" + arg1; 
+					return "initData" + arg1;
 				}
 
 			});
@@ -303,7 +302,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		mLyricView.setBackgroundColor(Color.parseColor("#969696"));
 		mHandler.post(mRunnable);
 		myHandler.post(myRunnable);
-//		MyHandler.post(MyRunnable);
+		// MyHandler.post(MyRunnable);
 	}
 
 	Handler mHandler = new Handler();
@@ -478,12 +477,11 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		timer.schedule(task ,1000 * time);
 	}
 
-	public void detailSetting(View v )
+	public void onDetailSetting(View v )
 	{
-		Toast.makeText(this ,"detailSetting..." ,Toast.LENGTH_SHORT).show();
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,MainActivity.class);
+		intent.setClass(Repeat.this ,RepeatMainActivity.class);
 		startActivity(intent);
 	}
 
@@ -829,6 +827,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		{
 			case android.R.id.home:
 				mp.stop();
+				seekBarFlag = false;
 				onBackPressed();
 				break;
 		}
@@ -842,6 +841,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
 			mp.stop();
+			seekBarFlag = false;
 			finish();
 			return true;
 		}

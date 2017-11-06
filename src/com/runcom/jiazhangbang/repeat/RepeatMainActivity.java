@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,13 +39,13 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class MainActivity extends Activity implements OnClickListener , OnItemClickListener
+public class RepeatMainActivity extends Activity implements OnClickListener , OnItemClickListener
 {
 	// 语音文件
 	private String fileAllNameAmr = null;
 	private String fileAllNameMp3 = null;
 	// 音频文件保存的路径
-	private String path = "";
+	private String path = Util.RECORDPATH;
 	// 界面控件z
 	private Button startRecord;// 开始录音
 	private Button startPlay;// 开始播放
@@ -87,7 +88,6 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle("录音");
-
 		// 初始化录音列表
 		initList();
 		// 初始化控件
@@ -129,7 +129,20 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 	@SuppressLint("DefaultLocale")
 	private void initList()
 	{
-		path = Util.RECORDPATH;
+		String recordePath = Util.APPPATH;
+		File recordePathFile = new File(recordePath);
+		if( !recordePathFile.exists())
+		{
+			try
+			{
+				recordePathFile.getParentFile().createNewFile();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 		// 判断SD卡是否存在
 		if( !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
@@ -138,7 +151,7 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 		else
 		{
 			// 根据后缀名进行判断、获取文件夹中的音频文件
-			File file = new File(path);
+			File file = new File(recordePath);
 			File files[] = file.listFiles();
 
 			for(File childFile : files)
@@ -566,7 +579,7 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 		}
 
 	}
- 
+
 	// 计时器异步更新界面
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler()
@@ -732,7 +745,8 @@ public class MainActivity extends Activity implements OnClickListener , OnItemCl
 					mPlayer.stop();
 				if(mRecorder != null)
 					mRecorder.stop();
-				onBackPressed();
+				finish();
+				// onBackPressed();
 				break;
 		}
 		return super.onOptionsItemSelected(item);

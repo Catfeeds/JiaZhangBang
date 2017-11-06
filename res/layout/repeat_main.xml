@@ -121,7 +121,7 @@
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
-            android:onClick="detailSetting"
+            android:onClick="onDetailSetting"
             android:src="@drawable/listen_text_detail" />
     </LinearLayout>
 

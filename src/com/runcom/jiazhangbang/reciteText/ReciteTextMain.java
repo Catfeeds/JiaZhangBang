@@ -28,7 +28,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
@@ -108,7 +107,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		new Text2Speech(getApplicationContext() , name).play();
+		// new Text2Speech(getApplicationContext() , name).play();
 		actionbar.setTitle(name);
 
 		Arrays.fill(scores ,"       ÔÝÎÞ");

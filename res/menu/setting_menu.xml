@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/main_menu_setting_menu"
+        android:icon="@drawable/main_setting"
+        android:showAsAction="always"
+        android:title="设置">
+    </item>
+
+</menu>

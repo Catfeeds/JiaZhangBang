@@ -16,7 +16,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.umeng.analytics.MobclickAgent;
 
@@ -60,7 +59,7 @@ public class FindNewWordsWeb extends Activity
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "З­вы";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		webView = (WebView) findViewById(R.id.find_new_words_contnets_show_webview);

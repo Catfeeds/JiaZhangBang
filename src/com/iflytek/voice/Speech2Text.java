@@ -52,7 +52,7 @@ public class Speech2Text
 		mIatDialog.show();
 		// System.out.println("gege zhi xing le yi ci");
 	}
-
+	
 	/**
 	 * ³õÊ¼»¯¼àÌýÆ÷¡£
 	 */

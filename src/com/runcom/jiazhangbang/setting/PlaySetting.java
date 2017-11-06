@@ -12,16 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.iflytek.voice.Speech2Text;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.mainActivity.Update;
 import com.umeng.analytics.MobclickAgent;
 
 public class PlaySetting extends Activity
 {
-	private TextView setting_clearCache_textView , setting_opinion_textView ,
+	private TextView setting_speech_recognition_textView ,
+	        setting_clearCache_textView , setting_opinion_textView ,
 	        setting_checkUpdate_textView , setting_aboutUs_textView;
-	private ImageView setting_clearCache_detail , setting_opinion_detail ,
-	        setting_checkUpdate_detail , setting_aboutUs_detail;
+	private ImageView setting_speech_recognition , setting_clearCache_detail ,
+	        setting_opinion_detail , setting_checkUpdate_detail ,
+	        setting_aboutUs_detail;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -42,6 +45,11 @@ public class PlaySetting extends Activity
 
 	private void initView()
 	{
+		setting_speech_recognition_textView = (TextView) findViewById(R.id.setting_speech_recognition_textView);
+		setting_speech_recognition_textView.setOnClickListener(listener);
+		setting_speech_recognition = (ImageView) findViewById(R.id.setting_speech_recognition);
+		setting_speech_recognition.setOnClickListener(listener);
+
 		setting_clearCache_textView = (TextView) findViewById(R.id.setting_clearCache_textView);
 		setting_clearCache_textView.setOnClickListener(listener);
 		setting_clearCache_detail = (ImageView) findViewById(R.id.setting_clearCache_detail);
@@ -74,8 +82,13 @@ public class PlaySetting extends Activity
 		{
 			switch(v.getId())
 			{
+				case R.id.setting_speech_recognition:
+					new Speech2Text(PlaySetting.this).play();
+					break;
 				case R.id.setting_clearCache_detail:
-					Toast.makeText(getApplicationContext() ,"clearCache_detail..." ,Toast.LENGTH_SHORT).show();
+					// Toast.makeText(getApplicationContext()
+					// ,"clearCache_detail..." ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,"ÒÑÇå³ý57MB»º´æ" ,Toast.LENGTH_SHORT).show();
 					break;
 				case R.id.setting_opinion_detail:
 					Toast.makeText(getApplicationContext() ,"opinion_detail..." ,Toast.LENGTH_SHORT).show();

@@ -28,7 +28,6 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.iflytek.voice.Speech2Text;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.Chinese.Chinese;
 import com.runcom.jiazhangbang.setting.PlaySetting;
@@ -55,15 +54,15 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		ActionBar actionbar = getActionBar();
-//		if(actionbar != null)
-//        {
-//	        actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//	        actionbar.setCustomView(R.layout.activity_main_actionbar_custom);
-//        }
-//		actionbar.setTitle(R.string.app_name);
-//		actionbar.setIcon(R.drawable.ic_interface);
-		
+		// ActionBar actionbar = getActionBar();
+		// if(actionbar != null)
+		// {
+		// actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+		// actionbar.setCustomView(R.layout.activity_main_actionbar_custom);
+		// }
+		// actionbar.setTitle(R.string.app_name);
+		// actionbar.setIcon(R.drawable.ic_interface);
+
 		// SpeechUtility.createUtility(this ,"appid=590aeb53");
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
 		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,R.layout.simple_spinner_item);
@@ -236,7 +235,7 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		getMenuInflater().inflate(R.menu.main_activity ,menu);
+		getMenuInflater().inflate(R.menu.setting_menu ,menu);
 		return true;
 	}
 
@@ -246,20 +245,26 @@ public class MainActivity extends Activity
 		int id = item.getItemId();
 		switch(id)
 		{
-			case R.id.main_menu_update:
-				update();
-				break;
-			case R.id.main_menu_others:
+			case R.id.main_menu_setting_menu:
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,PlaySetting.class);
 				startActivity(intent);
 				break;
-			case R.id.main_menu_speech_recognition:
-				new Speech2Text(MainActivity.this).play();
-				break;
-			case R.id.main_menu_newConversation:
-				Toast.makeText(getApplicationContext() ,"新会话" ,Toast.LENGTH_SHORT).show();
-				break;
+			// case R.id.main_menu_update:
+			// update();
+			// break;
+			// case R.id.main_menu_others:
+			// intent = new Intent();
+			// intent.setClass(getApplicationContext() ,PlaySetting.class);
+			// startActivity(intent);
+			// break;
+			// case R.id.main_menu_speech_recognition:
+			// new Speech2Text(MainActivity.this).play();
+			// break;
+			// case R.id.main_menu_newConversation:
+			// Toast.makeText(getApplicationContext() ,"新会话"
+			// ,Toast.LENGTH_SHORT).show();
+			// break;
 			default:
 				break;
 		}
@@ -286,6 +291,7 @@ public class MainActivity extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
+	@SuppressWarnings("unused")
 	private void update()
 	{
 		final String appName = "JiaZhangBang.apk";

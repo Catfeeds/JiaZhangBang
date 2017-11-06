@@ -43,7 +43,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.Util;
@@ -105,7 +104,7 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "Ìý¿ÎÎÄ" + selected + "Äê¼¶";
-		new Text2Speech(getApplicationContext() , content).play();
+		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		mp = new MediaPlayer();
