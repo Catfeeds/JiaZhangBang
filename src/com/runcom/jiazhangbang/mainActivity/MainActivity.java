@@ -29,7 +29,7 @@ import com.gr.okhttp.callback.Callback;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.Chinese.Chinese;
+import com.runcom.jiazhangbang.chinese.chinese;
 import com.runcom.jiazhangbang.setting.PlaySetting;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -40,7 +40,10 @@ public class MainActivity extends Activity
 	private Spinner spinner;
 	private ArrayAdapter < CharSequence > arrayAdapter;
 
-	int selected;
+	private TextView textView_one , textView_two , textView_three ,
+	        textView_four , textView_five , textView_six;
+
+	private int selected;
 
 	private ImageView Chinese_imageView , math_imageView , English_imageView;
 
@@ -74,6 +77,94 @@ public class MainActivity extends Activity
 		spinner.setSelection(selected);
 		++ selected;
 
+		textView_one = (TextView) findViewById(R.id.main_top_one_textview);
+		textView_two = (TextView) findViewById(R.id.main_top_two_textview);
+		textView_three = (TextView) findViewById(R.id.main_top_three_textview);
+		textView_four = (TextView) findViewById(R.id.main_top_four_textview);
+		textView_five = (TextView) findViewById(R.id.main_top_five_textview);
+		textView_six = (TextView) findViewById(R.id.main_top_six_textview);
+
+		textView_one.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 1;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+		
+		textView_two.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 2;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+		
+		textView_three.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 3;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+		textView_four.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 4;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+		textView_five.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 5;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+		textView_six.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				selected = 6;
+				Chinese_textView.setText(selected + "年级语文");
+				math_textView.setText(selected + "年级数学");
+				English_textView.setText(selected + "年级英语");
+				initImageView(selected);
+			}
+		});
+
 		Chinese_textView = (TextView) findViewById(R.id.Chinese_textView);
 		math_textView = (TextView) findViewById(R.id.math_textView);
 		English_textView = (TextView) findViewById(R.id.English_textView);
@@ -100,7 +191,7 @@ public class MainActivity extends Activity
 			}
 		});
 
-		Chinese_imageView = (ImageView) findViewById(R.id.Chinese_imageView);
+		Chinese_imageView = (ImageView) findViewById(R.id.chinese_imageView);
 		math_imageView = (ImageView) findViewById(R.id.math_imageView);
 		English_imageView = (ImageView) findViewById(R.id.English_imageView);
 
@@ -115,7 +206,7 @@ public class MainActivity extends Activity
 				// new Text2Speech(getApplicationContext() , selected +
 				// "年级语文").play();
 				Intent intent = new Intent();
-				intent.setClass(getApplicationContext() ,Chinese.class);
+				intent.setClass(getApplicationContext() ,chinese.class);
 				intent.putExtra("selected" ,selected);
 				startActivity(intent);
 			}
@@ -197,31 +288,73 @@ public class MainActivity extends Activity
 		switch(selected)
 		{
 			case 1:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.yes));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.no));
+
 				Chinese_imageView.setImageResource(R.drawable.main_first_up);
 				math_imageView.setImageResource(R.drawable.main_first_up);
 				English_imageView.setImageResource(R.drawable.main_first_up);
 				break;
 			case 2:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.yes));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.no));
+
 				Chinese_imageView.setImageResource(R.drawable.main_second_up);
 				math_imageView.setImageResource(R.drawable.main_second_up);
 				English_imageView.setImageResource(R.drawable.main_second_up);
 				break;
 			case 3:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.yes));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.no));
+
 				Chinese_imageView.setImageResource(R.drawable.main_third_up);
 				math_imageView.setImageResource(R.drawable.main_third_up);
 				English_imageView.setImageResource(R.drawable.main_third_up);
 				break;
 			case 4:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.yes));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.no));
+
 				Chinese_imageView.setImageResource(R.drawable.main_fourth_up);
 				math_imageView.setImageResource(R.drawable.main_fourth_up);
 				English_imageView.setImageResource(R.drawable.main_fourth_up);
 				break;
 			case 5:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.yes));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.no));
+
 				Chinese_imageView.setImageResource(R.drawable.main_fifth_up);
 				math_imageView.setImageResource(R.drawable.main_fifth_up);
 				English_imageView.setImageResource(R.drawable.main_fifth_up);
 				break;
 			case 6:
+				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_four.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_five.setBackgroundColor(getResources().getColor(R.color.no));
+				textView_six.setBackgroundColor(getResources().getColor(R.color.yes));
+
 				Chinese_imageView.setImageResource(R.drawable.main_sixth_up);
 				math_imageView.setImageResource(R.drawable.main_sixth_up);
 				English_imageView.setImageResource(R.drawable.main_sixth_up);

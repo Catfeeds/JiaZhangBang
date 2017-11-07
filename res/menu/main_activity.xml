@@ -4,7 +4,7 @@
     <item
         android:id="@+id/main_menu_setting_menu"
         android:showAsAction="always"
-        android:icon="@drawable/main_setting" 
+        android:icon="@drawable/main_setting"
         android:title="设置">
         <menu>
             <item

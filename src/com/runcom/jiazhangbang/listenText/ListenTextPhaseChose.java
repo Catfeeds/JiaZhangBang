@@ -40,7 +40,7 @@ public class ListenTextPhaseChose extends Activity
 
 	}
 
-	public void firstPhase(View v )
+	public void listenTextPhaseChoseFirstPhase(View v )
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
@@ -55,7 +55,7 @@ public class ListenTextPhaseChose extends Activity
 			startActivity(intent);
 	}
 
-	public void secondPhase(View v )
+	public void listenTextPhaseChoseSecondPhase(View v )
 	{
 
 		intent = new Intent();

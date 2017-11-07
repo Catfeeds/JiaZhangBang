@@ -1,4 +1,4 @@
-package com.runcom.jiazhangbang.Chinese;
+package com.runcom.jiazhangbang.chinese;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -20,7 +20,7 @@ import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.umeng.analytics.MobclickAgent;
 
-public class Chinese extends Activity
+public class chinese extends Activity
 {
 	Intent intent = new Intent();
 	int selected;

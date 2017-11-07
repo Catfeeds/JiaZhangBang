@@ -9,51 +9,147 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:spinnerMode="dropdown" >
+        android:spinnerMode="dropdown"
+        android:visibility="gone" >
     </Spinner>
 
-    <ImageView
-        android:id="@+id/Chinese_imageView"
+    <HorizontalScrollView
+        android:id="@+id/main_top_scrollview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignStart="@+id/chinese_imageView"
+        android:layout_below="@+id/main_spinner"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="@dimen/main_activity_top_chinese_math_english_imageview_margin"
+        android:orientation="horizontal"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/main_top_linearlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:gravity="center_vertical|start" >
+
+            <TextView
+                android:id="@+id/main_top_one_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginStart="0dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:text="@string/main_activity_main_one"
+                android:textSize="@dimen/main_activity_top_textsize" />
+
+            <TextView
+                android:id="@+id/main_top_two_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:text="@string/main_activity_main_two"
+                android:textSize="@dimen/main_activity_top_textsize" />
+
+            <TextView
+                android:id="@+id/main_top_three_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:text="@string/main_activity_main_three"
+                android:textSize="@dimen/main_activity_top_textsize" />
+
+            <TextView
+                android:id="@+id/main_top_four_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:text="@string/main_activity_main_four"
+                android:textSize="@dimen/main_activity_top_textsize" />
+
+            <TextView
+                android:id="@+id/main_top_five_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:text="@string/main_activity_main_five"
+                android:textSize="@dimen/main_activity_top_textsize" />
+
+            <TextView
+                android:id="@+id/main_top_six_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/main_activity_top_background_no_chose"
+                android:clickable="true"
+                android:focusable="true"
+                android:text="@string/main_activity_main_six"
+                android:textSize="@dimen/main_activity_top_textsize"
+                android:visibility="visible" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <ImageView
+        android:id="@+id/chinese_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/math_imageView"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="5dp"
-        android:contentDescription="语文"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="15dp"
+        android:contentDescription="@string/main_activity_main_chinese"
         android:src="@drawable/ic_launcher" />
 
     <ImageView
         android:id="@+id/math_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_spinner"
+        android:layout_below="@+id/main_top_scrollview"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="29dp"
-        android:contentDescription="数学"
+        android:layout_marginTop="@dimen/main_activity_top_chinese_math_english_imageview_margin"
+        android:contentDescription="@string/main_activity_main_math"
         android:src="@drawable/ic_launcher" />
 
     <ImageView
         android:id="@+id/English_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/Chinese_imageView"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="17dp"
-        android:contentDescription="英语"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/chinese_imageView"
+        android:layout_marginEnd="17dp"
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/main_activity_main_english"
         android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/Chinese_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Chinese_imageView"
-        android:layout_below="@+id/Chinese_imageView"
-        android:layout_marginLeft="15dp"
+        android:layout_alignStart="@+id/chinese_imageView"
+        android:layout_below="@+id/chinese_imageView"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="17dp"
-        android:gravity="left"
-        android:text="n年级语文" />
+        android:gravity="start"
+        android:text="@string/main_activity_main_chinese"
+        android:textSize="@dimen/main_activity_top_chinese_math_english_textsize" />
 
     <TextView
         android:id="@+id/math_textView"
@@ -62,17 +158,19 @@
         android:layout_alignBaseline="@+id/Chinese_textView"
         android:layout_alignBottom="@+id/Chinese_textView"
         android:layout_centerHorizontal="true"
-        android:text="n年级数学" />
+        android:text="@string/main_activity_main_math"
+        android:textSize="@dimen/main_activity_top_chinese_math_english_textsize" />
 
     <TextView
         android:id="@+id/English_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/math_textView"
-        android:layout_alignRight="@+id/English_imageView"
-        android:layout_marginRight="15dp"
-        android:gravity="right"
-        android:text="n年级英语" />
+        android:layout_alignEnd="@+id/English_imageView"
+        android:layout_marginEnd="15dp"
+        android:gravity="end"
+        android:text="@string/main_activity_main_english"
+        android:textSize="@dimen/main_activity_top_chinese_math_english_textsize" />
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -90,16 +188,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:text="培训课程" />
+                android:text="@string/main_activity_main_course" />
 
             <TextView
                 android:id="@+id/animation_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/course_textView"
+                android:layout_alignStart="@+id/course_textView"
                 android:layout_below="@+id/course_textView"
                 android:layout_marginTop="57dp"
-                android:text="动画配音" />
+                android:text="@string/main_activity_main_animation" />
 
             <TextView
                 android:id="@+id/story_textView"
@@ -108,7 +206,7 @@
                 android:layout_below="@+id/animation_textView"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="57dp"
-                android:text="听故事" />
+                android:text="@string/main_activity_main_story" />
         </RelativeLayout>
     </ScrollView>
 

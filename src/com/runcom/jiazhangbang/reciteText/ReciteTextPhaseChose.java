@@ -37,11 +37,16 @@ public class ReciteTextPhaseChose extends Activity
 		String content = "背课文 " + selected + "年级";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
-
+		// System.out.println("初始化。。。");
+		// Toast.makeText(getApplicationContext() ,"初始化。。。"
+		// ,Toast.LENGTH_LONG).show();
 	}
 
-	public void firstPhase(View v )
+	public void reciteTextPhaseChoseFirstPhase(View v )
 	{
+		// System.out.println("初始化上册。。。");
+		// Toast.makeText(getApplicationContext() ,"初始化上册。。。"
+		// ,Toast.LENGTH_LONG).show();
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
 		intent.putExtra("phase" ,1);
@@ -55,8 +60,11 @@ public class ReciteTextPhaseChose extends Activity
 			startActivity(intent);
 	}
 
-	public void secondPhase(View v )
+	public void reciteTextPhaseChoseSecondPhase(View v )
 	{
+		// System.out.println("初始化下册。。。");
+		// Toast.makeText(getApplicationContext() ,"初始化下册。。。"
+		// ,Toast.LENGTH_LONG).show();
 
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);

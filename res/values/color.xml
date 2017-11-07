@@ -9,5 +9,7 @@
     <color name="activity_main_setting_and_help_background_backup">#BDBBB9</color>
     <color name="activity_chinese_background_backup">#80B547</color>
     <color name="activity_chinese_background">#ffffff</color>
+    <color name="main_activity_top_background_chose">#7DCBE7</color>
+    <color name="main_activity_top_background_no_chose">#25CB73</color>
 
 </resources>

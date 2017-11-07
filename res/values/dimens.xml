@@ -6,5 +6,8 @@
     <dimen name="activity_chinese_tablerow_button_heigh">157dp</dimen>
     <dimen name="activity_chinese_tablerow_button_margin">5dp</dimen>
     <dimen name="activity_view_margin">5dp</dimen>
+    <dimen name="main_activity_top_textsize">22sp</dimen>
+    <dimen name="main_activity_top_chinese_math_english_textsize">17sp</dimen>
+    <dimen name="main_activity_top_chinese_math_english_imageview_margin">17dp</dimen>
 
 </resources>
