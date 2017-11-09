@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- app_main -->
     <string name="app_name">Jiazhangbang</string>
     <string name="hello_world">asdf</string>
     <string name="action_settings">Settings</string>
     <string name="empty_string"></string>
+    <!-- setting_main -->
     <string name="can_not_find_version_name">1.0</string>
+    <!-- main_activity_main -->
     <string name="main_activity_main_one">一年级</string>
     <string name="main_activity_main_two">二年级</string>
     <string name="main_activity_main_three">三年级</string>
@@ -27,5 +30,16 @@
         <item>5年级</item>
         <item>6年级</item>
     </string-array>
+    <!-- chinese_main -->
+    <string name="activity_chinese_listen_text">听课文</string>
+    <string name="activity_chinese_listen_write">听写</string>
+    <string name="activity_chinese_recite_text">背课文</string>
+    <string name="activity_chinese_repeat">跟读</string>
+    <string name="activity_chinese_findnewwords">查生词</string>
+    <string name="activity_chinese_comingsoon">敬请期待</string>
+
+    <!-- listen_write_main -->
+    <string name="listen_write_main_pause">暂停</string>
+    <string name="listen_write_main_stop">结束</string>
 
 </resources>

@@ -20,7 +20,7 @@
         android:layout_alignStart="@+id/chinese_imageView"
         android:layout_below="@+id/main_spinner"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="5dp"
+        android:layout_marginEnd="@dimen/normal_view_margin05"
         android:layout_marginTop="@dimen/main_activity_top_chinese_math_english_imageview_margin"
         android:orientation="horizontal"
         android:scrollbars="none" >
@@ -36,8 +36,8 @@
                 android:id="@+id/main_top_one_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_marginStart="0dp"
+                android:layout_margin="@dimen/normal_view_margin05"
+                android:layout_marginStart="@dimen/normal_view_margin00"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -49,7 +49,7 @@
                 android:id="@+id/main_top_two_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/normal_view_margin05"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -61,7 +61,7 @@
                 android:id="@+id/main_top_three_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/normal_view_margin05"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -73,7 +73,7 @@
                 android:id="@+id/main_top_four_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/normal_view_margin05"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -85,7 +85,7 @@
                 android:id="@+id/main_top_five_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/normal_view_margin05"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -97,7 +97,7 @@
                 android:id="@+id/main_top_six_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/normal_view_margin05"
                 android:background="@color/main_activity_top_background_no_chose"
                 android:clickable="true"
                 android:focusable="true"
@@ -113,8 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/math_imageView"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginEnd="@dimen/normal_view_margin05"
+        android:layout_marginStart="@dimen/normal_view_margin15"
         android:contentDescription="@string/main_activity_main_chinese"
         android:src="@drawable/ic_launcher" />
 
@@ -134,8 +134,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/chinese_imageView"
-        android:layout_marginEnd="17dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginEnd="@dimen/normal_view_margin18"
+        android:layout_marginStart="@dimen/normal_view_margin05"
         android:contentDescription="@string/main_activity_main_english"
         android:src="@drawable/ic_launcher" />
 
@@ -145,8 +145,8 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/chinese_imageView"
         android:layout_below="@+id/chinese_imageView"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginStart="@dimen/normal_view_margin15"
+        android:layout_marginTop="@dimen/normal_view_margin18"
         android:gravity="start"
         android:text="@string/main_activity_main_chinese"
         android:textSize="@dimen/main_activity_top_chinese_math_english_textsize" />
@@ -167,7 +167,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/math_textView"
         android:layout_alignEnd="@+id/English_imageView"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="@dimen/normal_view_margin15"
         android:gravity="end"
         android:text="@string/main_activity_main_english"
         android:textSize="@dimen/main_activity_top_chinese_math_english_textsize" />
@@ -176,7 +176,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@+id/math_textView"
-        android:layout_marginTop="27dp" >
+        android:layout_marginTop="@dimen/normal_view_margin27" >
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -196,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/course_textView"
                 android:layout_below="@+id/course_textView"
-                android:layout_marginTop="57dp"
+                android:layout_marginTop="@dimen/normal_view_margin57"
                 android:text="@string/main_activity_main_animation" />
 
             <TextView
@@ -205,7 +205,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/animation_textView"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="57dp"
+                android:layout_marginTop="@dimen/normal_view_margin57"
                 android:text="@string/main_activity_main_story" />
         </RelativeLayout>
     </ScrollView>

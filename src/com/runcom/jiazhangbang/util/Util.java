@@ -136,6 +136,11 @@ public class Util
 	public static final int lyricChinese = 3;
 	public static final int lyricAll = 4;
 
+	public static final String okHttpUtilsResultStringKey = "result";
+	public static final String okHttpUtilsResultStringValue = "0";
+	public static final String okHttpUtilsMesgStringKey = "mesg";
+	public static final String okHttpUtilsMesgStringValue = "";
+
 	public static String getVersionName(Context context )
 	{
 		try

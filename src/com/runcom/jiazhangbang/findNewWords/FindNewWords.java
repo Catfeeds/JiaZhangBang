@@ -120,7 +120,15 @@ public class FindNewWords extends Activity
 			public void onResponse(String arg0 , int arg1 )
 			{
 				// initData();
-				initDataAfter();
+				if(arg0 == null)
+				{
+					finish();
+				}
+				else
+					if(Util.okHttpUtilsResultStringValue.equals(arg0))
+					{
+						initDataAfter();
+					}
 			}
 
 			@Override
@@ -128,10 +136,12 @@ public class FindNewWords extends Activity
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
-				System.out.println(jsonObject.getString("result"));
-				if( !"0".equals(jsonObject.getString("result").toString()))
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				System.out.println(result);
+				String mesg = jsonObject.getString(Util.okHttpUtilsMesgStringKey);
+				if( !Util.okHttpUtilsResultStringValue.equals(result.toString()))
 				{
-					Toast.makeText(getApplicationContext() ,jsonObject.getString("mesg") ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,mesg != null ? mesg : "服务器异常， 请联系管理员！" ,Toast.LENGTH_SHORT).show();
 					return null;
 				}
 				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
@@ -156,7 +166,7 @@ public class FindNewWords extends Activity
 					newWordsMap.put(phrase ,"pinyin:\n\t" + pinyin + "\ndesc:\n\t" + desc + "\ntype:\n\t" + type);
 					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
 				}
-				return null;
+				return result;
 			}
 		});
 	}
@@ -185,7 +195,15 @@ public class FindNewWords extends Activity
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				initDataAfter();
+				if(arg0 == null)
+				{
+					finish();
+				}
+				else
+					if(Util.okHttpUtilsResultStringValue.equals(arg0))
+					{
+						initDataAfter();
+					}
 			}
 
 			@Override
@@ -194,10 +212,12 @@ public class FindNewWords extends Activity
 				String response = arg0.body().string().trim();
 				System.out.println(response);
 				JSONObject jsonObject = new JSONObject(response);
-				System.out.println(jsonObject.getString("result"));
-				if( !"0".equals(jsonObject.getString("result").toString()))
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				System.out.println(result);
+				String mesg = jsonObject.getString(Util.okHttpUtilsMesgStringKey);
+				if( !Util.okHttpUtilsResultStringValue.equals(result))
 				{
-					Toast.makeText(getApplicationContext() ,jsonObject.getString("mesg") ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,mesg.equals(Util.okHttpUtilsMesgStringValue) ? mesg : "服务器异常，请联系管理员！" ,Toast.LENGTH_SHORT).show();
 					return null;
 				}
 				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
@@ -222,7 +242,7 @@ public class FindNewWords extends Activity
 					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
 
 				}
-				return null;
+				return result;
 			}
 
 		});
@@ -231,7 +251,6 @@ public class FindNewWords extends Activity
 
 	private void initDataAfter()
 	{
-		System.out.println("gegezhixingle ");
 		for(int i = 0 ; i < autoCompleteTextViewArrayString1.length ; i ++ )
 		{
 			System.out.println("autoCompleteTextViewArrayString1:" + i + autoCompleteTextViewArrayString1[i]);
@@ -280,9 +299,10 @@ public class FindNewWords extends Activity
 				// contents = s.toString();
 				// loadingData(s.toString());
 				// 隐藏输入法
-				InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				// 显示或者隐藏输入法
-				imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
+				// InputMethodManager imm = (InputMethodManager)
+				// getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				// // 显示或者隐藏输入法
+				// imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 		autoCompleteTextView.setOnItemClickListener(new OnItemClickListener()
@@ -290,13 +310,13 @@ public class FindNewWords extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				// contents = parent.getItemAtPosition(position).toString();
-				// loadingData(contents);
-				// TODO
+				contents = parent.getItemAtPosition(position).toString();
+				loadingData(contents);
 				// 隐藏输入法
-				InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				// 显示或者隐藏输入法
-				imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
+				// InputMethodManager imm = (InputMethodManager)
+				// getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+				// // 显示或者隐藏输入法
+				// imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 
@@ -323,7 +343,7 @@ public class FindNewWords extends Activity
 	}
 
 	@SuppressWarnings("unused")
-	private void HideOrShowInputMethod()
+	private void hideOrShowInputMethod()
 	{
 		// 隐藏输入法
 		InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);

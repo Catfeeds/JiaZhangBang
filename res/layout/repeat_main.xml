@@ -30,7 +30,7 @@
 
     <com.runcom.jiazhangbang.listenText.LyricView
         android:id="@+id/listenText_lyricShow"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/listen_write_textView_nameShow"
         android:layout_alignParentRight="true"

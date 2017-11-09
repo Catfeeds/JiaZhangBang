@@ -9,5 +9,25 @@
     <dimen name="main_activity_top_textsize">22sp</dimen>
     <dimen name="main_activity_top_chinese_math_english_textsize">17sp</dimen>
     <dimen name="main_activity_top_chinese_math_english_imageview_margin">17dp</dimen>
+    <dimen name="normal_view_margin00">00dp</dimen>
+    <dimen name="normal_view_margin01">01dp</dimen>
+    <dimen name="normal_view_margin02">02dp</dimen>
+    <dimen name="normal_view_margin03">03dp</dimen>
+    <dimen name="normal_view_margin04">04dp</dimen>
+    <dimen name="normal_view_margin05">05dp</dimen>
+    <dimen name="normal_view_margin07">07dp</dimen>
+    <dimen name="normal_view_margin10">10dp</dimen>
+    <dimen name="normal_view_margin11">11dp</dimen>
+    <dimen name="normal_view_margin15">15dp</dimen>
+    <dimen name="normal_view_margin18">18dp</dimen>
+    <dimen name="normal_view_margin20">20dp</dimen>
+    <dimen name="normal_view_margin22">22dp</dimen>
+    <dimen name="normal_view_margin25">25dp</dimen>
+    <dimen name="normal_view_margin27">27dp</dimen>
+    <dimen name="normal_view_margin33">33dp</dimen>
+    <dimen name="normal_view_margin38">38dp</dimen>
+    <dimen name="normal_view_margin44">44dp</dimen>
+    <dimen name="normal_view_margin57">57dp</dimen>
+    <dimen name="normal_view_margin80">80dp</dimen>
 
 </resources>

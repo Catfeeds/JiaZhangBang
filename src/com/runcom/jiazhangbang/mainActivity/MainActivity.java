@@ -29,7 +29,7 @@ import com.gr.okhttp.callback.Callback;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.chinese.chinese;
+import com.runcom.jiazhangbang.chinese.Chinese;
 import com.runcom.jiazhangbang.setting.PlaySetting;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -206,7 +206,7 @@ public class MainActivity extends Activity
 				// new Text2Speech(getApplicationContext() , selected +
 				// "Äê¼¶ÓïÎÄ").play();
 				Intent intent = new Intent();
-				intent.setClass(getApplicationContext() ,chinese.class);
+				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
 				startActivity(intent);
 			}

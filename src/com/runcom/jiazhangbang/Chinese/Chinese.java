@@ -19,11 +19,16 @@ import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.umeng.analytics.MobclickAgent;
+/**
+ * chinese 
+ * @author Administrator
+ *
+ */
 
-public class chinese extends Activity
+public class Chinese extends Activity
 {
-	Intent intent = new Intent();
-	int selected;
+	private Intent intent = new Intent();
+	private int selected;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -42,7 +47,7 @@ public class chinese extends Activity
 
 	}
 
-	public void ListenText(View v )
+	public void listenText(View v )
 	{
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ListenTextPhaseChose.class);
@@ -52,10 +57,12 @@ public class chinese extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
+		{
 			startActivity(intent);
+		}
 	}
 
-	public void ListenAndWrite(View v )
+	public void listenAndWrite(View v )
 	{
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ListenWritePhaseChose.class);
@@ -65,10 +72,12 @@ public class chinese extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
+		{
 			startActivity(intent);
+		}
 	}
 
-	public void ReciteText(View v )
+	public void reciteText(View v )
 	{
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ReciteTextPhaseChose.class);
@@ -78,6 +87,7 @@ public class chinese extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
+		{
 			// if( !new
 			// ServerUtil().execute(Util.serverAddress).equals("success") )
 			// {
@@ -86,9 +96,10 @@ public class chinese extends Activity
 			// }
 			// else
 			startActivity(intent);
+		}
 	}
 
-	public void Repeat(View v )
+	public void repeat(View v )
 	{
 		// Toast.makeText(getApplicationContext() ,"¸ú¶Á"
 		// ,Toast.LENGTH_SHORT).show();
@@ -100,6 +111,7 @@ public class chinese extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
+		{
 			// if( !new
 			// ServerUtil().execute(Util.serverAddress).equals("success") )
 			// {
@@ -108,9 +120,10 @@ public class chinese extends Activity
 			// }
 			// else
 			startActivity(intent);
+		}
 	}
 
-	public void FindNewWords(View v )
+	public void findNewWords(View v )
 	{
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,FindNewWords.class);
@@ -120,6 +133,7 @@ public class chinese extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
+		{
 			// if( !new
 			// ServerUtil().execute(Util.serverAddress).equals("success") )
 			// {
@@ -129,11 +143,12 @@ public class chinese extends Activity
 
 			// else
 			startActivity(intent);
+		}
 		// Toast.makeText(getApplicationContext() ,"²éÉú´Ê"
 		// ,Toast.LENGTH_SHORT).show();
 	}
 
-	public void ComingSoon(View v )
+	public void comingSoon(View v )
 	{
 		// MyNotification.myNotification(getApplicationContext());
 		// intent.putExtra("selected" ,selected);
@@ -182,6 +197,8 @@ public class chinese extends Activity
 		{
 			case android.R.id.home:
 				onBackPressed();
+				break;
+			default:
 				break;
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,87 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chinese_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_span="2"
     android:background="@color/activity_chinese_background"
     android:orientation="vertical" >
 
-    <ScrollView
+    <TableLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_view_margin"
+        android:layout_marginLeft="@dimen/activity_view_margin"
+        android:layout_marginRight="@dimen/activity_view_margin"
+        android:layout_marginTop="@dimen/activity_view_margin"
+        android:shrinkColumns="*"
+        android:stretchColumns="*" >
 
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_view_margin"
-            android:layout_marginLeft="@dimen/activity_view_margin"
-            android:layout_marginRight="@dimen/activity_view_margin"
-            android:layout_marginTop="@dimen/activity_view_margin"
-            android:shrinkColumns="*"
-            android:stretchColumns="*" >
+        <TableRow>
 
-            <TableRow>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_listen_text"
+                android:onClick="listenText"
+                android:text="@string/activity_chinese_listen_text" >
+            </Button>
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_listen_text"
-                    android:onClick="ListenText"
-                    android:text="听课文" >
-                </Button>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_write_text"
+                android:onClick="listenAndWrite"
+                android:text="@string/activity_chinese_listen_write" >
+            </Button>
+        </TableRow>
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_write_text"
-                    android:onClick="ListenAndWrite"
-                    android:text="听写" >
-                </Button>
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_recite_text"
+                android:onClick="reciteText"
+                android:text="@string/activity_chinese_recite_text" >
+            </Button>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_recite_text"
-                    android:onClick="ReciteText"
-                    android:text="背课文" >
-                </Button>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_read_text"
+                android:onClick="repeat"
+                android:text="@string/activity_chinese_repeat" >
+            </Button>
+        </TableRow>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_read_text"
-                    android:onClick="Repeat"
-                    android:text="跟读" >
-                </Button>
-            </TableRow>
+        <TableRow>
 
-            <TableRow>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_think_text"
+                android:onClick="findNewWords"
+                android:text="@string/activity_chinese_findnewwords" >
+            </Button>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_think_text"
-                    android:onClick="FindNewWords"
-                    android:text="查生词" >
-                </Button>
+            <Button
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/chinese_do_text"
+                android:onClick="comingSoon"
+                android:text="@string/activity_chinese_comingsoon" >
+            </Button>
+        </TableRow>
+    </TableLayout>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
-                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                    android:background="@drawable/chinese_do_text"
-                    android:onClick="ComingSoon"
-                    android:text="敬请期待" />
-            </TableRow>
-        </TableLayout>
-    </ScrollView>
-
-</LinearLayout>
+</ScrollView>
