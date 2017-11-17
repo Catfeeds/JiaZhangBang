@@ -170,7 +170,7 @@ public class FindNewWords extends Activity
 			}
 		});
 	}
-
+ 
 	/**
 	 * 
 	 */
@@ -205,7 +205,7 @@ public class FindNewWords extends Activity
 						initDataAfter();
 					}
 			}
-
+ 
 			@Override
 			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 			{
