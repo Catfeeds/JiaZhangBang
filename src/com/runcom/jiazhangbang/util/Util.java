@@ -1,5 +1,6 @@
 package com.runcom.jiazhangbang.util;
 
+//superTextView BRVAH ARouter smartRefreshlayout takePhoto rxpermission okGo
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -54,7 +55,7 @@ public class Util
 		String dev = android.provider.Settings.Secure.getString(context.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 		String lang = Locale.getDefault().getLanguage();
 		if(lang.contains("zh"))
-			lang = "zh-Hans";// 中文是zh-Hans或zh-Hans-CN，英文是en或en-US
+			lang = "zh-Hans-CN";// 中文是zh-Hans或zh-Hans-CN，英文是en或en-US
 		else
 			lang = "en";
 		String ver = packageInfo.versionName;
@@ -106,23 +107,39 @@ public class Util
 	public static final String recordPath = "record/";
 	public static final String RECORDPATH = APPPATH + recordPath;
 
-	public static final String SERVER = "http://106.14.208.25:8080/";
-	public static final String SERVERADDRESS = SERVER + "Jiazhangbang/";
-	public static final String SERVER_RESOURCE = SERVER + "wgcwgc/";
+	// public static final String SERVERADDRESS = SERVER + "Jiazhangbang/";
+	// public static final String SERVER_RESOURCE = SERVER + "wgcwgc/";
+	//
+	// public static final String SERVERADDRESS_findNewWords = SERVERADDRESS +
+	// "findNewWords.jsp?type=0";
+	// public static final String SERVERADDRESS_listenText = SERVERADDRESS +
+	// "listenText.jsp?type=0";
+	// public static final String SERVERADDRESS_listenWrite = SERVERADDRESS +
+	// "listenWrite.jsp?type=0";
+	// public static final String SERVERADDRESS_listenWriteCopy = SERVERADDRESS
+	// + "listenWriteCopy.jsp?type=3";
+	// public static final String SERVERADDRESS_listenWriteBackups =
+	// SERVERADDRESS + "listenWriteBackups.jsp?type=4";
+	// public static final String SERVERADDRESS_listenWriteTips = SERVERADDRESS
+	// + "listenWriteTips.jsp?type=5";
+	// public static final String SERVERADDRESS_listenWriteMain = SERVERADDRESS
+	// + "listenWriteMain.jsp?type=6";
+	// public static final String SERVERADDRESS_reciteText = SERVERADDRESS +
+	// "reciteText.jsp?type=0";
+	// public static final String SERVERADDRESS_reciteTextMain = SERVERADDRESS +
+	// "reciteText.jsp?type=1";
+	// public static final String SERVERADDRESS_repeat = SERVERADDRESS +
+	// "repeat.jsp?type=0";
+	// public static final String SERVERADDRESS_update_version_name =
+	// SERVERADDRESS + "update.jsp?type=2";
+	public static final String SERVER = "http://172.16.0.119:8080/";
+	public static final String SERVERADDRESS = SERVER + "JiaZhangBang/";
+	public static final String SERVER_RESOURCE = SERVER + "JiaZhangBang/";
 
-	public static final String SERVERADDRESS_findNewWords = SERVERADDRESS + "findNewWords.jsp?type=0";
-	public static final String SERVERADDRESS_listenText = SERVERADDRESS + "listenText.jsp?type=0";
-	public static final String SERVERADDRESS_listenWrite = SERVERADDRESS + "listenWrite.jsp?type=0";
-	public static final String SERVERADDRESS_listenWriteCopy = SERVERADDRESS + "listenWriteCopy.jsp?type=3";
-	public static final String SERVERADDRESS_listenWriteBackups = SERVERADDRESS + "listenWriteBackups.jsp?type=4";
-	public static final String SERVERADDRESS_listenWriteTips = SERVERADDRESS + "listenWriteTips.jsp?type=5";
-	public static final String SERVERADDRESS_listenWriteMain = SERVERADDRESS + "listenWriteMain.jsp?type=6";
-	public static final String SERVERADDRESS_reciteText = SERVERADDRESS + "reciteText.jsp?type=0";
-	public static final String SERVERADDRESS_reciteTextMain = SERVERADDRESS + "reciteText.jsp?type=1";
 	public static final String SERVERADDRESS_repeat = SERVERADDRESS + "repeat.jsp?type=0";
-	public static final String SERVERADDRESS_update_version_name = SERVERADDRESS + "update.jsp?type=2";
+	public static final String SERVERADDRESS_update_version_name = SERVERADDRESS + "update.jsp";
 
-	public static final String SERVERADDRESS_update = SERVER_RESOURCE + "update/JiaZhangBang.apk";
+	public static final String SERVERADDRESS_update = SERVER_RESOURCE + "JiaZhangBang.apk";
 
 	public static final String Mp3Server = SERVER_RESOURCE + "mp3/";
 	public static final String NewWordsServer = SERVER_RESOURCE + "t2s2/";

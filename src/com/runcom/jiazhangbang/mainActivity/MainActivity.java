@@ -7,6 +7,7 @@ import okhttp3.Response;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import com.runcom.jiazhangbang.setting.PlaySetting;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
+@SuppressLint("ResourceAsColor")
 public class MainActivity extends Activity
 {
 
@@ -57,19 +59,20 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// ActionBar actionbar = getActionBar();
-		// if(actionbar != null)
-		// {
-		// actionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		// actionbar.setCustomView(R.layout.activity_main_actionbar_custom);
-		// }
-		// actionbar.setTitle(R.string.app_name);
-		// actionbar.setIcon(R.drawable.ic_interface);
-
-		// SpeechUtility.createUtility(this ,"appid=590aeb53");
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
 		arrayAdapter = ArrayAdapter.createFromResource(this ,R.array.classes ,R.layout.simple_spinner_item);
 		arrayAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+
+		// SlidingMenu menu = new SlidingMenu(this);
+		// menu.setMode(SlidingMenu.LEFT);
+		// menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+
+		// menu.setShadowWidthRes(R.dimen.normal_view_margin18);
+		// menu.setShadowDrawable(R.drawable.app_ic);
+		// menu.setBehindOffsetRes(R.dimen.normal_view_margin18);
+		// menu.setFadeDegree(0.35f);
+		// menu.attachToActivity(this ,SlidingMenu.SLIDING_CONTENT);
+		// menu.setMenu(R.layout.asdf);
 
 		spinner = (Spinner) findViewById(R.id.main_spinner);
 		spinner.setAdapter(arrayAdapter);
@@ -97,7 +100,7 @@ public class MainActivity extends Activity
 				initImageView(selected);
 			}
 		});
-		
+
 		textView_two.setOnClickListener(new OnClickListener()
 		{
 
@@ -111,7 +114,7 @@ public class MainActivity extends Activity
 				initImageView(selected);
 			}
 		});
-		
+
 		textView_three.setOnClickListener(new OnClickListener()
 		{
 

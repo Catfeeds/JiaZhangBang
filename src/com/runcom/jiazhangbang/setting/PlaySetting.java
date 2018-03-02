@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,9 @@ public class PlaySetting extends Activity
 	private ImageView setting_speech_recognition , setting_clearCache_detail ,
 	        setting_opinion_detail , setting_checkUpdate_detail ,
 	        setting_aboutUs_detail;
+	private TableRow setting_speech_recognition_tableRow ,
+	        setting_clearCache_tableRow , setting_opinion_tableRow ,
+	        setting_checkUpdate_tableRow , setting_aboutUs_tableRow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -49,26 +53,36 @@ public class PlaySetting extends Activity
 		setting_speech_recognition_textView.setOnClickListener(listener);
 		setting_speech_recognition = (ImageView) findViewById(R.id.setting_speech_recognition);
 		setting_speech_recognition.setOnClickListener(listener);
+		setting_speech_recognition_tableRow = (TableRow) findViewById(R.id.setting_speech_recognition_tableRow);
+		setting_speech_recognition_tableRow.setOnClickListener(listener);
 
 		setting_clearCache_textView = (TextView) findViewById(R.id.setting_clearCache_textView);
 		setting_clearCache_textView.setOnClickListener(listener);
 		setting_clearCache_detail = (ImageView) findViewById(R.id.setting_clearCache_detail);
 		setting_clearCache_detail.setOnClickListener(listener);
+		setting_clearCache_tableRow = (TableRow) findViewById(R.id.setting_clearCache_tableRow);
+		setting_clearCache_tableRow.setOnClickListener(listener);
 
 		setting_opinion_textView = (TextView) findViewById(R.id.setting_opinion_textView);
 		setting_opinion_textView.setOnClickListener(listener);
 		setting_opinion_detail = (ImageView) findViewById(R.id.setting_opinion_detail);
 		setting_opinion_detail.setOnClickListener(listener);
+		setting_opinion_tableRow = (TableRow) findViewById(R.id.setting_opinion_tableRow);
+		setting_opinion_tableRow.setOnClickListener(listener);
 
 		setting_checkUpdate_textView = (TextView) findViewById(R.id.setting_checkUpdate_textView);
 		setting_checkUpdate_textView.setOnClickListener(listener);
 		setting_checkUpdate_detail = (ImageView) findViewById(R.id.setting_checkUpdate_detail);
 		setting_checkUpdate_detail.setOnClickListener(listener);
+		setting_checkUpdate_tableRow = (TableRow) findViewById(R.id.setting_checkUpdate_tableRow);
+		setting_checkUpdate_tableRow.setOnClickListener(listener);
 
 		setting_aboutUs_textView = (TextView) findViewById(R.id.setting_aboutUs_textView);
 		setting_aboutUs_textView.setOnClickListener(listener);
 		setting_aboutUs_detail = (ImageView) findViewById(R.id.setting_aboutUs_detail);
 		setting_aboutUs_detail.setOnClickListener(listener);
+		setting_aboutUs_tableRow = (TableRow) findViewById(R.id.setting_aboutUs_tableRow);
+		setting_aboutUs_tableRow.setOnClickListener(listener);
 
 	}
 
@@ -83,20 +97,30 @@ public class PlaySetting extends Activity
 			switch(v.getId())
 			{
 				case R.id.setting_speech_recognition:
+				case R.id.setting_speech_recognition_textView:
+				case R.id.setting_speech_recognition_tableRow:
 					new Speech2Text(PlaySetting.this).play();
 					break;
 				case R.id.setting_clearCache_detail:
+				case R.id.setting_clearCache_textView:
+				case R.id.setting_clearCache_tableRow:
 					// Toast.makeText(getApplicationContext()
 					// ,"clearCache_detail..." ,Toast.LENGTH_SHORT).show();
 					Toast.makeText(getApplicationContext() ,"ÒÑÇå³ý57MB»º´æ" ,Toast.LENGTH_SHORT).show();
 					break;
 				case R.id.setting_opinion_detail:
+				case R.id.setting_opinion_textView:
+				case R.id.setting_opinion_tableRow:
 					Toast.makeText(getApplicationContext() ,"opinion_detail..." ,Toast.LENGTH_SHORT).show();
 					break;
 				case R.id.setting_checkUpdate_detail:
+				case R.id.setting_checkUpdate_textView:
+				case R.id.setting_checkUpdate_tableRow:
 					Update.update(PlaySetting.this);
 					break;
 				case R.id.setting_aboutUs_detail:
+				case R.id.setting_aboutUs_textView:
+				case R.id.setting_aboutUs_tableRow:
 					Toast.makeText(getApplicationContext() ,"aboutUs_detail..." ,Toast.LENGTH_SHORT).show();
 					break;
 			}

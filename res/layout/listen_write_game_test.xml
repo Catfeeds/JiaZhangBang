@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/listen_write_game_grade_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="134dp"
+        android:clickable="true"
+        android:text="年级："
+        android:textSize="27sp" />
+
+    <TextView
+        android:id="@+id/listen_write_game_phase_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="200dp"
+        android:clickable="true"
+        android:text="学期："
+        android:textSize="27sp" />
+
+    <TextView
+        android:id="@+id/listen_write_game_unit_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="268dp"
+        android:clickable="true"
+        android:text="单元："
+        android:textSize="27sp" />
+
+    <Spinner
+        android:id="@+id/listen_write_game_grade_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/listen_write_game_grade_textview"
+        android:layout_alignTop="@+id/listen_write_game_grade_textview"
+        android:layout_marginLeft="34dp"
+        android:layout_toRightOf="@+id/listen_write_game_grade_textview"
+        android:spinnerMode="dialog" />
+
+    <Spinner
+        android:id="@+id/listen_write_game_phase_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/listen_write_game_phase_textview"
+        android:layout_alignTop="@+id/listen_write_game_phase_textview"
+        android:layout_marginLeft="34dp"
+        android:layout_toRightOf="@+id/listen_write_game_phase_textview"
+        android:spinnerMode="dialog" />
+
+    <Spinner
+        android:id="@+id/listen_write_game_unit_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@+id/listen_write_game_unit_textview"
+        android:layout_alignTop="@+id/listen_write_game_unit_textview"
+        android:layout_marginLeft="34dp"
+        android:layout_toRightOf="@+id/listen_write_game_unit_textview"
+        android:spinnerMode="dialog" />
+
+    <Button
+        android:id="@+id/listen_write_game_start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listen_write_game_unit_textview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:text="开始游戏" />
+
+    <Spinner
+        android:id="@+id/listen_write_game_degree_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/listen_write_game_start_button"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/listen_write_game_start_button"
+        android:layout_marginTop="57dp"
+        android:spinnerMode="dialog" />
+
+</RelativeLayout>

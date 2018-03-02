@@ -24,12 +24,12 @@
                 android:id="@+id/MorePageTableLayout_Client"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="1.0dip"
+                android:paddingStart="1.0dp"
                 android:shrinkColumns="0"
                 android:stretchColumns="0" >
 
                 <TableRow
-                    android:id="@+id/more_page_row3"
+                    android:id="@+id/setting_speech_recognition_tableRow"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
@@ -63,7 +63,7 @@
                     android:background="#000000" />
 
                 <TableRow
-                    android:id="@+id/more_page_row4"
+                    android:id="@+id/setting_clearCache_tableRow"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
@@ -97,7 +97,7 @@
                     android:background="#000000" />
 
                 <TableRow
-                    android:id="@+id/more_page_row5"
+                    android:id="@+id/setting_opinion_tableRow"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
@@ -131,7 +131,7 @@
                     android:background="#000000" />
 
                 <TableRow
-                    android:id="@+id/more_page_row6"
+                    android:id="@+id/setting_checkUpdate_tableRow"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
@@ -165,7 +165,7 @@
                     android:background="#000000" />
 
                 <TableRow
-                    android:id="@+id/more_page_row7"
+                    android:id="@+id/setting_aboutUs_tableRow"
                     android:layout_width="fill_parent"
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"

@@ -140,7 +140,10 @@ public class ListenText extends Activity implements Runnable , OnCompletionListe
 		// map.put("phase" , "2");
 		// map.put("unit" , "4");
 		// map.put("text" , "");
-		OkHttpUtils.get().url(Util.SERVERADDRESS_listenText).build().execute(new Callback < String >()
+		// OkHttpUtils.get().url(Util.SERVERADDRESS_listenText).build().execute(new
+		// Callback < String >()
+		//TODO
+		OkHttpUtils.get().url(Util.appPath).build().execute(new Callback < String >()
 		{
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )

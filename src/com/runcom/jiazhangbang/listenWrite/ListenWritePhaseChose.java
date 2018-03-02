@@ -55,7 +55,7 @@ public class ListenWritePhaseChose extends Activity
 			startActivity(intent);
 	}
 
-	public void listenWritePhaseChoseSecondPhase(View v )
+	public void listenWritePhaseChoseSecondPhase(View v)
 	{
 
 		intent = new Intent();
@@ -72,18 +72,38 @@ public class ListenWritePhaseChose extends Activity
 
 	}
 
+	public void gameTest()
+	{
+//		Toast.makeText(getApplicationContext() ,"Ã˝–¥”Œœ∑≤‚ ‘" ,Toast.LENGTH_SHORT).show();
+		intent = new Intent();
+		intent.putExtra("selected" ,selected);
+		intent.setClass(getApplicationContext() ,ListenWriteGameTest.class);
+
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"«ÎºÏ≤ÈÕ¯¬Á¡¨Ω”" ,Toast.LENGTH_SHORT).show();
+			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+		}
+		else
+			startActivity(intent);
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.time_setting ,menu);
+		getMenuInflater().inflate(R.menu.listen_write_phasechose_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item )
 	{
+		
 		switch(item.getItemId())
 		{
+			case R.id.listen_write_phase_chose_test_item:
+				gameTest();
+				break;
 			case android.R.id.home:
 				onBackPressed();
 				break;

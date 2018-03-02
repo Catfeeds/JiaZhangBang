@@ -136,9 +136,12 @@ public class ListenWrite extends Activity implements Runnable , OnCompletionList
 		initData();
 	}
 
+	// TODO
 	private void initData()
 	{
-		OkHttpUtils.get().url(Util.SERVERADDRESS_listenWrite).build().execute(new Callback < String >()
+		// OkHttpUtils.get().url(Util.SERVERADDRESS_listenWrite).build().execute(new
+		// Callback < String >()
+		OkHttpUtils.get().url(Util.updatePath).build().execute(new Callback < String >()
 		{
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )

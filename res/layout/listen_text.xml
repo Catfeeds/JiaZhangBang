@@ -30,15 +30,13 @@
 
     <com.runcom.jiazhangbang.listenText.LyricView
         android:id="@+id/listenText_lyricShow"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/listenText_linearLayout_seekbar"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
-        android:ellipsize="marquee"
-        android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
 
         <TextView

@@ -165,7 +165,7 @@ public class FindNewWords extends Activity
 					type = "/*" + phlistJsonObject.get("type").toString() + "*/\n";
 					newWordsMap.put(phrase ,"pinyin:\n\t" + pinyin + "\ndesc:\n\t" + desc + "\ntype:\n\t" + type);
 					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
-				}
+				} 
 				return result;
 			}
 		});
