@@ -55,7 +55,7 @@ public class ListenWritePhaseChose extends Activity
 			startActivity(intent);
 	}
 
-	public void listenWritePhaseChoseSecondPhase(View v)
+	public void listenWritePhaseChoseSecondPhase(View v )
 	{
 
 		intent = new Intent();
@@ -74,7 +74,11 @@ public class ListenWritePhaseChose extends Activity
 
 	public void gameTest()
 	{
-//		Toast.makeText(getApplicationContext() ,"Ã˝–¥”Œœ∑≤‚ ‘" ,Toast.LENGTH_SHORT).show();
+		// Toast.makeText(getApplicationContext() ,"Ã˝–¥”Œœ∑≤‚ ‘"
+		// ,Toast.LENGTH_SHORT).show();
+		// TextView textView = (TextView)
+		// findViewById(R.id.listen_write_phase_chose_test_item);
+		// textView.setText("asdf");
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
 		intent.setClass(getApplicationContext() ,ListenWriteGameTest.class);
@@ -98,7 +102,7 @@ public class ListenWritePhaseChose extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item )
 	{
-		
+
 		switch(item.getItemId())
 		{
 			case R.id.listen_write_phase_chose_test_item:

@@ -11,20 +11,26 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
+import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -42,6 +48,10 @@ public class ListenWriteGameMain extends Activity
 	private MediaPlayer mediaPlayer;
 	private int currentPosition = -1 , lastPosition = -1;
 	private Boolean flag;
+	private TextView textView_historyScore , textView_currentScore;
+	private int clickCount = 0;
+	private static final String sharedPreferencesKey = "ListenWriteGameMainMenu";
+	private static final String sharedPreferencesHistoryScore = "ListenWriteGameMainMenuHistoryScore";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -69,14 +79,65 @@ public class ListenWriteGameMain extends Activity
 		initData();
 	}
 
+	/**
+	 * 随机指定范围内N个不重复的数
+	 * 
+	 * @param min
+	 *            指定范围最小值
+	 * @param max
+	 *            指定范围最大值
+	 * @param n
+	 *            随机数个数
+	 */
+	private static int [] getRandomNumber(int min , int max , int n )
+	{
+		if(n > (max - min + 1) || max < min)
+		{
+			return null;
+		}
+		int [] result = new int [n];
+		int count = 0;
+		while(count < n)
+		{
+			int num = (int) (Math.random() * (max - min)) + min;
+			boolean flag = true;
+			for(int j = 0 ; j < n ; j ++ )
+			{
+				if(num == result[j])
+				{
+					flag = false;
+					break;
+				}
+			}
+			if(flag)
+			{
+				result[count] = num;
+				count ++ ;
+			}
+		}
+		return result;
+	}
+
 	private void initView()
 	{
+		clickCount = 0;
+		textView_historyScore = (TextView) findViewById(R.id.listen_write_game_main_textView_historyScore);
+		int historyScore = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,99);
+		textView_historyScore.setText("历史成绩：" + historyScore);
+		textView_currentScore = (TextView) findViewById(R.id.listen_write_game_main_textView_currentScore);
+
 		int count = 6;
 		tempGameItemBeanList = new ArrayList < ListenWriteGameItemBean >();
+		int randomArray[] = getRandomNumber(0 ,gameItemBeanList.size() ,count);
 		for(int i = 0 ; i < count ; i ++ )
 		{
-			tempGameItemBeanList.add(gameItemBeanList.get(i));
-			tempGameItemBeanList.add(gameItemBeanList.get(i));
+			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
+//			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
+		}
+		for(int i = 0 ; i < count ; i ++ )
+		{
+//			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
+			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 		}
 		gridView = (GridView) findViewById(R.id.listen_write_game_main_gridView);
 		listenWriteGameMainGridViewAdapter = new ListenWriteGameMainGridViewAdapter(getApplicationContext() , tempGameItemBeanList);
@@ -90,9 +151,11 @@ public class ListenWriteGameMain extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
+				clickCount ++ ;
 				String content = "phrase:" + tempGameItemBeanList.get(position).getPhrase() + "\nvoice:" + tempGameItemBeanList.get(position).getVoice() + "\npinyin:" + tempGameItemBeanList.get(position).getPinyin();
 				System.out.println(content);
-				Toast.makeText(getApplicationContext() ,content ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(getApplicationContext() ,content
+				// ,Toast.LENGTH_SHORT).show();
 				mediaPlayer.reset();
 				try
 				{
@@ -120,8 +183,12 @@ public class ListenWriteGameMain extends Activity
 						{
 							// System.out.println("删除" + lastPosition + "和" +
 							// currentPosition);
-							tempGameItemBeanList.remove(currentPosition);
 							tempGameItemBeanList.remove(lastPosition);
+							if(lastPosition < currentPosition)
+							{
+								currentPosition -- ;
+							}
+							tempGameItemBeanList.remove(currentPosition);
 						}
 						listenWriteGameMainGridViewAdapter.setItemisSelectedMap(position ,false);
 						listenWriteGameMainGridViewAdapter.setItemisSelectedMap(lastPosition ,false);
@@ -133,6 +200,45 @@ public class ListenWriteGameMain extends Activity
 				else
 				{
 					// System.out.println("重复");
+					clickCount -- ;
+				}
+				textView_currentScore.setText("当前成绩：" + clickCount);
+				if(0 == tempGameItemBeanList.size())
+				{
+					new Text2Speech(getApplicationContext() , "好厉害哟").play();
+					// Toast.makeText(getApplicationContext()
+					// ,"恭喜恭喜   ！！！\r\n过关了" ,Toast.LENGTH_SHORT).show();
+					int clickCountHistory = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,999);
+					// System.out.println(clickCountHistory + "\n" +
+					// clickCount);
+					if(clickCount < clickCountHistory)
+					{
+						textView_historyScore.setText("历史成绩：" + clickCount);
+						MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,clickCount);
+						// Toast.makeText(getApplicationContext()
+						// ,"恭喜恭喜  ！！！\r\n打破自己记录了" ,Toast.LENGTH_SHORT).show();
+					}
+
+					AlertDialog.Builder successDialog = new AlertDialog.Builder(ListenWriteGameMain.this);
+					successDialog.setMessage("恭喜过关咯，再次挑战？");
+					successDialog.setPositiveButton("确定" ,new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog , int which )
+						{
+							initData();
+						}
+					});
+					successDialog.setNegativeButton("取消" ,new DialogInterface.OnClickListener()
+					{
+
+						@Override
+						public void onClick(DialogInterface dialog , int which )
+						{
+							onBackPressed();
+						}
+					});
+					successDialog.show();
 				}
 			}
 		});
@@ -272,6 +378,13 @@ public class ListenWriteGameMain extends Activity
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu )
+	{
+		getMenuInflater().inflate(R.menu.listen_write_game_main_menu ,menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	// 重写按返回键退出播放

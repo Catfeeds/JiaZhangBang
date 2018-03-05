@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/listen_write_game_main_textView_historyScore"
+        android:showAsAction="always"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="27sp"
+        android:title="历史成绩：99"/>
+    
+    <item
+        android:id="@+id/listen_write_game_main_textView_currentScore"
+        android:showAsAction="always"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="27sp"
+        android:title="当前成绩：99"/>
+
+</menu>

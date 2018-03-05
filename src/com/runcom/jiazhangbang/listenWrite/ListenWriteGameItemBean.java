@@ -2,7 +2,7 @@ package com.runcom.jiazhangbang.listenWrite;
 
 public class ListenWriteGameItemBean
 {
-	private String phrase , voice , pinyin;
+	private String phrase , voice , pinyin , flag;
 
 	public String getPhrase()
 	{
@@ -34,10 +34,20 @@ public class ListenWriteGameItemBean
 		this.pinyin = pinyin;
 	}
 
+	public String getFlag()
+	{
+		return flag;
+	}
+
+	public void setFlag(String flag )
+	{
+		this.flag = flag;
+	}
+
 	@Override
     public String toString()
     {
-	    return "ListenWriteGameItemBean [phrase=" + phrase + ", voice=" + voice + ", pinyin=" + pinyin + "]";
+	    return "ListenWriteGameItemBean [phrase=" + phrase + ", voice=" + voice + ", pinyin=" + pinyin + ", flag=" + flag + "]";
     }
 	
 }
