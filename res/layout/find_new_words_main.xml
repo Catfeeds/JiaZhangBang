@@ -152,7 +152,7 @@
             android:background="#EBEBEB"
             android:onClick="translate"
             android:layout_marginLeft="17dp"
-            android:src="@drawable/find_new_words_detail"
+            android:src="@drawable/find_new_words_text2speech"
             android:visibility="gone"/>
         
         <TextView
