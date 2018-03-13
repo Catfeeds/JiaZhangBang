@@ -43,7 +43,7 @@
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
-                        android:text="听曲识词"
+                        android:text="智能识文"
                         android:textColor="#ff333333"
                         android:textSize="16.0sp" />
 

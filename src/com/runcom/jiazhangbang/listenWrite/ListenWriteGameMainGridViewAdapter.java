@@ -73,7 +73,7 @@ public class ListenWriteGameMainGridViewAdapter extends BaseAdapter
 		}
 		else
 		{
-//			if(0 == position % 2)
+			// if(0 == position % 2)
 			if(position < listenWriteGameItemBean.size() / 2)
 				holder.phrase.setText(listenWriteGameItemBean.get(position).getPhrase());
 			else

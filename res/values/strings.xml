@@ -3,7 +3,7 @@
 
     <!-- app_main -->
     <string name="app_name">Jiazhangbang</string>
-    <string name="hello_world">asdf</string>
+    <string name="hello_world"></string>
     <string name="action_settings">Settings</string>
     <string name="empty_string"></string>
     <!-- setting_main -->
@@ -15,6 +15,20 @@
     <string name="main_activity_main_four">四年级</string>
     <string name="main_activity_main_five">五年级</string>
     <string name="main_activity_main_six">六年级</string>
+    
+    <string name="main_activity_main_one_up">一年级上册</string>
+    <string name="main_activity_main_one_dowm">一年级下册</string>
+    <string name="main_activity_main_two_up">二年级上册</string>
+    <string name="main_activity_main_two_dowm">二年级下册</string>
+    <string name="main_activity_main_three_up">三年级上册</string>
+    <string name="main_activity_main_three_dowm">三年级下册</string>
+    <string name="main_activity_main_four_up">四年级上册</string>
+    <string name="main_activity_main_four_dowm">四年级下册</string>
+    <string name="main_activity_main_five_up">五年级上册</string>
+    <string name="main_activity_main_five_dowm">五年级下册</string>
+    <string name="main_activity_main_six_up">六年级上册</string>
+    <string name="main_activity_main_six_dowm">六年级下册</string>
+    
     <string name="main_activity_main_chinese">语文</string>
     <string name="main_activity_main_math">数学</string>
     <string name="main_activity_main_english">英语</string>

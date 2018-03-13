@@ -57,7 +57,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 	// 定义线程池（同时只能有一个线程运行）
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
-	private String source , lyricsPath , name , filePath;
+	private String source , lyricsPath , filePath , resultBuffer;
 
 	// 歌词处理
 	private LrcRead mLrcRead;
@@ -79,7 +79,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(" 听曲识词 ");
+		actionbar.setTitle(" 智能识文 ");
 		// System.out.println("play 执行了");
 		initPlayView();
 	}
@@ -100,9 +100,9 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 
 		Intent intent = getIntent();
 		filePath = intent.getStringExtra("filePath");
-
-		source = Util.Mp3Server + filePath.substring(filePath.lastIndexOf("/") ,filePath.lastIndexOf(".")) + ".mp3";
-		name = filePath.substring(filePath.lastIndexOf("/") + 1 ,filePath.lastIndexOf("."));
+		resultBuffer = intent.getStringExtra("resultBuffer");
+		// TODO
+		source = "http://res.nutnet.cn:8800/cn/4-2/mp3/001-1.mp3";
 		lyricsPath = Util.LYRICSPATH + filePath.substring(filePath.lastIndexOf("/"));
 		play_list.clear();
 		play_list.add(source);
@@ -223,7 +223,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 				mp.start();
 				initSeekBar();
 				es.execute(this);
-				tv_showName.setText(name);
+				tv_showName.setText(resultBuffer);
 				btnPlay.setImageResource(R.drawable.play_start);
 				currState = PAUSE;
 			}

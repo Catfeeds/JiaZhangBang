@@ -13,10 +13,18 @@ import android.util.Log;
 public class LrcFileDownloader extends Thread
 {
 	private String lyric;
-
+	private String fileName;
+	
 	public LrcFileDownloader(String lyric)
 	{
 		this.lyric = lyric;
+		fileName = null;
+	}
+	
+	public LrcFileDownloader(String lyric , String fileName)
+	{
+		this.lyric = lyric;
+		this.fileName = fileName;
 	}
 
 	@Override
@@ -39,6 +47,10 @@ public class LrcFileDownloader extends Thread
 				// 获得网络字节输入流对象
 				InputStream is = conn.getInputStream();
 				File saveFilePath = new File(Util.LYRICSPATH + lyric.substring(lyric.lastIndexOf("/") + 1));
+				if(fileName != null)
+				{
+					saveFilePath = new File(Util.LYRICSPATH + fileName);
+				}
 				// Log.d("LOG" ,"1:" + saveFilePath.toString());
 				if( !saveFilePath.getParentFile().exists())
 				{

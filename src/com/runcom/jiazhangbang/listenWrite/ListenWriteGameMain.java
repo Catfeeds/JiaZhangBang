@@ -101,7 +101,7 @@ public class ListenWriteGameMain extends Activity
 		{
 			int num = (int) (Math.random() * (max - min)) + min;
 			boolean flag = true;
-			for(int j = 0 ; j < n ; j ++ )
+			for(int j = 0 ; j < count ; j ++ )
 			{
 				if(num == result[j])
 				{
@@ -118,7 +118,39 @@ public class ListenWriteGameMain extends Activity
 		return result;
 	}
 
-	private void initView()
+	/**
+	 * 
+	 * @param random
+	 *            数组
+	 * @return 随机数组
+	 */
+	private static int [] getRandomRandomNumber(int [] random )
+	{
+		int n = random.length;
+		int [] result = new int [n];
+		int count = 0;
+		while(count < n)
+		{
+			int num = (int) (Math.random() * n);
+			boolean flag = true;
+			for(int j = 0 ; j < count ; j ++ )
+			{
+				if(random[num] == result[j])
+				{
+					flag = false;
+					break;
+				}
+			}
+			if(flag)
+			{
+				result[count] = random[num];
+				count ++ ;
+			}
+		}
+		return result;
+	}
+
+	private void initSimpleModelView()
 	{
 		clickCount = 0;
 		textView_historyScore = (TextView) findViewById(R.id.listen_write_game_main_textView_historyScore);
@@ -132,11 +164,10 @@ public class ListenWriteGameMain extends Activity
 		for(int i = 0 ; i < count ; i ++ )
 		{
 			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
-//			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 		}
+		randomArray = getRandomRandomNumber(randomArray);
 		for(int i = 0 ; i < count ; i ++ )
 		{
-//			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 		}
 		gridView = (GridView) findViewById(R.id.listen_write_game_main_gridView);
@@ -267,7 +298,21 @@ public class ListenWriteGameMain extends Activity
 				if(leng > 0)
 				{
 					// System.out.println("连接服务器成功");
-					initView();
+					if(0 == degree)
+					{
+						initSimpleModelView();
+					}
+					else
+						if(1 == degree)
+						{
+							initMediumModeView();
+						}
+						else
+							if(2 == degree)
+							{
+								initHardModeView();
+							}
+
 				}
 				else
 				{
@@ -308,6 +353,18 @@ public class ListenWriteGameMain extends Activity
 				return result + leng + "";
 			}
 		});
+	}
+
+	private void initHardModeView()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private void initMediumModeView()
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 	@SuppressWarnings("unused")

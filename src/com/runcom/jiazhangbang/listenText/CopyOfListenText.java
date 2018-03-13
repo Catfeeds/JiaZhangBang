@@ -148,8 +148,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		map.put("grade" ,selected + "");
 		map.put("phase" ,phase + "");
 		map.put("unit" ,unit + "");
-		// System.out.println(Util.REALSERVER + "gettextlist.php?" +
-		// URL.getParameter(map));
+		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
 			@Override
@@ -187,8 +186,9 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 					else
 						if(1 < part)
 						{
-							JSONArray subjsonArray = new JSONArray(textListJsonObject.getJSONArray("partlist"));
-							for(int k = 0 , length = subjsonArray.length() ; k < length ; k ++ )
+							JSONArray subjsonArray = textListJsonObject.getJSONArray("partlist");
+							int length = subjsonArray.length();
+							for(int k = 0 ; k < length ; k ++ )
 							{
 								JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
 								play_list_title.add(subjsonObject.getString("title"));
@@ -219,8 +219,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			final int ii = i;
 			map = Util.getMap(getApplicationContext());
 			map.put("textid" ,play_list_id.get(i));
-			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 
@@ -245,10 +244,12 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 
 					myAudio = new MyAudio();
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+					String title = jsonObject_partlist.getString("title");
 					// System.out.println(lyric_copy);
-					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
-						new LrcFileDownloader(lyric_copy).start();
-					myAudio.setLyric(lyric_copy);
+					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
+					myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
+					// System.out.println(Util.LYRICSPATH + title + ".lrc");
 					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
 					// System.out.println(source_copy);
 					myAudio.setSource(source_copy);
@@ -310,7 +311,6 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/") + 1);
 		int flag = Util.lyricChinese;
 		mLrcRead = new LrcRead();
 		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
@@ -579,7 +579,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 
 	public void next()
 	{
-		// Log.d("LOG" ,currIndex + "");
+		Log.d("LOG" ,currIndex + "");
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
@@ -609,10 +609,11 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	// 蝕兵殴慧
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + ":" + play_list.size() + play_list.get(currIndex).getSource());
+		Log.d("LOG" ,"start()" + currIndex + ":" + play_list.size() + play_list.get(currIndex).getSource() + ":" + play_list.get(currIndex).getLyric());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
 			String SongPath = play_list.get(currIndex).getSource();
+			System.out.println(currIndex);
 			Log.d("LOG" ,SongPath);
 			mp.reset();
 			try
@@ -643,6 +644,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	{
 		if(currIndex < play_list.size() - 1 && currIndex >= 0)
 		{
+			System.out.println("！！！！！！！！！！！！！！！！！！！！next！！！！！！！！！！！！！！");
 			next();
 		}
 		else

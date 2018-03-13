@@ -79,8 +79,7 @@ public class ListenTextBackups extends Activity
 			map.put("course" ,Util.ChineseCourse);
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
-			// System.out.println(Util.REALSERVER + "getunitlist.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "getunitlist.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getunitlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override

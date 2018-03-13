@@ -31,10 +31,8 @@ public class Search
 				// System.out.println("Search:" + file.toString());
 				if(searchStringFromFile(context ,resultBuffer ,file.toString()))
 				{
-					// Toast.makeText(context ,resultBuffer.toString() + "\n" +
-					// file.toString() ,Toast.LENGTH_SHORT).show();
-					// System.out.println(resultBuffer.toString() + ":" +
-					// file.toString());
+//					Toast.makeText(context ,resultBuffer.toString() + "\n" + file.toString() ,Toast.LENGTH_SHORT).show();
+//					System.out.println(resultBuffer.toString() + ":" + file.toString());
 					jumpActivity(context ,file.toString() ,resultBuffer);
 					return;
 				}
@@ -62,8 +60,7 @@ public class Search
 			{
 				if(Lrc_data.contains(resultBuffer.toString()) || resultBuffer.contains(Lrc_data.toString()))
 				{
-					// System.out.println(resultBuffer.toString() + ":00:" +
-					// filePath);
+					System.out.println(resultBuffer.toString() + ":00:" + filePath);
 					return true;
 				}
 			}
@@ -79,8 +76,7 @@ public class Search
 				{
 					if(Lrc_data.contains(resultBuffer.toString()) || resultBuffer.contains(Lrc_data.toString()))
 					{
-						// System.out.println(resultBuffer.toString() + ":01:" +
-						// filePath);
+//						System.out.println(resultBuffer.toString() + ":01:" + filePath);
 						return true;
 					}
 				}

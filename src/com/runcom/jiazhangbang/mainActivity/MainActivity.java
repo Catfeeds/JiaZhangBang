@@ -44,8 +44,7 @@ public class MainActivity extends Activity
 
 	private TextView textView_one , textView_two , textView_three ,
 	        textView_four , textView_five , textView_six;
-
-	private int selected;
+	private int selected = 1;
 
 	private ImageView Chinese_imageView , math_imageView , English_imageView;
 
@@ -86,7 +85,7 @@ public class MainActivity extends Activity
 		textView_four = (TextView) findViewById(R.id.main_top_four_textview);
 		textView_five = (TextView) findViewById(R.id.main_top_five_textview);
 		textView_six = (TextView) findViewById(R.id.main_top_six_textview);
-
+ 
 		textView_one.setOnClickListener(new OnClickListener()
 		{
 
@@ -128,6 +127,7 @@ public class MainActivity extends Activity
 				initImageView(selected);
 			}
 		});
+
 		textView_four.setOnClickListener(new OnClickListener()
 		{
 
@@ -141,6 +141,7 @@ public class MainActivity extends Activity
 				initImageView(selected);
 			}
 		});
+
 		textView_five.setOnClickListener(new OnClickListener()
 		{
 
@@ -154,6 +155,7 @@ public class MainActivity extends Activity
 				initImageView(selected);
 			}
 		});
+
 		textView_six.setOnClickListener(new OnClickListener()
 		{
 
@@ -182,9 +184,9 @@ public class MainActivity extends Activity
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				selected = arg2 + 1;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(selected + "年级语文下册");
+				math_textView.setText(selected + "年级数学下册");
+				English_textView.setText(selected + "年级英语下册");
 				initImageView(selected);
 			}
 
@@ -327,6 +329,7 @@ public class MainActivity extends Activity
 				English_imageView.setImageResource(R.drawable.main_third_up);
 				break;
 			case 4:
+
 				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
 				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
 				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
@@ -351,6 +354,7 @@ public class MainActivity extends Activity
 				English_imageView.setImageResource(R.drawable.main_fifth_up);
 				break;
 			case 6:
+
 				textView_one.setBackgroundColor(getResources().getColor(R.color.no));
 				textView_two.setBackgroundColor(getResources().getColor(R.color.no));
 				textView_three.setBackgroundColor(getResources().getColor(R.color.no));
@@ -363,7 +367,8 @@ public class MainActivity extends Activity
 				English_imageView.setImageResource(R.drawable.main_sixth_up);
 				break;
 			default:
-				Toast.makeText(getApplicationContext() ,"selected error" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,"selected error or phase error!" ,Toast.LENGTH_SHORT).show();
+				break;
 		}
 
 	}

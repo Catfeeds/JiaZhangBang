@@ -30,7 +30,8 @@ public class LrcRead
 		InputStreamReader mInputStreamReader;
 		if(3 == flag)
 		{
-			mInputStreamReader = new InputStreamReader(mFileInputStream , "ucs-2");
+			//TODO
+			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");  
 		}
 		else
 		{
@@ -74,15 +75,15 @@ public class LrcRead
 							}
 							splitLrc_data[1] = splitLrc_data[splitLrc_data.length - 1].substring(0 ,code_index) + "\n" + splitLrc_data[splitLrc_data.length - 1].substring(code_index);
 						}
-						else if(Util.lyricChinese == flag)
-						{
-							splitLrc_data[1] = splitLrc_data[splitLrc_data.length - 1];
-						}
 						else
-						{
-							splitLrc_data[1] = splitLrc_data[1];
-						}
-//				Log.d("LOG", "code_index : " + code_index + "\n" + splitLrc_data[1]);
+							if(Util.lyricChinese == flag)
+							{
+								splitLrc_data[1] = splitLrc_data[splitLrc_data.length - 1];
+							}
+							else
+							{
+								splitLrc_data[1] = splitLrc_data[1];
+							}
 				mLyricContent.setLyric(splitLrc_data[1]);
 				int LyricTime = TimeStr(splitLrc_data[0]);
 				mLyricContent.setLyricTime(LyricTime);
