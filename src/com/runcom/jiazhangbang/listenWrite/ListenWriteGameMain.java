@@ -152,6 +152,7 @@ public class ListenWriteGameMain extends Activity
 
 	private void initSimpleModelView()
 	{
+		// System.out.println("gegezhixingle**************************");
 		clickCount = 0;
 		textView_historyScore = (TextView) findViewById(R.id.listen_write_game_main_textView_historyScore);
 		int historyScore = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,99);
@@ -170,6 +171,10 @@ public class ListenWriteGameMain extends Activity
 		{
 			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 		}
+		// for(int i = 0 ; i < count * 2 ; i ++ )
+		// {
+		// System.out.println(tempGameItemBeanList.get(i).getPhrase());
+		// }
 		gridView = (GridView) findViewById(R.id.listen_write_game_main_gridView);
 		listenWriteGameMainGridViewAdapter = new ListenWriteGameMainGridViewAdapter(getApplicationContext() , tempGameItemBeanList);
 		gridView.setAdapter(listenWriteGameMainGridViewAdapter);
@@ -183,8 +188,11 @@ public class ListenWriteGameMain extends Activity
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
 				clickCount ++ ;
-				String content = "phrase:" + tempGameItemBeanList.get(position).getPhrase() + "\nvoice:" + tempGameItemBeanList.get(position).getVoice() + "\npinyin:" + tempGameItemBeanList.get(position).getPinyin();
-				System.out.println(content);
+				// String content = "phrase:" +
+				// tempGameItemBeanList.get(position).getPhrase() + "\nvoice:" +
+				// tempGameItemBeanList.get(position).getVoice() + "\npinyin:" +
+				// tempGameItemBeanList.get(position).getPinyin();
+				// System.out.println(content);
 				// Toast.makeText(getApplicationContext() ,content
 				// ,Toast.LENGTH_SHORT).show();
 				mediaPlayer.reset();
@@ -298,17 +306,17 @@ public class ListenWriteGameMain extends Activity
 				if(leng > 0)
 				{
 					// System.out.println("连接服务器成功");
-					if(0 == degree)
+					if(1 == degree)
 					{
 						initSimpleModelView();
 					}
 					else
-						if(1 == degree)
+						if(2 == degree)
 						{
 							initMediumModeView();
 						}
 						else
-							if(2 == degree)
+							if(3 == degree)
 							{
 								initHardModeView();
 							}
@@ -334,7 +342,7 @@ public class ListenWriteGameMain extends Activity
 				phraseContent = new String [leng];
 				voiceContent = new String [leng];
 				pinyinContent = new String [leng];
-				String content = "";
+				// String content = "";
 				gameItemBeanList = new ArrayList < ListenWriteGameItemBean >();
 				for(int i = 0 ; i < leng ; i ++ )
 				{
@@ -347,8 +355,9 @@ public class ListenWriteGameMain extends Activity
 					gameItemBean.setVoice(voiceContent[i]);
 					gameItemBean.setPinyin(pinyinContent[i]);
 					gameItemBeanList.add(gameItemBean);
-					content = i + "\t" + phraseContent[i] + "\t" + voiceContent[i] + "\t" + pinyinContent[i];
-					System.out.println(content);
+					// content = i + "\t" + phraseContent[i] + "\t" +
+					// voiceContent[i] + "\t" + pinyinContent[i];
+					// System.out.println(content);
 				}
 				return result + leng + "";
 			}

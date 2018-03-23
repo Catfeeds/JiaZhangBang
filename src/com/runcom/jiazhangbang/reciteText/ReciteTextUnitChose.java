@@ -117,25 +117,6 @@ public class ReciteTextUnitChose extends Activity
 						myText.setMode(unitJsonObject.getString("desc"));
 						textList.add(myText);
 					}
-					// source = jsonObject.getString("source");
-					// lyric = jsonObject.getString("lyric");
-					// name = jsonObject.getString("name");
-					// for(int i = 0 ; i < 16 ; i ++ )
-					// {
-					// int index = (i % 8 + 1);
-					// myText = new MyText();
-					// lyric = lyric.substring(0 ,lyric.lastIndexOf("/")) +
-					// "/00" + index + ".lrc";
-					// myText.setLyric(lyric);
-					// if( !new File(Util.LYRICSPATH +
-					// lyric.substring(lyric.lastIndexOf("/") + 1)).exists())
-					// new LrcFileDownloader(lyric).start();
-					// myText.setName(name + (i + 1));
-					// myText.setMode("È«ÎÄ±³ËÐ" + (i + 1));
-					// myText.setSource(source.substring(0
-					// ,source.lastIndexOf("/")) + "/00" + index + ".mp3");
-					// textList.add(myText);
-					// }
 					return null;
 				}
 			});

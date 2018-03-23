@@ -75,11 +75,6 @@ public class FindNewWords extends Activity
 	private String [] autoCompleteTextViewArrayString2 = null;
 	private int note = 0;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -106,7 +101,7 @@ public class FindNewWords extends Activity
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
 		map.put("grade" ,selected + "");
-		map.put("phase" ,"1");
+		map.put("phase" ,"-1");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -144,7 +139,7 @@ public class FindNewWords extends Activity
 					Toast.makeText(getApplicationContext() ,mesg != null ? mesg : "服务器异常， 请联系管理员！" ,Toast.LENGTH_SHORT).show();
 					return null;
 				}
-				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
+				JSONArray jsonArray = jsonObject.getJSONArray("attr");
 				newWordsMap = new TreeMap < String , String >();
 				note = 0;
 				String phrase = null;
@@ -165,12 +160,12 @@ public class FindNewWords extends Activity
 					type = "/*" + phlistJsonObject.get("type").toString() + "*/\n";
 					newWordsMap.put(phrase ,"pinyin:\n\t" + pinyin + "\ndesc:\n\t" + desc + "\ntype:\n\t" + type);
 					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
-				} 
+				}
 				return result;
 			}
 		});
 	}
- 
+
 	/**
 	 * 
 	 */
@@ -195,17 +190,16 @@ public class FindNewWords extends Activity
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if(arg0 == null)
+				if( !Util.okHttpUtilsResultStringValue.equals(arg0))
 				{
 					finish();
 				}
 				else
-					if(Util.okHttpUtilsResultStringValue.equals(arg0))
-					{
-						initDataAfter();
-					}
+				{
+					initDataAfter();
+				}
 			}
- 
+
 			@Override
 			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 			{
@@ -394,7 +388,7 @@ public class FindNewWords extends Activity
 		else
 			if(content.equals("") || content.isEmpty())
 			{
-				Toast.makeText(this ,"课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(this ,selected + "年级课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
 				contentsShowTextView.setText("null");
 			}
 			else

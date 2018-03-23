@@ -94,7 +94,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	private ImageButton btnPlay;
 	private TextView tv_currTime , tv_totalTime , tv_lrc;
 	List < MyAudio > play_list = new ArrayList < MyAudio >();
-	List < String > play_list_copy = new ArrayList < String >();
+	private List < String > play_list_copy = new ArrayList < String >();
 	MyAudio myAudio;
 	public MediaPlayer mp;
 	int currIndex = 0;// 表示当前播放的音乐索引
@@ -174,18 +174,16 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 
 	private void initData()
 	{
-		// source1 = "http://if.redvpn.cn:9900/cn/stream/14/14.m3u8";
-		// source2 = "http://123.206.133.214:8080/wgcwgc/mp3/001.mp3";
-		// source3 = "http://if.redvpn.cn:9900/cn/stream/14.mp3";
-		// source4 = "http://123.206.133.214:8080/wgcwgc/mp3/001.mp3";
-
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
-			OkHttpUtils.get().url(Util.SERVERADDRESS_repeat).build().execute(new Callback < String >()
+		{
+			String url = "http://jzb.nutnet.cn:8800/interface/getfulltext.php?app=Jiazhangbang&build=57&dev=2b8b2d1541a790dd&lang=zh-Hans&os=6.0&term=0&textid=18&ver=1.3&sign=A5983D53ACCDA6FD5E7819CEE99FAC2A";
+			System.out.println(url);
+			OkHttpUtils.get().url(url).build().execute(new Callback < String >()
 			{
 
 				@Override
@@ -202,34 +200,31 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
-					String response = arg0.body().string().trim();
-					JSONObject jsonObject = new JSONObject(response);
-					String source = jsonObject.getString("source");
-					String lyric = jsonObject.getString("lyric");
-					String name = jsonObject.getString("name");
 					play_list.clear();
 					play_list_copy.clear();
-					for(int i = 1 ; i <= 8 ; i ++ )
-					{
-						myAudio = new MyAudio();
-						myAudio.setId(i);
-						myAudio.setName(name + i);
-						String lyric_copy = lyric.substring(0 ,lyric.lastIndexOf("/") + 1) + "00" + i + ".lrc";
-						myAudio.setLyric(lyric_copy);
-						if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
-							new LrcFileDownloader(lyric_copy).start();
-						String source_copy = source.substring(0 ,source.lastIndexOf("/") + 1) + "00" + i + ".mp3";
-						myAudio.setSource(source_copy);
-						play_list.add(myAudio);
-						play_list_copy.add(myAudio.getName());
-					}
+					
+					String response = arg0.body().string().trim();
+					JSONObject jsonObject = new JSONObject(response);
+					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
+					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
-					Log.d("执行LOG" ,play_list.toString() + "\n" + play_list_copy.toString() + "\n");
-					return "initData" + arg1;
+					myAudio = new MyAudio();
+					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+					String title = jsonObject_partlist.getString("title");
+					myAudio.setName(title);
+					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
+					myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
+					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
+					myAudio.setSource(source_copy);
+					play_list.add(myAudio);
+					play_list_copy.add(myAudio.getName());
+					
+					return jsonObject.getString("result");
 				}
 
 			});
-
+		}
 	}
 
 	private void initSpinner()
@@ -264,8 +259,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		new LrcFileDownloader(lyricsPath);
-		lyricsPath = Util.LYRICSPATH + lyricsPath.substring(lyricsPath.lastIndexOf("/"));
 		int flag = Util.lyricChinese;
 
 		mLrcRead = new LrcRead();
@@ -580,14 +573,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 			mp.reset();
 			try
 			{
-				// AssetManager assetManager = getAssets();
-				// AssetFileDescriptor afd = assetManager.openFd(SongPath);
-				// mp.setDataSource(afd.getFileDescriptor());
-
-				// videoView.setVideoURI(Uri.parse(SongPath));
-				// videoView.requestFocus();
-				// videoView.start();
-
 				mp.setDataSource(SongPath);
 				mp.prepare();
 				mp.start();

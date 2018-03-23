@@ -64,7 +64,7 @@ public class ListenWriteTips extends Activity
 
 		initData();
 	}
-	
+
 	private void initData()
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -79,8 +79,7 @@ public class ListenWriteTips extends Activity
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
-			// System.out.println(Util.REALSERVER + "getphrase.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
@@ -115,7 +114,7 @@ public class ListenWriteTips extends Activity
 					JSONObject jsonObject = new JSONObject(response);
 					String result = jsonObject.getString("result");
 					String mesg = jsonObject.getString("mesg");
-					JSONArray jsonArray = jsonObject.getJSONArray("phlist");
+					JSONArray jsonArray = jsonObject.getJSONArray("attr");
 					counts = jsonArray.length();
 					// JSONObject phraseJsonObject = new
 					// JSONObject(jsonArray.getString(5));

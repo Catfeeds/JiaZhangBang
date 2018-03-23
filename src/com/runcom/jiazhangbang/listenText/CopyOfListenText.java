@@ -159,6 +159,11 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
+				// for(int i = 0 ; i < play_list_id.size() ; i ++ )
+				// {
+				// System.out.println("play_list_id:" + play_list_id.get(i) +
+				// "\tplay_list_title:" + play_list_title.get(i));
+				// }
 				initLrcMp3();
 			}
 
@@ -168,7 +173,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
 
-				play_list_title.clear();
+				// play_list_title.clear();
 				play_list_id.clear();
 				// System.out.println(jsonObject.toString());
 				JSONArray jsonArray = jsonObject.getJSONArray("textlist");
@@ -180,7 +185,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 					int part = Integer.valueOf(parts);
 					if(1 == part)
 					{
-						play_list_title.add(textListJsonObject.getString("title"));
+						// play_list_title.add(textListJsonObject.getString("title"));
 						play_list_id.add(textListJsonObject.getString("id"));
 					}
 					else
@@ -191,7 +196,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 							for(int k = 0 ; k < length ; k ++ )
 							{
 								JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
-								play_list_title.add(subjsonObject.getString("title"));
+								// play_list_title.add(subjsonObject.getString("title"));
 								play_list_id.add(subjsonObject.getString("id"));
 							}
 						}
@@ -213,6 +218,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	{
 		TreeMap < String , String > map = null;
 		play_list.clear();
+		play_list_title.clear();
 		final int leng = play_list_id.size();
 		for(int i = 0 ; i < leng ; i ++ )
 		{
@@ -245,6 +251,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 					myAudio = new MyAudio();
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
+					play_list_title.add(title);
 					// System.out.println(lyric_copy);
 					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
@@ -265,9 +272,13 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 
 	private void initSpinner()
 	{
+		// for(int i = 0 ; i < play_list.size() ; i ++ )
+		// {
+		// System.out.println("play_list_lyric:" + play_list.get(i).getLyric() +
+		// "\tplay_list_source:" + play_list.get(i).getSource());
+		// }
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_title);
-
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -276,6 +287,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				currIndex = arg2;
+				// System.out.println("currIndex:" + currIndex);
 				start();
 			}
 
@@ -339,7 +351,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("#############################BUG############");
 		}
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
@@ -368,7 +380,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		{
 			int indexTemp = Index();
 
-			Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
+			// Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
 			if(indexTemp == newIndex)
 			{
 				mLyricView.setScrolled(false);
@@ -557,7 +569,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		if(currIndex >= 1 && play_list.size() > 0)
 		{
 			currIndex -- ;
-			spinner.setSelection(currIndex);
+			spinner.setSelection(currIndex ,true);
 			start();
 		}
 		else
@@ -583,7 +595,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
-			spinner.setSelection(currIndex);
+			spinner.setSelection(currIndex ,true);
 			start();
 		}
 		else
@@ -609,12 +621,18 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	// 蝕兵殴慧
 	public void start()
 	{
-		Log.d("LOG" ,"start()" + currIndex + ":" + play_list.size() + play_list.get(currIndex).getSource() + ":" + play_list.get(currIndex).getLyric());
 		if(play_list.size() > 0 && currIndex < play_list.size())
 		{
+			// for(int i = 0 ; i < play_list.size() ; i ++ )
+			// {
+			// System.out.println(play_list.get(i).getLyric() + "play_list:" +
+			// play_list.get(i).getSource());
+			// }
 			String SongPath = play_list.get(currIndex).getSource();
-			System.out.println(currIndex);
-			Log.d("LOG" ,SongPath);
+			// String string = "start()" + currIndex + ":" + play_list.size() +
+			// play_list.get(currIndex).getSource() + ":" +
+			// play_list.get(currIndex).getLyric();
+			// System.out.println(string);
 			mp.reset();
 			try
 			{
@@ -629,8 +647,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			}
 			catch(Exception e)
 			{
-				Log.d("LOG" ,"bugle");
-				e.printStackTrace();
+				System.out.println("buglebugle**************************");
 			}
 		}
 		else
@@ -644,7 +661,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	{
 		if(currIndex < play_list.size() - 1 && currIndex >= 0)
 		{
-			System.out.println("！！！！！！！！！！！！！！！！！！！！next！！！！！！！！！！！！！！");
+			// System.out.println("！！！！！！！！！！！！！！！！！！！！next！！！！！！！！！！！！！！");
 			next();
 		}
 		else
@@ -704,7 +721,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 				}
 				catch(InterruptedException e)
 				{
-					e.printStackTrace();
+					System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&bug&&&&&&&&&");
 				}
 			}
 			else

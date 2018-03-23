@@ -116,8 +116,6 @@ public class Util
 	// "listenText.jsp?type=0";
 	// public static final String SERVERADDRESS_listenWrite = SERVERADDRESS +
 	// "listenWrite.jsp?type=0";
-	// public static final String SERVERADDRESS_listenWriteCopy = SERVERADDRESS
-	// + "listenWriteCopy.jsp?type=3";
 	// public static final String SERVERADDRESS_listenWriteBackups =
 	// SERVERADDRESS + "listenWriteBackups.jsp?type=4";
 	// public static final String SERVERADDRESS_listenWriteTips = SERVERADDRESS

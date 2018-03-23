@@ -94,11 +94,6 @@
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteCopy"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
             android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteTips"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteBackups"

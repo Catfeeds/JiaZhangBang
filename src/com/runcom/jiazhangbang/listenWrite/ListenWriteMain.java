@@ -176,7 +176,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 					// selected + "&units=" + units);
 					String response = arg0.body().string().trim();
 					JSONObject jsonObject = new JSONObject(response);
-					JSONArray jsonArray = jsonObject.getJSONArray("phlist");
+					JSONArray jsonArray = jsonObject.getJSONArray("attr");
 					JSONObject phlistJsonObject = null;
 					leng = jsonArray.length();
 					phraseContent = new String [leng];
@@ -268,7 +268,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				Toast.makeText(getApplicationContext() ,( newWordsList.get(position).getId() + 1 ) + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,(newWordsList.get(position).getId() + 1) + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
 			}
 		});
 

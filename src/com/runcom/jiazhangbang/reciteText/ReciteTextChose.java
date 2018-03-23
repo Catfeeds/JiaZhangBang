@@ -169,8 +169,7 @@ public class ReciteTextChose extends Activity
 			final int ii = i;
 			map = Util.getMap(getApplicationContext());
 			map.put("textid" ,textList.get(i).getId());
-			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 
@@ -193,9 +192,10 @@ public class ReciteTextChose extends Activity
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
-					lrcList.add(lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1));
-					if( !new File(Util.LYRICSPATH + lyric_copy.substring(lyric_copy.lastIndexOf("/") + 1)).exists())
-						new LrcFileDownloader(lyric_copy).start();
+					String title = jsonObject_partlist.getString("title");
+					lrcList.add(title + ".lrc");
+					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
 					return null;
 				}
 			});

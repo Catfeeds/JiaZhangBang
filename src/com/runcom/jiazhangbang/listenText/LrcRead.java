@@ -28,15 +28,16 @@ public class LrcRead
 		File mFile = new File(file);
 		FileInputStream mFileInputStream = new FileInputStream(mFile);
 		InputStreamReader mInputStreamReader;
-		if(3 == flag)
-		{
-			//TODO
-			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");  
-		}
-		else
-		{
-			mInputStreamReader = new InputStreamReader(mFileInputStream , "GB2312");
-		}
+		// if(3 == flag)
+		// {
+		// TODO
+		mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
+		// }
+		// else
+		// {
+		// mInputStreamReader = new InputStreamReader(mFileInputStream ,
+		// "GB2312");
+		// }
 		// 一行一行读取
 		BufferedReader mBufferedReader = new BufferedReader(mInputStreamReader);
 		while((Lrc_data = mBufferedReader.readLine()) != null)
