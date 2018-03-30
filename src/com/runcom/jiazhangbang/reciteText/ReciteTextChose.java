@@ -89,7 +89,7 @@ public class ReciteTextChose extends Activity
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -99,30 +99,53 @@ public class ReciteTextChose extends Activity
 			map.put("grade" ,selected + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
-			// System.out.println(Util.REALSERVER + "gettextlist.php?" +
-			// URL.getParameter(map));
+			System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					initTextLrc();
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+					{
+						initTextLrc();
+					}
+					else
+						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						}
 				}
 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					textList.clear();
-
 					JSONArray jsonArray = jsonObject.getJSONArray("textlist");
 					JSONObject textListJsonObject = null;
-					for(int i = 0 , leng = jsonArray.length() ; i < leng ; i ++ )
+					int leng = jsonArray.length();
+					if(leng <= 0)
+					{
+						return Util.okHttpUtilsResultExceptionStringValue;
+					}
+					for(int i = 0 ; i < leng ; i ++ )
 					{
 						textListJsonObject = new JSONObject(jsonArray.getString(i));
 						String parts = textListJsonObject.getString("parts");
@@ -150,11 +173,11 @@ public class ReciteTextChose extends Activity
 							}
 							else
 							{
-								Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
+								Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
 								System.exit(0);
 							}
 					}
-					return null;
+					return result;
 				}
 			});
 		}
@@ -176,19 +199,34 @@ public class ReciteTextChose extends Activity
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
 					if(ii == leng - 1)
+					{
 						initListView();
+					}
+					else
+						if( !Util.okHttpUtilsResultStringKey.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
 				}
 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
@@ -196,7 +234,7 @@ public class ReciteTextChose extends Activity
 					lrcList.add(title + ".lrc");
 					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
-					return null;
+					return result;
 				}
 			});
 		}

@@ -70,7 +70,7 @@ public class ListenWriteBackups extends Activity
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -85,18 +85,28 @@ public class ListenWriteBackups extends Activity
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					if(arg0.equals("0"))
-						initArray();
-					else
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 					{
-						Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_SHORT).show();
-						return;
+						initArray();
 					}
+					else
+						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_SHORT).show();
+							finish();
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_SHORT).show();
+							finish();
+						}
 				}
 
 				@Override
@@ -104,10 +114,18 @@ public class ListenWriteBackups extends Activity
 				{
 					String response = arg0.body().string().trim();
 					JSONObject jsonObject = new JSONObject(response);
-					String result = jsonObject.getString("result");
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONArray jsonArray = jsonObject.getJSONArray("unitlist");
 					// System.out.println("jsonArray: " + jsonArray.toString());
 					int leng = jsonArray.length();
+					if(leng <= 0)
+					{
+						return Util.okHttpUtilsResultExceptionStringValue;
+					}
 					String unitlist;
 					contents = new String [leng];
 					for(int i = 0 ; i < leng ; i ++ )
@@ -123,48 +141,6 @@ public class ListenWriteBackups extends Activity
 
 			});
 
-			// String [] contents =
-			// { "上册          第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元",
-			// "第七单元", "第八单元", "下册          第一单元", "第二单元", "第三单元", "第四单元",
-			// "第五单元", "第六单元", "第七单元", "第八单元" };
-			// OkHttpUtils.get().url(Util.SERVERADDRESS_listenWriteBackups).build().execute(new
-			// Callback < String >()
-			// {
-			// @Override
-			// public void onError(Call arg0 , Exception arg1 , int arg2 )
-			// {
-			// }
-			//
-			// @Override
-			// public void onResponse(String arg0 , int arg1 )
-			// {
-			// initOnClick();
-			// }
-			//
-			// @Override
-			// public String parseNetworkResponse(Response arg0 , int arg1 )
-			// throws Exception
-			// {
-			// // String response = arg0.body().string().trim();
-			// // JSONObject jsonObject = new JSONObject(response);
-			//
-			// // String source = jsonObject.getString("source");
-			// // contents = source.split(",|，");
-			// String [] contents =
-			// { "第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元", "第七单元", "第八单元"
-			// };
-			// myListenWriteContentArrayList.clear();
-			// for(int i = 0 ; i < contents.length ; i ++ )
-			// {
-			// myAudio = new MyAudio();
-			// myAudio.setName(contents[i]);
-			// myListenWriteContentArrayList.add(myAudio);
-			// }
-			//
-			// return null;
-			// }
-			//
-			// });
 		}
 	}
 

@@ -78,7 +78,7 @@ public class ReciteTextUnitChose extends Activity
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -93,12 +93,28 @@ public class ReciteTextUnitChose extends Activity
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					initListView();
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+					{
+						initListView();
+					}
+					else
+						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
 				}
 
 				@Override
@@ -106,8 +122,17 @@ public class ReciteTextUnitChose extends Activity
 				{
 					textList.clear();
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONArray jsonArray = new JSONArray(jsonObject.getString("unitlist"));
 					int leng = jsonArray.length();
+					if(leng <= 0)
+					{
+						return Util.okHttpUtilsResultExceptionStringValue;
+					}
 					JSONObject unitJsonObject = null;
 					for(int i = 0 ; i < leng ; i ++ )
 					{
@@ -117,7 +142,7 @@ public class ReciteTextUnitChose extends Activity
 						myText.setMode(unitJsonObject.getString("desc"));
 						textList.add(myText);
 					}
-					return null;
+					return result;
 				}
 			});
 		}

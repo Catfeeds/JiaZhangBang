@@ -151,10 +151,14 @@ public class Util
 	public static final int lyricChinese = 3;
 	public static final int lyricAll = 4;
 
+	public static final String okHttpUtilsInternetConnectExceptionString = "请检查网络连接";
 	public static final String okHttpUtilsResultStringKey = "result";
-	public static final String okHttpUtilsResultStringValue = "0";
+	public static final String okHttpUtilsResultOkStringValue = "0";
+	public static final String okHttpUtilsResultExceptionStringValue = "-1";
 	public static final String okHttpUtilsMesgStringKey = "mesg";
-	public static final String okHttpUtilsMesgStringValue = "";
+	public static final String okHttpUtilsMissingResourceString = "缺少资源录入";
+	public static final String okHttpUtilsServerExceptionString = "服务器异常";
+	public static final String okHttpUtilsConnectServerExceptionString = "连接服务器异常";
 
 	public static String getVersionName(Context context )
 	{

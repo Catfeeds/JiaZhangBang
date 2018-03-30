@@ -297,15 +297,15 @@ public class ListenWriteGameMain extends Activity
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
+				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				finish();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				int leng = Integer.valueOf(arg0);
-				if(leng > 0)
+				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 				{
-					// System.out.println("连接服务器成功");
 					if(1 == degree)
 					{
 						initSimpleModelView();
@@ -320,14 +320,18 @@ public class ListenWriteGameMain extends Activity
 							{
 								initHardModeView();
 							}
-
 				}
 				else
-				{
-					// System.out.println("连接服务器失败");
-					// Toast.makeText(getApplicationContext() ,"连接服务器失败"
-					// ,Toast.LENGTH_SHORT).show();
-				}
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_SHORT).show();
+						finish();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_SHORT).show();
+						finish();
+					}
 			}
 
 			@Override
@@ -335,14 +339,21 @@ public class ListenWriteGameMain extends Activity
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
-				String result = jsonObject.getString("result");
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+				{
+					return result;
+				}
 				JSONArray jsonArray = jsonObject.getJSONArray("attr");
 				JSONObject phlistJsonObject = null;
 				int leng = jsonArray.length();
+				if(leng <= 0)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
 				phraseContent = new String [leng];
 				voiceContent = new String [leng];
 				pinyinContent = new String [leng];
-				// String content = "";
 				gameItemBeanList = new ArrayList < ListenWriteGameItemBean >();
 				for(int i = 0 ; i < leng ; i ++ )
 				{
@@ -355,11 +366,8 @@ public class ListenWriteGameMain extends Activity
 					gameItemBean.setVoice(voiceContent[i]);
 					gameItemBean.setPinyin(pinyinContent[i]);
 					gameItemBeanList.add(gameItemBean);
-					// content = i + "\t" + phraseContent[i] + "\t" +
-					// voiceContent[i] + "\t" + pinyinContent[i];
-					// System.out.println(content);
 				}
-				return result + leng + "";
+				return result;
 			}
 		});
 	}
@@ -374,64 +382,6 @@ public class ListenWriteGameMain extends Activity
 	{
 		// TODO Auto-generated method stub
 
-	}
-
-	@SuppressWarnings("unused")
-	private void initPinYin()
-	{
-		TreeMap < String , String > map = null;
-		int length = phraseContent.length;
-		pinyinContent = new String [length];
-		for(int i = 0 ; i < length ; i ++ )
-		{
-			map = Util.getMap(getApplicationContext());
-			map.put("course" ,Util.ChineseCourse);
-			map.put("phrase" ,phraseContent[i]);
-			map.put("flag" ,"1");
-			map.put("blank" ,"1");
-			System.out.println(Util.REALSERVER + "getpinyin.php?" + URL.getParameter(map));
-			OkHttpUtils.get().url(Util.REALSERVER + "getpinyin.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
-			{
-
-				@Override
-				public void onError(Call arg0 , Exception arg1 , int arg2 )
-				{
-				}
-
-				@Override
-				public void onResponse(String arg0 , int arg1 )
-				{
-					if( !arg0.equals("0"))
-					{
-						Toast.makeText(getApplicationContext() ,"连接服务器失败" ,Toast.LENGTH_SHORT).show();
-					}
-				}
-
-				@Override
-				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
-				{
-					String response = arg0.body().string().trim();
-					JSONObject jsonObject = new JSONObject(response);
-					String result = jsonObject.getString("result");
-					String pinyin = jsonObject.getString("pinyin");
-					System.out.println(":" + pinyin);
-					return result;
-				}
-			});
-
-			pinyinContent[i] = "";
-
-			if(i == length - 1)
-			{
-				initLayout();
-			}
-
-		}
-	}
-
-	private void initLayout()
-	{
-		System.out.println("end");
 	}
 
 	@Override

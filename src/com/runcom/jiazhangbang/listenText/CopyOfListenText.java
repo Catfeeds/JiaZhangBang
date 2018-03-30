@@ -154,17 +154,28 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
+				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				finish();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				// for(int i = 0 ; i < play_list_id.size() ; i ++ )
-				// {
-				// System.out.println("play_list_id:" + play_list_id.get(i) +
-				// "\tplay_list_title:" + play_list_title.get(i));
-				// }
-				initLrcMp3();
+				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+				{
+					initLrcMp3();
+				}
+				else
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
 			}
 
 			@Override
@@ -172,13 +183,22 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
-
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+				{
+					return result;
+				}
 				// play_list_title.clear();
 				play_list_id.clear();
 				// System.out.println(jsonObject.toString());
 				JSONArray jsonArray = jsonObject.getJSONArray("textlist");
 				JSONObject textListJsonObject = null;
-				for(int i = 0 , leng = jsonArray.length() ; i < leng ; i ++ )
+				int leng = jsonArray.length();
+				if(leng <= 0)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
+				for(int i = 0 ; i < leng ; i ++ )
 				{
 					textListJsonObject = new JSONObject(jsonArray.getString(i));
 					String parts = textListJsonObject.getString("parts");
@@ -207,7 +227,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 						}
 				}
 
-				return null;
+				return result;
 			}
 
 		});
@@ -232,19 +252,34 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
 					if(leng - 1 == ii)
+					{
 						initSpinner();
+					}
+					else
+						if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
 				}
 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
@@ -261,7 +296,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 					// System.out.println(source_copy);
 					myAudio.setSource(source_copy);
 					play_list.add(myAudio);
-					return null;
+					return result;
 				}
 
 			});

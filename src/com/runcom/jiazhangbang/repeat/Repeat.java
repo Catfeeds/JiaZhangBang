@@ -176,7 +176,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -189,12 +189,22 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					initSpinner();
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+					{
+						initSpinner();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
 				}
 
 				@Override
@@ -202,9 +212,14 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 				{
 					play_list.clear();
 					play_list_copy.clear();
-					
+
 					String response = arg0.body().string().trim();
 					JSONObject jsonObject = new JSONObject(response);
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
@@ -219,8 +234,8 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 					myAudio.setSource(source_copy);
 					play_list.add(myAudio);
 					play_list_copy.add(myAudio.getName());
-					
-					return jsonObject.getString("result");
+
+					return result;
 				}
 
 			});

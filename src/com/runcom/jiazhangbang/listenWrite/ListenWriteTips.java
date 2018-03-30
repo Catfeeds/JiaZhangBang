@@ -69,7 +69,7 @@ public class ListenWriteTips extends Activity
 	{
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -85,43 +85,49 @@ public class ListenWriteTips extends Activity
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					String [] config = arg0.split("#");
-					// for(int j = 0 ; j < config.length ; j ++ )
-					// {
-					// System.out.println(config[j]);
-					// }
-					if( !config[0].equals("0"))
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 					{
 						textView_start.setEnabled(false);
 						textView_reset.setEnabled(false);
-						// Toast.makeText(getApplicationContext() ,config[1]
-						// ,Toast.LENGTH_LONG).show();
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
 					}
 					else
-						initView();
+						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
+						else
+						{
+							initView();
+						}
 				}
 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
-					// System.out.println("***********************");
 					String response = arg0.body().string().trim();
 					JSONObject jsonObject = new JSONObject(response);
-					String result = jsonObject.getString("result");
-					String mesg = jsonObject.getString("mesg");
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONArray jsonArray = jsonObject.getJSONArray("attr");
 					counts = jsonArray.length();
-					// JSONObject phraseJsonObject = new
-					// JSONObject(jsonArray.getString(5));
-					// String phrase = phraseJsonObject.getString("phrase");
-					// System.out.println("counts: " + counts + "\njson: " +
-					// jsonObject.toString() + "\nphrase: " + phrase);
-					return result + "#" + mesg;
+					if(counts <= 0)
+					{
+						return Util.okHttpUtilsResultExceptionStringValue;
+					}
+					return result;
 				}
 			});
 		}
@@ -160,7 +166,7 @@ public class ListenWriteTips extends Activity
 				intent.setClass(getApplicationContext() ,ListenWriteMain.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
-					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 					startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 				}
 				else
@@ -180,7 +186,7 @@ public class ListenWriteTips extends Activity
 				intent.setClass(getApplicationContext() ,ListenWriteTipsPlaySetting.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
-					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 					startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 				}
 				else

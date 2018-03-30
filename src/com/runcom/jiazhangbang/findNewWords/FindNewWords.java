@@ -38,6 +38,7 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -93,7 +94,13 @@ public class FindNewWords extends Activity
 		actionbar.setTitle(content);
 
 		initView();
-		initDataBefore();
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
+			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+		}
+		else
+			initDataBefore();
 	}
 
 	private void initDataBefore()
@@ -109,20 +116,27 @@ public class FindNewWords extends Activity
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
+				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				finish();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				// initData();
-				if(arg0 == null)
+				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 				{
-					finish();
+					initDataAfter();
 				}
 				else
-					if(Util.okHttpUtilsResultStringValue.equals(arg0))
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
 					{
-						initDataAfter();
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
 					}
 			}
 
@@ -132,12 +146,10 @@ public class FindNewWords extends Activity
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
 				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
-				System.out.println(result);
-				String mesg = jsonObject.getString(Util.okHttpUtilsMesgStringKey);
-				if( !Util.okHttpUtilsResultStringValue.equals(result.toString()))
+				// System.out.println(result);
+				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
 				{
-					Toast.makeText(getApplicationContext() ,mesg != null ? mesg : "服务器异常， 请联系管理员！" ,Toast.LENGTH_SHORT).show();
-					return null;
+					return result;
 				}
 				JSONArray jsonArray = jsonObject.getJSONArray("attr");
 				newWordsMap = new TreeMap < String , String >();
@@ -148,6 +160,10 @@ public class FindNewWords extends Activity
 				String type = null;
 				JSONObject phlistJsonObject = null;
 				int leng = jsonArray.length();
+				if(leng <= 0)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
 				autoCompleteTextViewArrayString1 = new String [leng];
 				for(int i = 0 ; i < leng ; i ++ )
 				{
@@ -184,20 +200,31 @@ public class FindNewWords extends Activity
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
+				// Toast.makeText(getApplicationContext()
+				// ,Util.okHttpUtilsConnectServerExceptionString
+				// ,Toast.LENGTH_LONG).show();
+				// finish();
 				initDataAfter();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if( !Util.okHttpUtilsResultStringValue.equals(arg0))
-				{
-					finish();
-				}
-				else
+				if(Util.okHttpUtilsResultOkStringValue.equals(arg0))
 				{
 					initDataAfter();
 				}
+				else
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
 			}
 
 			@Override
@@ -207,12 +234,10 @@ public class FindNewWords extends Activity
 				System.out.println(response);
 				JSONObject jsonObject = new JSONObject(response);
 				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
-				System.out.println(result);
-				String mesg = jsonObject.getString(Util.okHttpUtilsMesgStringKey);
-				if( !Util.okHttpUtilsResultStringValue.equals(result))
+				// System.out.println(result);
+				if( !Util.okHttpUtilsResultOkStringValue.equals(result))
 				{
-					Toast.makeText(getApplicationContext() ,mesg.equals(Util.okHttpUtilsMesgStringValue) ? mesg : "服务器异常，请联系管理员！" ,Toast.LENGTH_SHORT).show();
-					return null;
+					return result;
 				}
 				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 				note = 0;
@@ -222,6 +247,10 @@ public class FindNewWords extends Activity
 				String type = null;
 				JSONObject phlistJsonObject = null;
 				int leng = jsonArray.length();
+				if(leng <= 0)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
 				autoCompleteTextViewArrayString2 = new String [leng];
 				for(int i = 0 ; i < leng ; i ++ )
 				{

@@ -147,54 +147,6 @@ public class ReciteTextMain extends Activity implements Checkable
 			}
 			initListview();
 
-			// final TreeMap < String , String > map =
-			// Util.getMap(getApplicationContext());
-			// // map.put("selected" ,selected + "");
-			// // map.put("phase" ,phase + "");
-			// // map.put("unit" ,unit + "");
-			// map.put("id" ,id);
-			// System.out.println(Util.REALSERVER + "getfulltext.php?" +
-			// URL.getParameter(map));
-			// OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" +
-			// URL.getParameter(map)).build().execute(new Callback < String >()
-			// {
-			// @Override
-			// public void onError(Call arg0 , Exception arg1 , int arg2 )
-			// {
-			// }
-			//
-			// @Override
-			// public void onResponse(String arg0 , int arg1 )
-			// {
-			// initListview();
-			// dataMax = Integer.parseInt(arg0);
-			// // dataMax = Integer.valueOf(arg0);
-			// }
-			//
-			// @Override
-			// public String parseNetworkResponse(Response arg0 , int arg1 )
-			// throws Exception
-			// {
-			// JSONObject jsonObject = new
-			// JSONObject(arg0.body().string().trim());
-			// JSONObject jsonObject_attr = new
-			// JSONObject(jsonObject.getString("attr"));
-			// JSONObject jsonObject_partlist = new
-			// JSONObject(jsonObject_attr.getString("partlist"));
-			//
-			// String [] contents = jsonObject.getString("source").split("\n");
-			// myTextContentArraylist.clear();
-			// for(int i = 0 ; i < contents.length ; i ++ )
-			// {
-			// myTextContent = new MyTextContent();
-			// myTextContent.setName((i + 1) + "\u3000\u3000" + contents[i]);
-			// myTextContentArraylist.add(myTextContent);
-			// }
-			//
-			// return "" + contents.length;
-			// }
-			//
-			// });
 		}
 
 		autoJudge_textView = (TextView) findViewById(R.id.recite_text_main_textview_autojudge);

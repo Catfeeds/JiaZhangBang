@@ -142,7 +142,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		// + selected + "&units=" + units);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
-			Toast.makeText(getApplicationContext() ,"Çë¼ì²éÍøÂçÁ¬½Ó" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
@@ -158,53 +158,57 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 
 				@Override
 				public void onResponse(String arg0 , int arg1 )
 				{
-					if(Integer.valueOf(arg0) > 0)
+					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+					{
 						initPlayData();
+					}
+					else
+						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+							finish();
+						}
 				}
 
 				@Override
 				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 				{
-					// Log.d("log*************1" ,"classes : " + selected +
-					// "\nunits : " + units + "\nuri : " +
-					// Util.SERVERADDRESS_listenWriteMain + "&classes=" +
-					// selected + "&units=" + units);
 					String response = arg0.body().string().trim();
 					JSONObject jsonObject = new JSONObject(response);
+					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					{
+						return result;
+					}
 					JSONArray jsonArray = jsonObject.getJSONArray("attr");
 					JSONObject phlistJsonObject = null;
 					leng = jsonArray.length();
+					if(leng <= 0)
+					{
+						return Util.okHttpUtilsResultExceptionStringValue;
+					}
 					phraseContent = new String [leng];
 					voiceContent = new String [leng];
-					// System.out.println("*************************************************start...");
 					for(int i = 0 ; i < leng ; i ++ )
 					{
-						// System.out.println("\n*************************************************start00..."
-						// + i);
 						phlistJsonObject = new JSONObject(jsonArray.getString(i));
-						// System.out.println("\n*************************************************start01..."
-						// + i);
 						phraseContent[i] = phlistJsonObject.getString("phrase");
-						// System.out.println("\n*************************************************start02..."
-						// + i);
 						voiceContent[i] = phlistJsonObject.getString("voice");
-						// System.out.println("\n" + phraseContent[i] + "\t" +
-						// voiceContent[i]);
 					}
-					// contents = jsonObject.getString("contents");
 
-					// Log.d("log*************3" ,"leng : " + leng +
-					// "\ncontents : " + contents);
-					// Toast.makeText(getApplicationContext() ,"leng : " + leng
-					// + "\ncontents : " + contents ,Toast.LENGTH_SHORT).show();
-
-					return leng + "";
-					// return null;
+					return result;
 				}
 
 			});

@@ -27,12 +27,13 @@ public class Update
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
+				Toast.makeText(context ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if( !"0".equals(arg0))
+				if( !Util.okHttpUtilsResultOkStringValue.equals(arg0))
 				{
 					if( !new File(file).exists())
 					{
