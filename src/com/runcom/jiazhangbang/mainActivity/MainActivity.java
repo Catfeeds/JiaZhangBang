@@ -1,16 +1,8 @@
 package com.runcom.jiazhangbang.mainActivity;
 
-import java.io.File;
-
-import okhttp3.Call;
-import okhttp3.Response;
-
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -25,8 +17,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gr.okhttp.OkHttpUtils;
-import com.gr.okhttp.callback.Callback;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
@@ -93,9 +83,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 1;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -107,9 +97,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 2;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -121,9 +111,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 3;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -135,9 +125,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 4;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -149,9 +139,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 5;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -163,9 +153,9 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				selected = 6;
-				Chinese_textView.setText(selected + "年级语文");
-				math_textView.setText(selected + "年级数学");
-				English_textView.setText(selected + "年级英语");
+				Chinese_textView.setText(Util.grade[selected] + "语文");
+				math_textView.setText(Util.grade[selected] + "数学");
+				English_textView.setText(Util.grade[selected] + "英语");
 				initImageView(selected);
 			}
 		});
@@ -173,9 +163,9 @@ public class MainActivity extends Activity
 		Chinese_textView = (TextView) findViewById(R.id.Chinese_textView);
 		math_textView = (TextView) findViewById(R.id.math_textView);
 		English_textView = (TextView) findViewById(R.id.English_textView);
-		Chinese_textView.setText(selected + "年级语文");
-		math_textView.setText(selected + "年级数学");
-		English_textView.setText(selected + "年级英语");
+		Chinese_textView.setText(Util.grade[selected] + "语文");
+		math_textView.setText(Util.grade[selected] + "数学");
+		English_textView.setText(Util.grade[selected] + "英语");
 		spinner.setDropDownHorizontalOffset(2);
 		spinner.setDropDownVerticalOffset(2);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
@@ -184,9 +174,9 @@ public class MainActivity extends Activity
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				selected = arg2 + 1;
-				Chinese_textView.setText(selected + "年级语文下册");
-				math_textView.setText(selected + "年级数学下册");
-				English_textView.setText(selected + "年级英语下册");
+				Chinese_textView.setText(Util.grade[selected] + "语文下册");
+				math_textView.setText(Util.grade[selected] + "数学下册");
+				English_textView.setText(Util.grade[selected] + "英语下册");
 				initImageView(selected);
 			}
 
@@ -209,7 +199,7 @@ public class MainActivity extends Activity
 			public void onClick(View v )
 			{
 				// new Text2Speech(getApplicationContext() , selected +
-				// "年级语文").play();
+				// "语文").play();
 				Intent intent = new Intent();
 				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
@@ -223,9 +213,9 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				Toast.makeText(getApplicationContext() ,selected + "年级数学" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,Util.grade[selected] + "数学" ,Toast.LENGTH_SHORT).show();
 				// new Text2Speech(getApplicationContext() , selected +
-				// "年级数学").play();
+				// "数学").play();
 			}
 		});
 
@@ -235,9 +225,9 @@ public class MainActivity extends Activity
 			@Override
 			public void onClick(View v )
 			{
-				Toast.makeText(getApplicationContext() ,selected + "年级英语" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext() ,Util.grade[selected] + "英语" ,Toast.LENGTH_SHORT).show();
 				// new Text2Speech(getApplicationContext() , selected +
-				// "年级英语").play();
+				// "英语").play();
 			}
 		});
 

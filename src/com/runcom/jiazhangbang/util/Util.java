@@ -16,7 +16,8 @@ import com.runcom.jiazhangbang.R;
 
 public class Util
 {
-
+	public static final String grade[] =
+	{ "半年级", "一年级", "二年级", "三年级", "四年级", "五年级", "六年级" };
 	public static final String SECRETKEY = "8848@jzb";
 	public static final String REALSERVER = "http://jzb.nutnet.cn:8800/interface/";
 	public static final String RESOURCESERVER = "http://res.nutnet.cn:8800/";

@@ -99,9 +99,9 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上学期第" + unit + "单元";
+		String content = "听写 " + Util.grade[selected] + "上学期第" + unit + "单元";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下学期第" + unit + "单元";
+			content = "听写 " + Util.grade[selected] + "下学期第" + unit + "单元";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

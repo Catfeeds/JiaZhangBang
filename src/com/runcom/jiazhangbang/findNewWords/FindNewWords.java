@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -89,7 +90,7 @@ public class FindNewWords extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "查生词  " + selected + "年级";
+		String content = "查生词  " + Util.grade[selected];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -100,15 +101,18 @@ public class FindNewWords extends Activity
 			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
 		}
 		else
-			initDataBefore();
+		{
+			initData1();
+		}
 	}
 
-	private void initDataBefore()
+	private void initData1()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
 		map.put("grade" ,selected + "");
-		map.put("phase" ,"-1");
+		map.put("phase" ,"1");
+		map.put("unit" ,"-1");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -116,28 +120,13 @@ public class FindNewWords extends Activity
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
-				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
-				finish();
+				initData2();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
-				{
-					initDataAfter();
-				}
-				else
-					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
-					{
-						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
-						finish();
-					}
-					else
-					{
-						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
-						finish();
-					}
+				initData2();
 			}
 
 			@Override
@@ -146,7 +135,6 @@ public class FindNewWords extends Activity
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
 				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
-				// System.out.println(result);
 				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
 				{
 					return result;
@@ -175,7 +163,8 @@ public class FindNewWords extends Activity
 					desc = "/*" + phlistJsonObject.get("desc").toString() + "*/\n";
 					type = "/*" + phlistJsonObject.get("type").toString() + "*/\n";
 					newWordsMap.put(phrase ,"pinyin:\n\t" + pinyin + "\ndesc:\n\t" + desc + "\ntype:\n\t" + type);
-					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
+					// System.out.println(i + "phrase:" + phrase + "pinyin:" +
+					// pinyin + "desc:" + desc + "type:" + type);
 				}
 				return result;
 			}
@@ -185,14 +174,13 @@ public class FindNewWords extends Activity
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unused")
-	private void initData()
+	private void initData2()
 	{
-		// TODO
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
 		map.put("grade" ,selected + "");
 		map.put("phase" ,"2");
+		map.put("unit" ,"-1");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -200,19 +188,16 @@ public class FindNewWords extends Activity
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
-				// Toast.makeText(getApplicationContext()
-				// ,Util.okHttpUtilsConnectServerExceptionString
-				// ,Toast.LENGTH_LONG).show();
-				// finish();
-				initDataAfter();
+				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				finish();
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if(Util.okHttpUtilsResultOkStringValue.equals(arg0))
+				if(autoCompleteTextViewArrayString2.length > 0 || autoCompleteTextViewArrayString1.length > 0)
 				{
-					initDataAfter();
+					initData();
 				}
 				else
 					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
@@ -231,7 +216,7 @@ public class FindNewWords extends Activity
 			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
 			{
 				String response = arg0.body().string().trim();
-				System.out.println(response);
+				// System.out.println(response);
 				JSONObject jsonObject = new JSONObject(response);
 				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
 				// System.out.println(result);
@@ -239,7 +224,7 @@ public class FindNewWords extends Activity
 				{
 					return result;
 				}
-				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
+				JSONArray jsonArray = jsonObject.getJSONArray("attr");
 				note = 0;
 				String phrase = null;
 				String pinyin = null;
@@ -262,8 +247,8 @@ public class FindNewWords extends Activity
 					desc = "/*" + phlistJsonObject.get("desc").toString() + "*/\n";
 					type = "/*" + phlistJsonObject.get("type").toString() + "*/\n";
 					newWordsMap.put(phrase ,"pinyin:\n\t" + pinyin + "\ndesc:\n\t" + desc + "\ntype:\n\t" + type);
-					System.out.println(i + "phrase:" + phrase + "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
-
+					// System.out.println("-" + i + "phrase:" + phrase +
+					// "pinyin:" + pinyin + "desc:" + desc + "type:" + type);
 				}
 				return result;
 			}
@@ -272,33 +257,36 @@ public class FindNewWords extends Activity
 
 	}
 
-	private void initDataAfter()
+	private void initData()
 	{
-		for(int i = 0 ; i < autoCompleteTextViewArrayString1.length ; i ++ )
-		{
-			System.out.println("autoCompleteTextViewArrayString1:" + i + autoCompleteTextViewArrayString1[i]);
-		}
-		// for(int i = 0 ; i < autoCompleteTextViewArrayString2.length ; i ++ )
+		// System.out.println(newWordsMap);
+
+		int leng1 = autoCompleteTextViewArrayString1.length;
+		int leng2 = autoCompleteTextViewArrayString2.length;
+
+		// for(int i = 0 ; i < leng1 ; i ++ )
 		// {
-		// System.out.println(autoCompleteTextViewArrayString2[i]);
+		// System.out.println("autoCompleteTextViewArrayString1:" + i +
+		// autoCompleteTextViewArrayString1[i]);
+		// }
+		// for(int i = 0 ; i < leng2 ; i ++ )
+		// {
+		// System.out.println("autoCompleteTextViewArrayString2:" + i +
+		// autoCompleteTextViewArrayString2[i]);
 		// }
 
+		autoCompleteTextViewArrayString = new String [leng1 + leng2];
 		// autoCompleteTextViewArrayString = new String
-		// [autoCompleteTextViewArrayString1.length +
-		// autoCompleteTextViewArrayString2.length];
-		autoCompleteTextViewArrayString = new String [autoCompleteTextViewArrayString1.length];
-		System.arraycopy(autoCompleteTextViewArrayString1 ,0 ,autoCompleteTextViewArrayString ,0 ,autoCompleteTextViewArrayString1.length);
-		// System.arraycopy(autoCompleteTextViewArrayString2
-		// ,autoCompleteTextViewArrayString1.length
-		// ,autoCompleteTextViewArrayString ,0
-		// ,autoCompleteTextViewArrayString2.length);
-		for(int i = 0 ; i < autoCompleteTextViewArrayString.length ; i ++ )
-		{
-			System.out.println("autoCompleteTextViewArrayString:" + i + autoCompleteTextViewArrayString[i]);
-		}
-		// autoCompleteTextViewArrayString =
-		// { "abc", "wgc", "wgcwgc", "bbc", "java", "android", "And", "bbb",
-		// "autoComplete", "asdfasdfasdfasdfasdf" };
+		// [leng1];
+		System.arraycopy(autoCompleteTextViewArrayString1 ,0 ,autoCompleteTextViewArrayString ,0 ,leng1);
+		System.arraycopy(autoCompleteTextViewArrayString2 ,0 ,autoCompleteTextViewArrayString ,leng1 ,leng2);
+		// for(int i = 0 , leng = autoCompleteTextViewArrayString.length ; i <
+		// leng ; i ++ )
+		// {
+		// System.out.println(i + "\tautoCompleteTextViewArrayString\t" +
+		// autoCompleteTextViewArrayString[i]);
+		// }
+
 		ArrayAdapter < String > autoCompleteTextViewArrayAdapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.simple_dropdown_item_1line , autoCompleteTextViewArrayString);
 
 		autoCompleteTextView.setAdapter(autoCompleteTextViewArrayAdapter);
@@ -319,13 +307,6 @@ public class FindNewWords extends Activity
 			@Override
 			public void afterTextChanged(Editable s )
 			{
-				// contents = s.toString();
-				// loadingData(s.toString());
-				// 隐藏输入法
-				// InputMethodManager imm = (InputMethodManager)
-				// getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				// // 显示或者隐藏输入法
-				// imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 			}
 		});
 		autoCompleteTextView.setOnItemClickListener(new OnItemClickListener()
@@ -335,11 +316,27 @@ public class FindNewWords extends Activity
 			{
 				contents = parent.getItemAtPosition(position).toString();
 				loadingData(contents);
-				// 隐藏输入法
-				// InputMethodManager imm = (InputMethodManager)
-				// getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-				// // 显示或者隐藏输入法
-				// imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
+				hideOrShowInputMethod();
+			}
+		});
+
+		autoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		{
+
+			@Override
+			public boolean onEditorAction(TextView v , int actionId , KeyEvent event )
+			{
+				if(actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == 13)
+				{
+					contents = autoCompleteTextView.getText().toString();
+					String content = v.getText().toString();
+					loadingData(contents);
+					hideOrShowInputMethod();
+					System.out.println(content + "\n" + contents);
+					return true;
+				}
+
+				return false;
 			}
 		});
 
@@ -365,14 +362,12 @@ public class FindNewWords extends Activity
 
 	}
 
-	@SuppressWarnings("unused")
 	private void hideOrShowInputMethod()
 	{
 		// 隐藏输入法
 		InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 		// 显示或者隐藏输入法
-		// imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
-		imm.toggleSoftInput(0 ,InputMethodManager.RESULT_HIDDEN);
+		imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")
@@ -408,22 +403,27 @@ public class FindNewWords extends Activity
 
 	private void loadingData(String contents )
 	{
-		String content = newWordsMap.get(contents);
-		if(contents.trim().isEmpty() || contents.equals(""))
+		if(contents.trim().isEmpty() || contents.trim().equals("") || contents.trim() == null)
 		{
 			Toast.makeText(this ,"内容为空" ,Toast.LENGTH_SHORT).show();
 			contentsShowTextView.setText("");
 		}
 		else
-			if(content.equals("") || content.isEmpty())
+		{
+			String content = newWordsMap.get(contents);
+			// System.out.println(content + "--" + contents);
+			if(content == null)
 			{
 				Toast.makeText(this ,selected + "年级课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
-				contentsShowTextView.setText("null");
+				autoCompleteTextView.setText("");
+				deleteImageView.setVisibility(ImageView.INVISIBLE);
+				contentsShowTextView.setText("");
 			}
 			else
 			{
 				contentsShowTextView.setText("\n\t" + contents + "\n\n" + content);
 			}
+		}
 	}
 
 	/**
@@ -462,11 +462,13 @@ public class FindNewWords extends Activity
 	@Override
 	public boolean onKeyDown(int keyCode , KeyEvent event )
 	{
+		System.out.println("keyCode:" + keyCode + "\tevent:" + event);
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
 			finish();
 			return true;
 		}
+
 		return super.onKeyDown(keyCode ,event);
 	}
 

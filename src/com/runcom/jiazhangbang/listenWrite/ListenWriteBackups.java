@@ -57,9 +57,9 @@ public class ListenWriteBackups extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上册";
+		String content = "听写 " + Util.grade[selected] + "上册";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下册";
+			content = "听写 " + Util.grade[selected] + "下册";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

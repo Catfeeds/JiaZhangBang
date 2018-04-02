@@ -145,7 +145,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = " ¸ú¶Á " + selected + "Äê¼¶";
+		String content = " ¸ú¶Á " + Util.grade[selected];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

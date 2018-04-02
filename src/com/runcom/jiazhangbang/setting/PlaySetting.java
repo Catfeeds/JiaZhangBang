@@ -2,6 +2,7 @@ package com.runcom.jiazhangbang.setting;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,7 +23,8 @@ public class PlaySetting extends Activity
 {
 	private TextView setting_speech_recognition_textView ,
 	        setting_clearCache_textView , setting_opinion_textView ,
-	        setting_checkUpdate_textView , setting_aboutUs_textView;
+	        setting_checkUpdate_textView , setting_aboutUs_textView ,
+	        setting_version_textView;
 	private ImageView setting_speech_recognition , setting_clearCache_detail ,
 	        setting_opinion_detail , setting_checkUpdate_detail ,
 	        setting_aboutUs_detail;
@@ -84,6 +86,17 @@ public class PlaySetting extends Activity
 		setting_aboutUs_tableRow = (TableRow) findViewById(R.id.setting_aboutUs_tableRow);
 		setting_aboutUs_tableRow.setOnClickListener(listener);
 
+		setting_version_textView = (TextView) findViewById(R.id.setting_version_textView);
+		setting_version_textView.setOnClickListener(listener);
+		try
+		{
+			String ver = this.getPackageManager().getPackageInfo(this.getPackageName() ,0).versionName;
+			setting_version_textView.setText("版本号：" + ver + "\n版权所有：浙江兰创通信有限公司");
+		}
+		catch(NameNotFoundException e)
+		{
+			setting_version_textView.setText("版权所有：浙江兰创通信有限公司");
+		}
 	}
 
 	/**
@@ -122,6 +135,8 @@ public class PlaySetting extends Activity
 				case R.id.setting_aboutUs_textView:
 				case R.id.setting_aboutUs_tableRow:
 					Toast.makeText(getApplicationContext() ,"aboutUs_detail..." ,Toast.LENGTH_SHORT).show();
+					break;
+				case R.id.setting_version_textView:
 					break;
 			}
 		}

@@ -56,9 +56,9 @@ public class ListenWriteTips extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + selected + "年级上册第" + unit + "单元";
+		String content = "听写 " + Util.grade[selected] + "上册第" + unit + "单元";
 		if(2 == phase)
-			content = "听写 " + selected + "年级下册第" + unit + "单元";
+			content = "听写 " + Util.grade[selected] + "下册第" + unit + "单元";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

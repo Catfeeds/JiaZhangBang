@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
 public class ListenWritePhaseChose extends Activity
@@ -34,7 +35,7 @@ public class ListenWritePhaseChose extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "ÌýÐ´ " + selected + "Äê¼¶";
+		String content = "ÌýÐ´ " + Util.grade[selected];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 

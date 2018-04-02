@@ -18,6 +18,7 @@ import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
 import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 /**
  * chinese 
@@ -43,7 +44,7 @@ public class Chinese extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(selected + "年级语文");
+		actionbar.setTitle(Util.grade[selected] + "语文");
 
 	}
 
