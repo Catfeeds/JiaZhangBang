@@ -23,8 +23,7 @@
         android:layout_marginEnd="@dimen/normal_view_margin05"
         android:layout_marginTop="@dimen/main_activity_top_chinese_math_english_imageview_margin"
         android:orientation="horizontal"
-        android:scrollbars="none"
-      >
+        android:scrollbars="none" >
 
         <LinearLayout
             android:id="@+id/main_top_linearlayout"
@@ -183,7 +182,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_below="@+id/math_textView"
-        android:layout_marginTop="@dimen/normal_view_margin27" >
+        android:layout_marginTop="@dimen/normal_view_margin27"
+        android:scrollbars="none" >
 
         <RelativeLayout
             android:layout_width="wrap_content"

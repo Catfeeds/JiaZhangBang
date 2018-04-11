@@ -14,7 +14,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenWriteTipsPlaySetting extends Activity
+public class ListenWriteTipsSetting extends Activity
 {
 
 	private static final String sharedPreferencesKey = "ListenWriteSetting";

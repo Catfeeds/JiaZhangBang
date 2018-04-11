@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -23,7 +24,7 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.setting.ListenWriteTipsPlaySetting;
+import com.runcom.jiazhangbang.setting.ListenWriteTipsSetting;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
@@ -39,6 +40,7 @@ public class ListenWriteTips extends Activity
 	private int counts;
 	private TextView textView_information , textView_start , textView_reset;
 	private final int WORDSTIME = 2;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -47,20 +49,30 @@ public class ListenWriteTips extends Activity
 		setContentView(R.layout.listen_write_tips);
 
 		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,1);// 年级
-		phase = intent.getIntExtra("phase" ,1);// 上下册
-		unit = intent.getIntExtra("id" ,1);// 单元
+		// selected = intent.getIntExtra("selected" ,1);// 年级
+		selected = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		// phase = intent.getIntExtra("phase" ,1);// 上下册
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
+		// unit = intent.getIntExtra("id" ,1);// 单元
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + Util.grade[selected] + "上册第" + unit + "单元";
+		String content = "听写 " + Util.grade[selected] + "上学期" + Util.unit[unit];
 		if(2 == phase)
-			content = "听写 " + Util.grade[selected] + "下册第" + unit + "单元";
+			content = "听写 " + Util.grade[selected] + "下学期" + Util.unit[unit];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initData();
 	}
@@ -121,7 +133,7 @@ public class ListenWriteTips extends Activity
 					{
 						return result;
 					}
-					JSONArray jsonArray = jsonObject.getJSONArray("attr");
+					JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 					counts = jsonArray.length();
 					if(counts <= 0)
 					{
@@ -152,7 +164,7 @@ public class ListenWriteTips extends Activity
 		String contents = "本次听写\n总共" + counts + "个生词\n生词朗读间隔" + intervalValue + "秒\n每个生词朗读" + frequencyValue + "遍\n大约用时" + totalTime + "秒\n即" + hours + "时" + minutes + "分" + seconds + "秒";
 
 		textView_information.setText(contents);
-
+		progressDialog.dismiss();
 		textView_start.setOnClickListener(new OnClickListener()
 		{
 
@@ -183,7 +195,7 @@ public class ListenWriteTips extends Activity
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);
 				intent.putExtra("units" ,unit);
-				intent.setClass(getApplicationContext() ,ListenWriteTipsPlaySetting.class);
+				intent.setClass(getApplicationContext() ,ListenWriteTipsSetting.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
 					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();

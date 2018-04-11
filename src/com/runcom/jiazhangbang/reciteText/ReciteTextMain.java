@@ -10,6 +10,7 @@ import java.util.List;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -82,6 +83,9 @@ public class ReciteTextMain extends Activity implements Checkable
 	// "第16次成绩:          57",
 	// "第17次成绩:          77", "第18次成绩:          87", "第19次成绩:          97",
 	// "第20次成绩:         100" };
+
+	private ProgressDialog progressDialog;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -109,6 +113,13 @@ public class ReciteTextMain extends Activity implements Checkable
 		actionbar.setDisplayShowCustomEnabled(true);
 		// new Text2Speech(getApplicationContext() , name).play();
 		actionbar.setTitle(name);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		Arrays.fill(scores ,"       暂无");
 		initView();
@@ -142,7 +153,10 @@ public class ReciteTextMain extends Activity implements Checkable
 			for(int i = 0 ; i < dataMax ; i ++ )
 			{
 				myTextContent = new MyTextContent();
-				myTextContent.setName((i + 1) + "\u3000\u3000" + LyricList.get(i).getLyric());
+				if(Util.debug)
+					myTextContent.setName((i + 1) + "\u3000\u3000" + LyricList.get(i).getLyric());
+				else
+					myTextContent.setName("\u3000\u3000" + LyricList.get(i).getLyric());
 				myTextContentArraylist.add(myTextContent);
 			}
 			initListview();
@@ -246,6 +260,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		listView.setAdapter(myListViewMainAdapter);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		// myListViewMainAdapter.notifyDataSetChanged();
+		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
@@ -273,7 +288,9 @@ public class ReciteTextMain extends Activity implements Checkable
 				boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
 				myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);
 				myListViewMainAdapter.notifyDataSetChanged();
-				Toast.makeText(getApplication() ,"position : " + position + "\nstate : " + counts[position] ,Toast.LENGTH_SHORT).show();
+				if(Util.debug)
+					Toast.makeText(getApplication() ,"position : " + position + "\nstate : " + counts[position] ,Toast.LENGTH_SHORT).show();
+
 			}
 		});
 	}

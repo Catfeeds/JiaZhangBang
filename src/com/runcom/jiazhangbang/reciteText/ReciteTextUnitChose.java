@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -48,7 +49,8 @@ public class ReciteTextUnitChose extends Activity
 	private MyText myText = new MyText();
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
 	private MyListViewAdapter adapter;
-
+	private ProgressDialog progressDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -71,6 +73,13 @@ public class ReciteTextUnitChose extends Activity
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
+		
 		initData();
 	}
 
@@ -154,6 +163,7 @@ public class ReciteTextUnitChose extends Activity
 		adapter = new MyListViewAdapter(getApplicationContext() , textList);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
+		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -163,7 +173,7 @@ public class ReciteTextUnitChose extends Activity
 				// Toast.makeText(getApplicationContext() ,"您点击了" +
 				// textList.get(arg2).getName().toString()
 				// ,Toast.LENGTH_SHORT).show();
-				Intent open_intent = new Intent(getApplicationContext() , ReciteTextChose.class);
+				Intent open_intent = new Intent(getApplicationContext() , ReciteTextTextChose.class);
 				// open_intent.putExtra("source"
 				// ,textList.get(arg2).getSource());
 				// open_intent.putExtra("lyric" ,textList.get(arg2).getLyric());
@@ -237,7 +247,7 @@ public class ReciteTextUnitChose extends Activity
 						// Toast.makeText(getApplicationContext() ,"您点击了" +
 						// textList.get(position).getName().toString()
 						// ,Toast.LENGTH_SHORT).show();
-						Intent open_intent = new Intent(getApplicationContext() , ReciteTextChose.class);
+						Intent open_intent = new Intent(getApplicationContext() , ReciteTextTextChose.class);
 						open_intent.putExtra("selected" ,selected);
 						open_intent.putExtra("phase" ,phase);
 						open_intent.putExtra("unit" ,position + 1);
@@ -250,7 +260,7 @@ public class ReciteTextUnitChose extends Activity
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-						String url = (textList.get(position).getSource().toString()).toString();
+						String url = textList.get(position).getSource();
 						share_intent.putExtra(Intent.EXTRA_TEXT ,url);
 						share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(Intent.createChooser(share_intent ,"分享"));

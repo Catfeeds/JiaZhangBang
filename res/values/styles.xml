@@ -21,7 +21,7 @@
 
     <style name="MenuTextStyleListenWriteGameMain">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="NoBackGroundDialog" parent="@android:style/Theme.Holo.Light.Dialog">

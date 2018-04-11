@@ -1,4 +1,4 @@
-package com.runcom.jiazhangbang.listenText;
+package com.runcom.jiazhangbang.listenWrite;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,13 +26,13 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenWrite.MyListenWriteAdapter;
+import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenTextBackups extends Activity
+public class ListenWriteUnitChose extends Activity
 {
 	private MyListenWriteAdapter myListenWriteMainAdapter;
 	private MyAudio myAudio;
@@ -40,6 +41,7 @@ public class ListenTextBackups extends Activity
 	private int selected , phase;
 	private Intent intent;
 	private String [] contents = null;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -57,11 +59,18 @@ public class ListenTextBackups extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听课文 " + Util.grade[selected] + "上册";
+		String content = "听写 " + Util.grade[selected] + "上册";
 		if(2 == phase)
-			content = "听课文 " + Util.grade[selected] + "下册";
+			content = "听写 " + Util.grade[selected] + "下册";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initData();
 	}
@@ -99,7 +108,7 @@ public class ListenTextBackups extends Activity
 					else
 						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
 						{
-							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_SHORT).show();
 							finish();
 						}
 						else
@@ -138,7 +147,9 @@ public class ListenTextBackups extends Activity
 					}
 					return result;
 				}
+
 			});
+
 		}
 	}
 
@@ -151,6 +162,7 @@ public class ListenTextBackups extends Activity
 		{
 			myAudio = new MyAudio();
 			myAudio.setName(contents[i]);
+			// myAudio.setId(i);
 			myListenWriteContentArrayList.add(myAudio);
 		}
 
@@ -164,6 +176,7 @@ public class ListenTextBackups extends Activity
 		myListenWriteMainAdapter = new MyListenWriteAdapter(getApplicationContext() , myListenWriteContentArrayList);
 		listView.setAdapter(myListenWriteMainAdapter);
 		myListenWriteMainAdapter.notifyDataSetChanged();
+		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -173,8 +186,10 @@ public class ListenTextBackups extends Activity
 				intent = new Intent();
 				intent.putExtra("selected" ,selected);// 年级
 				intent.putExtra("phase" ,phase);// 上下册
-				intent.putExtra("id" ,(long) ++ id);// 单元
-				intent.setClass(getApplicationContext() ,CopyOfListenText.class);
+				intent.putExtra("id" ,++ position);// 单元
+				// System.out.println("**********************************position:"
+				// + position + "id:" + id);
+				intent.setClass(getApplicationContext() ,ListenWriteTips.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
 					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();

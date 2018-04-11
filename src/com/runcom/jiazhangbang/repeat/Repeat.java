@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -60,6 +61,7 @@ import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.listenText.LyricView;
 import com.runcom.jiazhangbang.listenText.MyAudio;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
@@ -113,7 +115,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	// initialization
 	private Intent intent;
 	private String lyricsPath;
-	int selected;
+	int grade;
 
 	// 歌词处理
 	private LrcRead mLrcRead;
@@ -130,24 +132,33 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	// private AudioRecord audioRecord;
 	private String outputFile = Util.RECORDPATH + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss" , Locale.CHINA).format(new Date()) + ".mp3";
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.repeat_main);
 
-		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,0);
-
+		// intent = getIntent();
+		// grade = intent.getIntExtra("selected" ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = " 跟读 " + Util.grade[selected];
+		String content = "朗读" + Util.grade[grade];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initPlayView();
 	}
@@ -249,6 +260,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
 
 		spinner.setAdapter(adapter);
+		progressDialog.dismiss();
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 			@Override
@@ -488,7 +500,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	public void onDetailSetting(View v )
 	{
 		intent = new Intent();
-		intent.putExtra("selected" ,selected);
+		intent.putExtra("selected" ,grade);
 		intent.setClass(Repeat.this ,RepeatMainActivity.class);
 		startActivity(intent);
 	}

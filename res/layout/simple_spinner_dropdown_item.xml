@@ -7,6 +7,7 @@
     android:ellipsize="marquee"
     android:gravity="center_vertical|center_horizontal"
     android:scrollHorizontally="true"
+    android:scrollbars="none"
     android:singleLine="true"
     android:textSize="27sp" >
 

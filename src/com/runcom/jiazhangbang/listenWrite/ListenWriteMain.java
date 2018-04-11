@@ -15,6 +15,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -48,8 +49,8 @@ import com.umeng.analytics.MobclickAgent;
 public class ListenWriteMain extends Activity implements OnCompletionListener , OnErrorListener
 {
 	private long startTime , endTime;
-	private Intent intent;
-	private int selected , phase , unit;
+	// private Intent intent;
+	private int grade , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int leng;
 	private String [] phraseContent , voiceContent;
@@ -77,16 +78,21 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 
 	// private ExecutorService es = Executors.newSingleThreadExecutor();
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_main);
 
-		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,1);
-		phase = intent.getIntExtra("phase" ,1);
-		unit = intent.getIntExtra("units" ,1);
+		// intent = getIntent();
+		// grade = intent.getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		// phase = intent.getIntExtra("phase" ,1);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
+		// unit = intent.getIntExtra("units" ,1);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
 
 		// 两个词语间隔秒数
 		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
@@ -99,11 +105,18 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + Util.grade[selected] + "上学期第" + unit + "单元";
+		String content = "听写 " + Util.grade[grade] + "上学期" + Util.unit[unit];
 		if(2 == phase)
-			content = "听写 " + Util.grade[selected] + "下学期第" + unit + "单元";
+			content = "听写 " + Util.grade[grade] + "下学期" + Util.unit[unit];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		timer.schedule(task ,0 ,1000);
 		initNewWordsData();
@@ -149,7 +162,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
 			map.put("course" ,Util.ChineseCourse);
-			map.put("grade" ,selected + "");
+			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
 			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
@@ -192,7 +205,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 					{
 						return result;
 					}
-					JSONArray jsonArray = jsonObject.getJSONArray("attr");
+					JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 					JSONObject phlistJsonObject = null;
 					leng = jsonArray.length();
 					if(leng <= 0)
@@ -266,7 +279,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		gridView.setAdapter(myListenWriteMainAdapter);
 		gridView.setChoiceMode(GridView.CHOICE_MODE_SINGLE);
 		myListenWriteMainAdapter.notifyDataSetInvalidated();
-
+		progressDialog.dismiss();
 		gridView.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override

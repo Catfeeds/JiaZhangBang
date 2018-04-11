@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -28,7 +29,6 @@ import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.URL;
@@ -53,6 +53,8 @@ public class ListenWriteGameMain extends Activity
 	private static final String sharedPreferencesKey = "ListenWriteGameMainMenu";
 	private static final String sharedPreferencesHistoryScore = "ListenWriteGameMainMenuHistoryScore";
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -75,6 +77,13 @@ public class ListenWriteGameMain extends Activity
 		unit = intent.getIntExtra("unit" ,1);
 		String str = "degree:" + degree + "\tgrade:" + grade + "\tphase:" + phase + "\tunit:" + unit;
 		System.out.println(str);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initData();
 	}
@@ -180,6 +189,9 @@ public class ListenWriteGameMain extends Activity
 		gridView.setAdapter(listenWriteGameMainGridViewAdapter);
 		gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 		listenWriteGameMainGridViewAdapter.notifyDataSetChanged();
+
+		progressDialog.dismiss();
+
 		mediaPlayer = new MediaPlayer();
 		gridView.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -244,12 +256,11 @@ public class ListenWriteGameMain extends Activity
 				textView_currentScore.setText("当前成绩：" + clickCount);
 				if(0 == tempGameItemBeanList.size())
 				{
-					new Text2Speech(getApplicationContext() , "好厉害哟").play();
+					// new Text2Speech(getApplicationContext() , "好厉害哟").play();
 					// Toast.makeText(getApplicationContext()
 					// ,"恭喜恭喜   ！！！\r\n过关了" ,Toast.LENGTH_SHORT).show();
 					int clickCountHistory = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,999);
-					// System.out.println(clickCountHistory + "\n" +
-					// clickCount);
+					System.out.println(clickCountHistory + "\n" + clickCount);
 					if(clickCount < clickCountHistory)
 					{
 						textView_historyScore.setText("历史成绩：" + clickCount);
@@ -344,7 +355,7 @@ public class ListenWriteGameMain extends Activity
 				{
 					return result;
 				}
-				JSONArray jsonArray = jsonObject.getJSONArray("attr");
+				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 				JSONObject phlistJsonObject = null;
 				int leng = jsonArray.length();
 				if(leng <= 0)
@@ -375,12 +386,14 @@ public class ListenWriteGameMain extends Activity
 	private void initHardModeView()
 	{
 		// TODO Auto-generated method stub
+		progressDialog.dismiss();
 
 	}
 
 	private void initMediumModeView()
 	{
 		// TODO Auto-generated method stub
+		progressDialog.dismiss();
 
 	}
 

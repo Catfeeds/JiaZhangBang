@@ -10,6 +10,7 @@ import java.net.URL;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,60 +39,97 @@ import com.runcom.jiazhangbang.util.Util;
 public class MyTask extends AsyncTask < String , Void , byte [] >
 {
 	private Context context;
-	private ProgressDialog pDialog;
+	private ProgressDialog progressDialog;
 	private String path = Util.PICTURESPATH;
 	private String fileName;
+	private Boolean flag = true;
 
 	public MyTask(Context context)
 	{
 		this.context = context;
-		pDialog = new ProgressDialog(context);
-		pDialog.setIcon(R.drawable.ic_launcher);
-		pDialog.setMessage("加载中...");
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setIcon(R.drawable.ic_launcher);
+		progressDialog.setMessage("加载中...");
 	}
 
 	public MyTask(Context context , String fileName)
 	{
 		this.context = context;
 		this.fileName = fileName;
-		pDialog = new ProgressDialog(context);
-		pDialog.setIcon(R.drawable.ic_launcher);
-		pDialog.setMessage("加载中...");
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setIcon(R.drawable.ic_launcher);
+		progressDialog.setMessage("加载中...");
 	}
-	
-	public MyTask(Context context , String path , String fileName)
+
+	public MyTask(final Context context , String path , String fileName)
 	{
 		this.context = context;
 		this.path = path;
 		this.fileName = fileName;
-		pDialog = new ProgressDialog(context , 0);
-		pDialog.setIcon(R.drawable.ic_launcher);
-		pDialog.setMessage("更新内容加载中...");
-		pDialog.setTitle("下载更新");
-		pDialog.setCancelable(false);
-		pDialog.setMax(100);
-		pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog = new ProgressDialog(context , 0);
+		progressDialog.setIcon(R.drawable.ic_launcher);
+		progressDialog.setMessage("更新内容加载中...");
+		progressDialog.setTitle("下载更新");
+		progressDialog.setCancelable(false);
+		progressDialog.setMax(100);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setButton(DialogInterface.BUTTON_POSITIVE ,"后台更新" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Toast.makeText(context ,"已切换至后台更新" ,Toast.LENGTH_SHORT).show();
+				flag = true;
+			}
+		});
+		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE ,"取消" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Toast.makeText(context ,"您取消了本次更新" ,Toast.LENGTH_SHORT).show();
+				flag = false;
+			}
+		});
 	}
-	
-	public MyTask(Context context , String path , String fileName , String contents , String title)
+
+	public MyTask(final Context context , String path , String fileName , String contents , String title)
 	{
 		this.context = context;
 		this.path = path;
 		this.fileName = fileName;
-		pDialog = new ProgressDialog(context , 0);
-		pDialog.setIcon(R.drawable.ic_launcher);
-		pDialog.setMessage(contents);
-		pDialog.setTitle(title);
-		pDialog.setCancelable(false);
-		pDialog.setMax(100);
-		pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog = new ProgressDialog(context , 0);
+		progressDialog.setIcon(R.drawable.ic_launcher);
+		progressDialog.setMessage(contents);
+		progressDialog.setTitle(title);
+		progressDialog.setCancelable(false);
+		progressDialog.setMax(100);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setButton(DialogInterface.BUTTON_POSITIVE ,"后台更新" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Toast.makeText(context ,"已切换至后台更新" ,Toast.LENGTH_SHORT).show();
+				flag = true;
+			}
+		});
+		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE ,"取消" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Toast.makeText(context ,"您取消了本次更新" ,Toast.LENGTH_SHORT).show();
+				flag = false;
+			}
+		});
 	}
 
 	@Override
 	protected void onPreExecute()
 	{
 		super.onPreExecute();
-		pDialog.show();
+		progressDialog.show();
 	}
 
 	@Override
@@ -103,10 +141,10 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 		{
 			URL url = new URL(params[0]);
 			HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-			
+
 			httpConn.setDoInput(true);
 			httpConn.connect();
-			
+
 			if(httpConn.getResponseCode() == 200)
 			{
 				bis = new BufferedInputStream(httpConn.getInputStream());
@@ -118,7 +156,7 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 				{
 					baos.write(buffer ,0 ,inputSize);
 					count += inputSize;
-					pDialog.setProgress((int)(( count / (float ) total) * 100));
+					progressDialog.setProgress((int) ((count / (float) total) * 100));
 					baos.flush();
 				}
 				return baos.toByteArray();
@@ -137,7 +175,7 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 		super.onPostExecute(result);
 		if(result == null)
 		{
-			Toast.makeText(context ,"加载失败！" ,Toast.LENGTH_LONG).show();
+			Toast.makeText(context ,"更新失败 请检查网络后重试" ,Toast.LENGTH_LONG).show();
 		}
 		else
 		{
@@ -145,19 +183,19 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 			// Bitmap bitmap = BitmapFactory.decodeByteArray(result, 0,
 			// result.length);
 			// imageView_main_img.setImageBitmap(bitmap);
-			if(SDCardHelper.saveFileToSDCard(result , path ,fileName))
+			if(flag && SDCardHelper.saveFileToSDCard(result ,path ,fileName))
 			{// 调用自己封装的方法保存文件 到SD卡中
-//				Toast.makeText(context ,"保存成功！" ,Toast.LENGTH_LONG).show();
+				// Toast.makeText(context ,"保存成功！" ,Toast.LENGTH_LONG).show();
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.setDataAndType(Uri.parse("file://"+ path + fileName),"application/vnd.android.package-archive");
+				intent.setDataAndType(Uri.parse("file://" + path + fileName) ,"application/vnd.android.package-archive");
 				context.startActivity(intent);
 			}
 			else
 			{
-				Toast.makeText(context ,"文件保存失败！" ,Toast.LENGTH_LONG).show();
+				// Toast.makeText(context ,"取消更新" ,Toast.LENGTH_LONG).show();
 			}
 		}
-		pDialog.dismiss();
+		progressDialog.dismiss();
 	}
 }

@@ -8,7 +8,8 @@
         android:id="@+id/recite_text_main_scrollview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:fadingEdge="none" >
+        android:fadingEdge="none"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +28,42 @@
                 android:paddingStart="1.0dp"
                 android:shrinkColumns="0"
                 android:stretchColumns="0" >
+
+                <TableRow
+                    android:id="@+id/setting_modify_tableRow"
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:paddingBottom="16.0dip"
+                    android:paddingTop="16.0dip"
+                    android:visibility="gone" >
+
+                    <TextView
+                        android:id="@+id/setting_modify_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:paddingLeft="17.0dip"
+                        android:text="修改"
+                        android:textColor="#ff333333"
+                        android:textSize="16.0sp" />
+
+                    <ImageView
+                        android:id="@+id/setting_modify_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:src="@drawable/setting_detail" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000"
+                    android:visibility="gone" />
 
                 <TableRow
                     android:id="@+id/setting_speech_recognition_tableRow"
@@ -48,7 +85,7 @@
                         android:textSize="16.0sp" />
 
                     <ImageView
-                        android:id="@+id/setting_speech_recognition"
+                        android:id="@+id/setting_speech_recognition_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
@@ -148,7 +185,7 @@
                         android:text="检查更新"
                         android:textColor="#ff333333"
                         android:textSize="16.0sp" />
-					
+
                     <ImageView
                         android:id="@+id/setting_checkUpdate_detail"
                         android:layout_width="wrap_content"
@@ -209,8 +246,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
         android:gravity="center_vertical|center_horizontal"
-        android:text="版权所有：浙江兰创通信有限公司"
         android:lineSpacingExtra="15sp"
+        android:text="版权所有：浙江兰创通信有限公司"
         android:textSize="11sp" />
 
 </RelativeLayout>

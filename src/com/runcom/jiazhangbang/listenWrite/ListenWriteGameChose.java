@@ -13,25 +13,29 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenWriteGameTest extends Activity
+public class ListenWriteGameChose extends Activity
 {
 	private int degreeSpinnerValue , gradeSpinnerValue , phaseSpinnerValue ,
 	        unitSpinnerValue;
 	private Spinner degreeSpinner , gradeSpinner , phaseSpinner , unitSpinner;
 	private Button startButton;
 	private Intent intent;
+	private ArrayAdapter < String > adapter_grade , adapter_phase ,
+	        adapter_unit , adapter_degree;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listen_write_game_test);
+		setContentView(R.layout.listen_write_game_chose);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -79,9 +83,14 @@ public class ListenWriteGameTest extends Activity
 		degreeDataList.add("简单");
 		degreeDataList.add("中等");
 		degreeDataList.add("困难");
-		ListenWriteGameSpinnerAdapter adapter_degree = new ListenWriteGameSpinnerAdapter(getApplicationContext());
+
+		adapter_degree = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , degreeDataList);
 		degreeSpinner.setAdapter(adapter_degree);
-		adapter_degree.setDatas(degreeDataList);
+
+		// ListenWriteGameSpinnerAdapter adapter_degree = new
+		// ListenWriteGameSpinnerAdapter(getApplicationContext());
+		// degreeSpinner.setAdapter(adapter_degree);
+		// adapter_degree.setDatas(degreeDataList);
 
 		degreeSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -108,9 +117,13 @@ public class ListenWriteGameTest extends Activity
 		gradeDataList.add("五年级");
 		gradeDataList.add("六年级");
 
-		ListenWriteGameSpinnerAdapter adapter_grade = new ListenWriteGameSpinnerAdapter(getApplicationContext());
+		adapter_grade = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , gradeDataList);
 		gradeSpinner.setAdapter(adapter_grade);
-		adapter_grade.setDatas(gradeDataList);
+
+		// ListenWriteGameSpinnerAdapter adapter_grade = new
+		// ListenWriteGameSpinnerAdapter(getApplicationContext());
+		// gradeSpinner.setAdapter(adapter_grade);
+		// adapter_grade.setDatas(gradeDataList);
 
 		gradeSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -133,9 +146,13 @@ public class ListenWriteGameTest extends Activity
 		phaseDataList.add("上册");
 		phaseDataList.add("下册");
 
-		ListenWriteGameSpinnerAdapter adapter_phase = new ListenWriteGameSpinnerAdapter(getApplicationContext());
+		adapter_phase = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , phaseDataList);
 		phaseSpinner.setAdapter(adapter_phase);
-		adapter_phase.setDatas(phaseDataList);
+
+		// ListenWriteGameSpinnerAdapter adapter_phase = new
+		// ListenWriteGameSpinnerAdapter(getApplicationContext());
+		// phaseSpinner.setAdapter(adapter_phase);
+		// adapter_phase.setDatas(phaseDataList);
 		phaseSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 
@@ -154,18 +171,17 @@ public class ListenWriteGameTest extends Activity
 			}
 		});
 
-		unitDataList.add("第一单元");
-		unitDataList.add("第二单元");
-		unitDataList.add("第三单元");
-		unitDataList.add("第四单元");
-		unitDataList.add("第五单元");
-		unitDataList.add("第六单元");
-		unitDataList.add("第七单元");
-		unitDataList.add("第八单元");
-
-		ListenWriteGameSpinnerAdapter adapter_unit = new ListenWriteGameSpinnerAdapter(getApplicationContext());
+		for(int i = 1 ; i <= 8 ; i ++ )
+		{
+			unitDataList.add(Util.unit[i]);
+		}
+		adapter_unit = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , unitDataList);
 		unitSpinner.setAdapter(adapter_unit);
-		adapter_unit.setDatas(unitDataList);
+
+		// ListenWriteGameSpinnerAdapter adapter_unit = new
+		// ListenWriteGameSpinnerAdapter(getApplicationContext());
+		// unitSpinner.setAdapter(adapter_unit);
+		// adapter_unit.setDatas(unitDataList);
 
 		unitSpinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -189,13 +205,13 @@ public class ListenWriteGameTest extends Activity
 
 	private void initLayout()
 	{
-		degreeSpinner = (Spinner) findViewById(R.id.listen_write_game_degree_spinner);
+		degreeSpinner = (Spinner) findViewById(R.id.setting_chose_course_spinner);
 
-		gradeSpinner = (Spinner) findViewById(R.id.listen_write_game_grade_spinner);
-		phaseSpinner = (Spinner) findViewById(R.id.listen_write_game_phase_spinner);
-		unitSpinner = (Spinner) findViewById(R.id.listen_write_game_unit_spinner);
+		gradeSpinner = (Spinner) findViewById(R.id.setting_chose_grade_spinner);
+		phaseSpinner = (Spinner) findViewById(R.id.setting_chose_phase_spinner);
+		unitSpinner = (Spinner) findViewById(R.id.setting_chose_unit_spinner);
 
-		startButton = (Button) findViewById(R.id.listen_write_game_start_button);
+		startButton = (Button) findViewById(R.id.setting_chose_submit_button);
 	}
 
 	@Override

@@ -39,6 +39,7 @@
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:ellipsize="marquee"
+        android:scrollbars="none"
         android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
 

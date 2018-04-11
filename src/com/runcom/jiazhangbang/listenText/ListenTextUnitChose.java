@@ -1,4 +1,4 @@
-package com.runcom.jiazhangbang.listenWrite;
+package com.runcom.jiazhangbang.listenText;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,21 +26,23 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenText.MyAudio;
+import com.runcom.jiazhangbang.listenWrite.MyListenWriteAdapter;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenWriteBackups extends Activity
+public class ListenTextUnitChose extends Activity
 {
 	private MyListenWriteAdapter myListenWriteMainAdapter;
 	private MyAudio myAudio;
 	private ArrayList < MyAudio > myListenWriteContentArrayList = new ArrayList < MyAudio >();
 	private ListView listView;
-	private int selected , phase;
+	private int grade , phase;
 	private Intent intent;
 	private String [] contents = null;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -47,21 +50,30 @@ public class ListenWriteBackups extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_backups);
 
-		intent = getIntent();
+		// intent = getIntent();
 
-		selected = intent.getIntExtra("selected" ,1);
-		phase = intent.getIntExtra("phase" ,1);
+		// selected = intent.getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		// phase = intent.getIntExtra("phase" ,1);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + Util.grade[selected] + "上册";
+		String content = "听课文 " + Util.grade[grade] + "上册";
 		if(2 == phase)
-			content = "听写 " + Util.grade[selected] + "下册";
+			content = "听课文 " + Util.grade[grade] + "下册";
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initData();
 	}
@@ -77,7 +89,7 @@ public class ListenWriteBackups extends Activity
 		{
 			TreeMap < String , String > map = Util.getMap(getApplicationContext());
 			map.put("course" ,Util.ChineseCourse);
-			map.put("grade" ,selected + "");
+			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
 			System.out.println(Util.REALSERVER + "getunitlist.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getunitlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
@@ -99,7 +111,7 @@ public class ListenWriteBackups extends Activity
 					else
 						if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
 						{
-							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_SHORT).show();
+							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
 							finish();
 						}
 						else
@@ -138,9 +150,7 @@ public class ListenWriteBackups extends Activity
 					}
 					return result;
 				}
-
 			});
-
 		}
 	}
 
@@ -153,10 +163,8 @@ public class ListenWriteBackups extends Activity
 		{
 			myAudio = new MyAudio();
 			myAudio.setName(contents[i]);
-			// myAudio.setId(i);
 			myListenWriteContentArrayList.add(myAudio);
 		}
-
 		initOnClick();
 
 	}
@@ -167,6 +175,7 @@ public class ListenWriteBackups extends Activity
 		myListenWriteMainAdapter = new MyListenWriteAdapter(getApplicationContext() , myListenWriteContentArrayList);
 		listView.setAdapter(myListenWriteMainAdapter);
 		myListenWriteMainAdapter.notifyDataSetChanged();
+		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -174,12 +183,10 @@ public class ListenWriteBackups extends Activity
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
 				intent = new Intent();
-				intent.putExtra("selected" ,selected);// 年级
+				intent.putExtra("selected" ,grade);// 年级
 				intent.putExtra("phase" ,phase);// 上下册
-				intent.putExtra("id" ,++ position);// 单元
-				// System.out.println("**********************************position:"
-				// + position + "id:" + id);
-				intent.setClass(getApplicationContext() ,ListenWriteTips.class);
+				intent.putExtra("id" ,(long) ++ id);// 单元
+				intent.setClass(getApplicationContext() ,ListenTextMain.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 				{
 					Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();

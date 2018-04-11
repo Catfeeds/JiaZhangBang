@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -37,6 +38,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
@@ -47,10 +49,10 @@ import com.umeng.analytics.MobclickAgent;
  * @author Administrator
  * 
  */
-public class ReciteTextChose extends Activity
+public class ReciteTextTextChose extends Activity
 {
-	private Intent intent = new Intent();
-	private int selected;
+	// private Intent intent = new Intent();
+	private int grade;
 	private int phase;
 	private int unit;
 	private SwipeMenuListView listView;
@@ -58,6 +60,7 @@ public class ReciteTextChose extends Activity
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
 	private ArrayList < String > lrcList = new ArrayList < String >();
 	private MyListViewAdapter adapter;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -65,10 +68,13 @@ public class ReciteTextChose extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_listview);
 
-		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,1);
-		phase = intent.getIntExtra("phase" ,1);
-		unit = intent.getIntExtra("unit" ,1);
+		// intent = getIntent();
+		// grade = intent.getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		// phase = intent.getIntExtra("phase" ,1);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
+		// unit = intent.getIntExtra("unit" ,1);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -76,11 +82,18 @@ public class ReciteTextChose extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "背课文  " + Util.grade[selected] + "上册第" + unit + "单元";
+		String content = "背诵检查" + Util.grade[grade] + "上学期" + Util.unit[unit];
 		if(2 == phase)
-			content = "背课文  " + Util.grade[selected] + "下册第" + unit + "单元";
+			content = "背诵检查" + Util.grade[grade] + "下学期" + Util.unit[unit];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initData();
 	}
@@ -96,7 +109,7 @@ public class ReciteTextChose extends Activity
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
 			map.put("course" ,Util.ChineseCourse);
-			map.put("grade" ,selected + "");
+			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
 			map.put("unit" ,unit + "");
 			System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
@@ -150,9 +163,9 @@ public class ReciteTextChose extends Activity
 						textListJsonObject = new JSONObject(jsonArray.getString(i));
 						String parts = textListJsonObject.getString("parts");
 						int part = Integer.valueOf(parts);
-						myText = new MyText();
 						if(1 == part)
 						{
+							myText = new MyText();
 							myText.setId(textListJsonObject.getString("id"));
 							myText.setName(textListJsonObject.getString("title"));
 							myText.setMode(textListJsonObject.getString("desc"));
@@ -164,17 +177,13 @@ public class ReciteTextChose extends Activity
 								JSONArray subjsonArray = new JSONArray(textListJsonObject.getJSONArray("partlist"));
 								for(int k = 0 , length = subjsonArray.length() ; k < length ; k ++ )
 								{
+									myText = new MyText();
 									JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
 									myText.setId(subjsonObject.getString("id"));
 									myText.setName(subjsonObject.getString("title"));
 									myText.setMode(subjsonObject.getString("desc"));
 									textList.add(myText);
 								}
-							}
-							else
-							{
-								Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
-								System.exit(0);
 							}
 					}
 					return result;
@@ -211,7 +220,7 @@ public class ReciteTextChose extends Activity
 						initListView();
 					}
 					else
-						if( !Util.okHttpUtilsResultStringKey.equalsIgnoreCase(arg0))
+						if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 						{
 							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
 							finish();
@@ -223,7 +232,7 @@ public class ReciteTextChose extends Activity
 				{
 					JSONObject jsonObject = new JSONObject(arg0.body().string().trim());
 					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
-					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
 					{
 						return result;
 					}
@@ -246,6 +255,8 @@ public class ReciteTextChose extends Activity
 		adapter = new MyListViewAdapter(getApplicationContext() , textList);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
+		progressDialog.dismiss();
+
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -256,7 +267,7 @@ public class ReciteTextChose extends Activity
 				// textList.get(arg2).getName().toString()
 				// ,Toast.LENGTH_SHORT).show();
 				Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-				open_intent.putExtra("selected" ,selected);
+				open_intent.putExtra("selected" ,grade);
 				open_intent.putExtra("phase" ,phase);
 				open_intent.putExtra("unit" ,arg2 + 1);
 				open_intent.putExtra("name" ,textList.get(arg2).getName());
@@ -329,7 +340,7 @@ public class ReciteTextChose extends Activity
 						// textList.get(position).getName().toString()
 						// ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-						open_intent.putExtra("selected" ,selected);
+						open_intent.putExtra("selected" ,grade);
 						open_intent.putExtra("phase" ,phase);
 						open_intent.putExtra("unit" ,position + 1);
 						open_intent.putExtra("name" ,textList.get(position).getName());

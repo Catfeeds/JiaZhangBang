@@ -1,6 +1,5 @@
 package com.runcom.jiazhangbang.chinese;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,48 +9,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.iflytek.voice.Text2Speech;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.findnewwords.FindNewWords;
-import com.runcom.jiazhangbang.listenText.ListenTextPhaseChose;
-import com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose;
-import com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose;
-import com.runcom.jiazhangbang.repeat.Repeat;
+import com.runcom.jiazhangbang.listenWrite.ListenWriteGameChose;
+import com.runcom.jiazhangbang.notification.MyNotification;
+import com.runcom.jiazhangbang.setting.Setting;
+import com.runcom.jiazhangbang.setting.SettingChose;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
+import com.runcom.jiazhangbang.welcome.Welcome;
 import com.umeng.analytics.MobclickAgent;
-/**
- * chinese 
- * @author Administrator
- *
- */
 
 public class Chinese extends Activity
 {
 	private Intent intent = new Intent();
-	private int selected;
+	private int grade;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
-		selected = getIntent().getIntExtra("selected" ,1);
-
-		ActionBar actionbar = getActionBar();
-		actionbar.setDisplayHomeAsUpEnabled(false);
-		actionbar.setDisplayShowHomeEnabled(true);
-		actionbar.setDisplayUseLogoEnabled(true);
-		actionbar.setDisplayShowTitleEnabled(true);
-		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(Util.grade[selected] + "语文");
-
+		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
+		firstStartAndSetChose();
 	}
 
+	private void firstStartAndSetChose()
+	{
+		Boolean first = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeyFirstStart ,Util.firstStartSharedPreferencesKeyString ,true);
+		if(first)
+		{
+			intent.putExtra("class" ,Util.FirstStartAndSetChose);
+			intent.setClass(getApplicationContext() ,SettingChose.class);
+			MySharedPreferences.putValue(getApplicationContext() ,Util.sharedPreferencesKeyFirstStart ,Util.firstStartSharedPreferencesKeyString ,false);
+			startActivity(intent);
+		}
+	}
+
+	/**
+	 * 1听课文
+	 * 
+	 * @param v
+	 */
 	public void listenText(View v )
 	{
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenTextPhaseChose.class);
+		intent.putExtra("class" ,Util.ListenTextMain);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -63,10 +68,15 @@ public class Chinese extends Activity
 		}
 	}
 
+	/**
+	 * 2听写
+	 * 
+	 * @param v
+	 */
 	public void listenAndWrite(View v )
 	{
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenWritePhaseChose.class);
+		intent.putExtra("class" ,Util.ListenWriteTips);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -78,10 +88,15 @@ public class Chinese extends Activity
 		}
 	}
 
+	/**
+	 * 3背诵检查
+	 * 
+	 * @param v
+	 */
 	public void reciteText(View v )
 	{
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ReciteTextPhaseChose.class);
+		intent.putExtra("class" ,Util.ReciteTextTextChose);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -89,23 +104,19 @@ public class Chinese extends Activity
 		}
 		else
 		{
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success") )
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-			// else
 			startActivity(intent);
 		}
 	}
 
+	/**
+	 * 4朗读
+	 * 
+	 * @param v
+	 */
 	public void repeat(View v )
 	{
-		// Toast.makeText(getApplicationContext() ,"跟读"
-		// ,Toast.LENGTH_SHORT).show();
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,Repeat.class);
+		intent.putExtra("class" ,Util.Repeat);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -113,21 +124,19 @@ public class Chinese extends Activity
 		}
 		else
 		{
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success") )
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-			// else
 			startActivity(intent);
 		}
 	}
 
+	/**
+	 * 5查生词
+	 * 
+	 * @param v
+	 */
 	public void findNewWords(View v )
 	{
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,FindNewWords.class);
+		intent.putExtra("class" ,Util.FindNewWords);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -135,59 +144,65 @@ public class Chinese extends Activity
 		}
 		else
 		{
-			// if( !new
-			// ServerUtil().execute(Util.serverAddress).equals("success") )
-			// {
-			// Toast.makeText(getApplicationContext() ,"服务器未开启 !\n请联系网络管理员."
-			// ,Toast.LENGTH_SHORT).show();
-			// }
-
-			// else
 			startActivity(intent);
 		}
-		// Toast.makeText(getApplicationContext() ,"查生词"
-		// ,Toast.LENGTH_SHORT).show();
 	}
 
-	public void comingSoon(View v )
+	/**
+	 * 玩游戏
+	 * 
+	 * @param v
+	 */
+	public void playGame(View v )
 	{
-		// MyNotification.myNotification(getApplicationContext());
-		// intent.putExtra("selected" ,selected);
-		// intent.setClass(getApplicationContext() ,Welcome.class);
-		// startActivity(intent);
-		Toast.makeText(getApplicationContext() ,"coming soon..." ,Toast.LENGTH_SHORT).show();
-		new Text2Speech(getApplicationContext() , "敬请期待...").play();
-		// this.finish();
+		intent.setClass(getApplicationContext() ,ListenWriteGameChose.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+		}
+		else
+		{
+			startActivity(intent);
+		}
 	}
 
-	// @Override
-	// public boolean onMenuOpened(int featureId , Menu menu )
-	// {
-	// if(featureId == Window.FEATURE_ACTION_BAR && menu != null)
-	// {
-	// if(menu.getClass().getSimpleName().equals("MenuBuilder"))
-	// {
-	// try
-	// {
-	// Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible"
-	// ,Boolean.TYPE);
-	// m.setAccessible(true);
-	// m.invoke(menu ,true);
-	// }
-	// catch(Exception e)
-	// {
-	// Toast.makeText(this ,"overflow 展开显示item图标异常" ,Toast.LENGTH_LONG).show();
-	// }
-	// }
-	// }
-	//
-	// return super.onMenuOpened(featureId ,menu);
-	// }
+	/**
+	 * 6录课文
+	 * 
+	 * @param v
+	 */
+	public void recordText(View v )
+	{
+		intent.putExtra("class" ,Util.RecordText);
+		intent.setClass(getApplicationContext() ,SettingChose.class);
+		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
+		{
+			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
+			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+		}
+		else
+		{
+			startActivity(intent);
+		}
+		// notification();
+	}
+
+	@SuppressWarnings("unused")
+	private void notification()
+	{
+		MyNotification.myNotification(getApplicationContext());
+		intent.putExtra("selected" ,grade);
+		intent.setClass(getApplicationContext() ,Welcome.class);
+		startActivity(intent);
+		// TODO Auto-generated method stub
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.welcome ,menu);
+		// getMenuInflater().inflate(R.menu.welcome ,menu);//TODO
+		getMenuInflater().inflate(R.menu.setting_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -196,6 +211,11 @@ public class Chinese extends Activity
 	{
 		switch(item.getItemId())
 		{
+			case R.id.main_menu_setting_menu:
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext() ,Setting.class);
+				startActivity(intent);
+				break;
 			case android.R.id.home:
 				onBackPressed();
 				break;
@@ -205,10 +225,29 @@ public class Chinese extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
+	// 两秒内按返回键两次退出程序
+	private long exitTime = 0;
+
 	// 重写按返回键
 	@Override
 	public boolean onKeyDown(int keyCode , KeyEvent event )
 	{
+		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
+		{
+			if((System.currentTimeMillis() - exitTime) > 2000)
+			{
+				Toast.makeText(getApplicationContext() ,"再按一次退出程序" ,Toast.LENGTH_SHORT).show();
+				exitTime = System.currentTimeMillis();
+			}
+			else
+			{
+				MobclickAgent.onKillProcess(this);
+				finish();
+				System.exit(0);
+			}
+			return true;
+		}
+
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
 			finish();
@@ -221,7 +260,6 @@ public class Chinese extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		// MobclickAgent.onPageStart("ChineseScreen");
 		MobclickAgent.onResume(this);
 	}
 
@@ -229,7 +267,6 @@ public class Chinese extends Activity
 	public void onPause()
 	{
 		super.onPause();
-		// MobclickAgent.onPageEnd("ChineseScreen");
 		MobclickAgent.onPause(this);
 	}
 

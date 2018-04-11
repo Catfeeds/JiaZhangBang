@@ -21,7 +21,6 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.chinese.Chinese;
-import com.runcom.jiazhangbang.setting.PlaySetting;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -366,7 +365,7 @@ public class MainActivity extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		getMenuInflater().inflate(R.menu.setting_menu ,menu);
+		// getMenuInflater().inflate(R.menu.setting_menu ,menu);
 		return true;
 	}
 
@@ -376,26 +375,26 @@ public class MainActivity extends Activity
 		int id = item.getItemId();
 		switch(id)
 		{
-			case R.id.main_menu_setting_menu:
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext() ,PlaySetting.class);
-				startActivity(intent);
-				break;
-			// case R.id.main_menu_update:
-			// update();
-			// break;
-			// case R.id.main_menu_others:
-			// intent = new Intent();
-			// intent.setClass(getApplicationContext() ,PlaySetting.class);
-			// startActivity(intent);
-			// break;
-			// case R.id.main_menu_speech_recognition:
-			// new Speech2Text(MainActivity.this).play();
-			// break;
-			// case R.id.main_menu_newConversation:
-			// Toast.makeText(getApplicationContext() ,"新会话"
-			// ,Toast.LENGTH_SHORT).show();
-			// break;
+		// case R.id.main_menu_setting_menu:
+		// Intent intent = new Intent();
+		// intent.setClass(getApplicationContext() ,Setting.class);
+		// startActivity(intent);
+		// break;
+		// case R.id.main_menu_update:
+		// update();
+		// break;
+		// case R.id.main_menu_others:
+		// intent = new Intent();
+		// intent.setClass(getApplicationContext() ,PlaySetting.class);
+		// startActivity(intent);
+		// break;
+		// case R.id.main_menu_speech_recognition:
+		// new Speech2Text(MainActivity.this).play();
+		// break;
+		// case R.id.main_menu_newConversation:
+		// Toast.makeText(getApplicationContext() ,"新会话"
+		// ,Toast.LENGTH_SHORT).show();
+		// break;
 			default:
 				break;
 		}

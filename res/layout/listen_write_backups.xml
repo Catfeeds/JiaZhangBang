@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  	android:orientation="vertical" >
+    android:orientation="vertical" >
 
     <ListView
         android:id="@+id/listenWrite_listView"
@@ -12,6 +12,7 @@
         android:layout_alignParentStart="true"
         android:background="#969696"
         android:ellipsize="marquee"
+        android:scrollbars="none"
         android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
     </ListView>

@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -47,12 +47,13 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class CopyOfListenText extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
+public class ListenTextMain extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
 	// spinner
 	private Spinner spinner;
@@ -81,8 +82,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
 	private String lyricsPath;
-	private int selected , phase , unit;
-	private Intent intent;
+	private int grade , phase , unit;
 	// 歌词处理
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
@@ -94,16 +94,21 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 
 	private int newIndex = 0;
 
+	private ProgressDialog progressDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text);
 
-		intent = getIntent();
-		selected = intent.getIntExtra("selected" ,1);
-		phase = intent.getIntExtra("phase" ,1);
-		unit = (int) intent.getLongExtra("id" ,1);
+		// intent = getIntent();
+		// grade = intent.getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		// phase = intent.getIntExtra("phase" ,1);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
+		// unit = (int) intent.getLongExtra("id" ,1);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -111,15 +116,23 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听课文" + Util.grade[selected] + "上册第" + unit + "单元";
+		String content = "听课文" + Util.grade[grade] + "上学期" + Util.unit[unit];
 		if(2 == phase)
-			content = "听课文" + Util.grade[selected] + "下册第" + unit + "单元";
+			content = "听课文" + Util.grade[grade] + "下学期" + Util.unit[unit];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		mp = new MediaPlayer();
 		mp.setOnCompletionListener(this);
 		mp.setOnErrorListener(this);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initPlayView();
 	}
@@ -145,7 +158,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 	{
 		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
-		map.put("grade" ,selected + "");
+		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
 		map.put("unit" ,unit + "");
 		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
@@ -315,6 +328,7 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_title);
 		spinner.setAdapter(adapter);
+		progressDialog.dismiss();
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 
@@ -331,12 +345,6 @@ public class CopyOfListenText extends Activity implements Runnable , OnCompletio
 			{
 			}
 		});
-	}
-
-	@SuppressWarnings("unused")
-	private String getName(String url )
-	{
-		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
 	}
 
 	@SuppressLint("HandlerLeak")

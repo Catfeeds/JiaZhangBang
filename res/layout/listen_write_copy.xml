@@ -38,6 +38,7 @@
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:ellipsize="marquee"
+        android:scrollbars="none"
         android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
     </ListView>
@@ -79,8 +80,8 @@
             android:id="@+id/listenText_textView_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            android:text="0" />
     </LinearLayout>
 
     <LinearLayout

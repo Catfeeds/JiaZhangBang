@@ -19,24 +19,26 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.mainActivity.Update;
 import com.umeng.analytics.MobclickAgent;
 
-public class PlaySetting extends Activity
+public class Setting extends Activity
 {
-	private TextView setting_speech_recognition_textView ,
-	        setting_clearCache_textView , setting_opinion_textView ,
-	        setting_checkUpdate_textView , setting_aboutUs_textView ,
-	        setting_version_textView;
-	private ImageView setting_speech_recognition , setting_clearCache_detail ,
+	private TextView setting_modify_textView ,
+	        setting_speech_recognition_textView , setting_clearCache_textView ,
+	        setting_opinion_textView , setting_checkUpdate_textView ,
+	        setting_aboutUs_textView , setting_version_textView;
+	private ImageView setting_modify_detail ,
+	        setting_speech_recognition_detail , setting_clearCache_detail ,
 	        setting_opinion_detail , setting_checkUpdate_detail ,
 	        setting_aboutUs_detail;
-	private TableRow setting_speech_recognition_tableRow ,
-	        setting_clearCache_tableRow , setting_opinion_tableRow ,
-	        setting_checkUpdate_tableRow , setting_aboutUs_tableRow;
+	private TableRow setting_modify_tableRow ,
+	        setting_speech_recognition_tableRow , setting_clearCache_tableRow ,
+	        setting_opinion_tableRow , setting_checkUpdate_tableRow ,
+	        setting_aboutUs_tableRow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main_setting_and_help);
+		setContentView(R.layout.setting);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -44,17 +46,24 @@ public class PlaySetting extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(" …Ë÷√ ");
+		actionbar.setTitle("…Ë÷√ ");
 
 		initView();
 	}
 
 	private void initView()
 	{
+		setting_modify_textView = (TextView) findViewById(R.id.setting_modify_textView);
+		setting_modify_textView.setOnClickListener(listener);
+		setting_modify_detail = (ImageView) findViewById(R.id.setting_modify_detail);
+		setting_modify_detail.setOnClickListener(listener);
+		setting_modify_tableRow = (TableRow) findViewById(R.id.setting_modify_tableRow);
+		setting_modify_tableRow.setOnClickListener(listener);
+
 		setting_speech_recognition_textView = (TextView) findViewById(R.id.setting_speech_recognition_textView);
 		setting_speech_recognition_textView.setOnClickListener(listener);
-		setting_speech_recognition = (ImageView) findViewById(R.id.setting_speech_recognition);
-		setting_speech_recognition.setOnClickListener(listener);
+		setting_speech_recognition_detail = (ImageView) findViewById(R.id.setting_speech_recognition_detail);
+		setting_speech_recognition_detail.setOnClickListener(listener);
 		setting_speech_recognition_tableRow = (TableRow) findViewById(R.id.setting_speech_recognition_tableRow);
 		setting_speech_recognition_tableRow.setOnClickListener(listener);
 
@@ -109,10 +118,19 @@ public class PlaySetting extends Activity
 		{
 			switch(v.getId())
 			{
-				case R.id.setting_speech_recognition:
+				case R.id.setting_modify_textView:
+				case R.id.setting_modify_tableRow:
+				case R.id.setting_modify_detail:
+					// startActivity(new
+					// Intent().setClass(getApplicationContext()
+					// ,SettingChose.class));
+					Toast.makeText(getApplicationContext() ,"modify..." ,Toast.LENGTH_LONG).show();
+					break;
+
+				case R.id.setting_speech_recognition_detail:
 				case R.id.setting_speech_recognition_textView:
 				case R.id.setting_speech_recognition_tableRow:
-					new Speech2Text(PlaySetting.this).play();
+					new Speech2Text(Setting.this).play();
 					break;
 				case R.id.setting_clearCache_detail:
 				case R.id.setting_clearCache_textView:
@@ -129,7 +147,7 @@ public class PlaySetting extends Activity
 				case R.id.setting_checkUpdate_detail:
 				case R.id.setting_checkUpdate_textView:
 				case R.id.setting_checkUpdate_tableRow:
-					Update.update(PlaySetting.this);
+					Update.update(Setting.this);
 					break;
 				case R.id.setting_aboutUs_detail:
 				case R.id.setting_aboutUs_textView:

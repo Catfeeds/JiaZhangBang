@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -18,35 +19,34 @@ import com.umeng.analytics.MobclickAgent;
 public class ListenTextPhaseChose extends Activity
 {
 	private Intent intent;
-	private int selected;
+	private int grade;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text_phase_chose);
-		intent = getIntent();
-
-		selected = intent.getIntExtra("selected" ,1);
-
+//		intent = getIntent();
+ 
+//		selected = intent.getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听课文 " + Util.grade[selected];
+		String content = "听课文 " + Util.grade[grade];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
-
 	}
 
 	public void listenTextPhaseChoseFirstPhase(View v )
 	{
 		intent = new Intent();
-		intent.putExtra("selected" ,selected);
+		intent.putExtra("selected" ,grade);
 		intent.putExtra("phase" ,1);
-		intent.setClass(getApplicationContext() ,ListenTextBackups.class);
+		intent.setClass(getApplicationContext() ,ListenTextUnitChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -60,9 +60,9 @@ public class ListenTextPhaseChose extends Activity
 	{
 
 		intent = new Intent();
-		intent.putExtra("selected" ,selected);
+		intent.putExtra("selected" ,grade);
 		intent.putExtra("phase" ,2);
-		intent.setClass(getApplicationContext() ,ListenTextBackups.class);
+		intent.setClass(getApplicationContext() ,ListenTextUnitChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();

@@ -79,7 +79,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(" 智能识文 ");
+		actionbar.setTitle("智能识文 ");
 		// System.out.println("play 执行了");
 		initPlayView();
 	}

@@ -38,6 +38,7 @@
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:ellipsize="marquee"
+        android:scrollbars="none"
         android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
 
@@ -50,7 +51,6 @@
             android:text=""
             android:textColor="#25CB73"
             android:textSize="22sp" />
-
     </com.runcom.jiazhangbang.listenText.LyricView>
 
     <TextView

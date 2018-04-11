@@ -46,7 +46,7 @@ public class ListenWritePhaseChose extends Activity
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
 		intent.putExtra("phase" ,1);
-		intent.setClass(getApplicationContext() ,ListenWriteBackups.class);
+		intent.setClass(getApplicationContext() ,ListenWriteUnitChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -62,7 +62,7 @@ public class ListenWritePhaseChose extends Activity
 		intent = new Intent();
 		intent.putExtra("selected" ,selected);
 		intent.putExtra("phase" ,2);
-		intent.setClass(getApplicationContext() ,ListenWriteBackups.class);
+		intent.setClass(getApplicationContext() ,ListenWriteUnitChose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -75,28 +75,26 @@ public class ListenWritePhaseChose extends Activity
 
 	public void gameTest()
 	{
-		// Toast.makeText(getApplicationContext() ,"听写游戏测试"
+		// intent = new Intent();
+		// intent.putExtra("selected" ,selected);
+		// intent.setClass(getApplicationContext() ,ListenWriteGameTest.class);
+		//
+		// if(NetUtil.getNetworkState(getApplicationContext()) ==
+		// NetUtil.NETWORK_NONE)
+		// {
+		// Toast.makeText(getApplicationContext() ,"请检查网络连接"
 		// ,Toast.LENGTH_SHORT).show();
-		// TextView textView = (TextView)
-		// findViewById(R.id.listen_write_phase_chose_test_item);
-		// textView.setText("asdf");
-		intent = new Intent();
-		intent.putExtra("selected" ,selected);
-		intent.setClass(getApplicationContext() ,ListenWriteGameTest.class);
-
-		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
-		{
-			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
-			startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
-		}
-		else
-			startActivity(intent);
+		// startActivity(new
+		// Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
+		// }
+		// else
+		// startActivity(intent);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		getMenuInflater().inflate(R.menu.listen_write_phasechose_menu ,menu);
+		// getMenuInflater().inflate(R.menu.listen_write_phasechose_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -106,9 +104,9 @@ public class ListenWritePhaseChose extends Activity
 
 		switch(item.getItemId())
 		{
-			case R.id.listen_write_phase_chose_test_item:
-				gameTest();
-				break;
+		// case R.id.listen_write_phase_chose_test_item:
+		// gameTest();
+		// break;
 			case android.R.id.home:
 				onBackPressed();
 				break;

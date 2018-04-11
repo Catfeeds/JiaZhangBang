@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.iflytek.voice.Text2Speech;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
@@ -64,7 +66,7 @@ public class FindNewWords extends Activity
 {
 
 	private Intent intent = new Intent();
-	private int selected;
+	private int grade;
 	private String contents;
 
 	private AutoCompleteTextView autoCompleteTextView;
@@ -76,6 +78,7 @@ public class FindNewWords extends Activity
 	private String [] autoCompleteTextViewArrayString1 = null;
 	private String [] autoCompleteTextViewArrayString2 = null;
 	private int note = 0;
+	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -83,16 +86,24 @@ public class FindNewWords extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.find_new_words_main);
 
-		selected = getIntent().getIntExtra("selected" ,1);
+		// grade = getIntent().getIntExtra("selected" ,1);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "查生词  " + Util.grade[selected];
+		String content = "查生词" + Util.grade[grade];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
 
 		initView();
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -110,7 +121,7 @@ public class FindNewWords extends Activity
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
-		map.put("grade" ,selected + "");
+		map.put("grade" ,grade + "");
 		map.put("phase" ,"1");
 		map.put("unit" ,"-1");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
@@ -139,7 +150,7 @@ public class FindNewWords extends Activity
 				{
 					return result;
 				}
-				JSONArray jsonArray = jsonObject.getJSONArray("attr");
+				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 				newWordsMap = new TreeMap < String , String >();
 				note = 0;
 				String phrase = null;
@@ -178,7 +189,7 @@ public class FindNewWords extends Activity
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,Util.ChineseCourse);
-		map.put("grade" ,selected + "");
+		map.put("grade" ,grade + "");
 		map.put("phase" ,"2");
 		map.put("unit" ,"-1");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
@@ -195,15 +206,15 @@ public class FindNewWords extends Activity
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if(autoCompleteTextViewArrayString2.length > 0 || autoCompleteTextViewArrayString1.length > 0)
+				if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
 				{
-					initData();
+					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+					finish();
 				}
 				else
-					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+					if(autoCompleteTextViewArrayString1.length > 0 || autoCompleteTextViewArrayString2.length > 0)
 					{
-						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
-						finish();
+						initData();
 					}
 					else
 					{
@@ -220,11 +231,12 @@ public class FindNewWords extends Activity
 				JSONObject jsonObject = new JSONObject(response);
 				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
 				// System.out.println(result);
+				autoCompleteTextViewArrayString2 = new String [0];
 				if( !Util.okHttpUtilsResultOkStringValue.equals(result))
 				{
 					return result;
 				}
-				JSONArray jsonArray = jsonObject.getJSONArray("attr");
+				JSONArray jsonArray = jsonObject.getJSONArray("phlist");
 				note = 0;
 				String phrase = null;
 				String pinyin = null;
@@ -288,8 +300,9 @@ public class FindNewWords extends Activity
 		// }
 
 		ArrayAdapter < String > autoCompleteTextViewArrayAdapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.simple_dropdown_item_1line , autoCompleteTextViewArrayString);
-
 		autoCompleteTextView.setAdapter(autoCompleteTextViewArrayAdapter);
+		autoCompleteTextViewArrayAdapter.notifyDataSetChanged();
+		progressDialog.dismiss();
 		autoCompleteTextView.addTextChangedListener(new TextWatcher()
 		{
 
@@ -322,16 +335,18 @@ public class FindNewWords extends Activity
 
 		autoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
-
 			@Override
 			public boolean onEditorAction(TextView v , int actionId , KeyEvent event )
 			{
-				if(actionId == EditorInfo.IME_ACTION_SEND || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId == 13)
+				// if(actionId == EditorInfo.IME_ACTION_SEND || (event != null
+				// && event.getKeyCode() == KeyEvent.KEYCODE_ENTER) || actionId
+				// == EditorInfo.IME_ACTION_DONE)
+				if(actionId == EditorInfo.IME_ACTION_DONE)
 				{
+					hideOrShowInputMethod();
 					contents = autoCompleteTextView.getText().toString();
 					String content = v.getText().toString();
 					loadingData(contents);
-					hideOrShowInputMethod();
 					System.out.println(content + "\n" + contents);
 					return true;
 				}
@@ -355,6 +370,7 @@ public class FindNewWords extends Activity
 			@Override
 			public void onClick(View v )
 			{
+				hideOrShowInputMethod();
 				contents = autoCompleteTextView.getText().toString();
 				loadingData(contents);
 			}
@@ -364,9 +380,7 @@ public class FindNewWords extends Activity
 
 	private void hideOrShowInputMethod()
 	{
-		// 隐藏输入法
 		InputMethodManager imm = (InputMethodManager) getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-		// 显示或者隐藏输入法
 		imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
@@ -414,7 +428,7 @@ public class FindNewWords extends Activity
 			// System.out.println(content + "--" + contents);
 			if(content == null)
 			{
-				Toast.makeText(this ,selected + "年级课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(this ,grade + "年级课文中不存在该生词，请重新输入" ,Toast.LENGTH_SHORT).show();
 				autoCompleteTextView.setText("");
 				deleteImageView.setVisibility(ImageView.INVISIBLE);
 				contentsShowTextView.setText("");

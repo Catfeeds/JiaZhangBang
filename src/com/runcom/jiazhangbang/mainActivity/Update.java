@@ -1,6 +1,7 @@
 package com.runcom.jiazhangbang.mainActivity;
 
 import java.io.File;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -8,48 +9,52 @@ import okhttp3.Response;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
+import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 
 public class Update
 {
+	private static String content , install;
+
 	public static void update(final Context context )
 	{
-		final String appName = "JiaZhangBang.apk";
-		final String file = Util.UPDATEPath + appName;
-		OkHttpUtils.get().url(Util.SERVERADDRESS_update_version_name).build().execute(new Callback < String >()
+		TreeMap < String , String > map = Util.getMap(context);
+		System.out.println(Util.REALSERVER + "getver.php?" + URL.getParameter(map));
+		OkHttpUtils.get().url(Util.REALSERVER + "getver.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
 				Toast.makeText(context ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				System.out.println(arg1);
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if( !Util.okHttpUtilsResultOkStringValue.equals(arg0))
+				if(Util.okHttpUtilsResultOkStringValue.equals(arg0))
 				{
-					if( !new File(file).exists())
+					Toast.makeText(context ,"当前已是最新版本" ,Toast.LENGTH_SHORT).show();
+				}
+				else
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
 					{
-						new MyTask(context , Util.UPDATEPath , appName , arg0 , "更新下载").execute(Util.SERVERADDRESS_update);
+						File updateFile = new File(Util.UPDATEPath + Util.appName);
+						if(updateFile.exists())
+						{
+							updateFile.delete();
+						}
+						new MyTask(context , Util.UPDATEPath , Util.appName , content , "更新下载").execute(install);
+						updateFile.delete();
 					}
 					else
 					{
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						intent.setDataAndType(Uri.parse("file://" + file) ,"application/vnd.android.package-archive");
-						context.startActivity(intent);
+						Toast.makeText(context ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
 					}
-					new File(file).deleteOnExit();
-				}
-				else
-					Toast.makeText(context ,"当前已是最新版本" ,Toast.LENGTH_SHORT).show();
 			}
 
 			@Override
@@ -57,24 +62,27 @@ public class Update
 			{
 				String response = arg0.body().string().trim();
 				JSONObject jsonObject = new JSONObject(response);
-				String serverVersion = jsonObject.getString("version");
-				String updateContent = jsonObject.getString("updateContent");
-				String localVersion = Util.getVersionName(context);
-
-				String [] serverDigits = serverVersion.split("\\.");
-				String [] localDigits = localVersion.split("\\.");
-
-				int server0 = Integer.parseInt(serverDigits[0]);
-				int server1 = Integer.parseInt(serverDigits[1]);
-				int local0 = Integer.parseInt(localDigits[0]);
-				int local1 = Integer.parseInt(localDigits[1]);
-
-				if(server0 > local0 || (server0 == local0 && server1 > local1))
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
 				{
-					return updateContent;
+					return result;
 				}
-
-				return "0";
+				String localVersion = Util.getVersionName(context);
+				String minVersion = jsonObject.getString("min");
+				String latestVersion = jsonObject.getString("latest");
+				install = jsonObject.getString("install");
+				content = jsonObject.getString("content");
+				float local = Float.valueOf(localVersion);
+				float min = Float.valueOf(minVersion);
+				float latest = Float.valueOf(latestVersion);
+				if(local < latest && local > min)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
+				else
+				{
+					return Util.okHttpUtilsResultOkStringValue;
+				}
 			}
 		});
 	}
