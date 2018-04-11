@@ -68,12 +68,8 @@ public class ReciteTextTextChose extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_listview);
 
-		// intent = getIntent();
-		// grade = intent.getIntExtra("selected" ,1);
 		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
-		// phase = intent.getIntExtra("phase" ,1);
 		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
-		// unit = intent.getIntExtra("unit" ,1);
 		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
 
 		ActionBar actionbar = getActionBar();

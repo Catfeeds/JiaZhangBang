@@ -17,8 +17,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.chinese.Chinese;
 import com.runcom.jiazhangbang.judge.Judge;
-import com.runcom.jiazhangbang.mainActivity.MainActivity;
 import com.umeng.analytics.MobclickAgent;
 
 public class Welcome extends Activity
@@ -80,7 +80,7 @@ public class Welcome extends Activity
 				name = name_editText.getText().toString();
 				mobilePhoneNumber = phoneNumber_editText.getText().toString();
 				Intent intent = new Intent();
-				intent.setClass(getApplicationContext() ,MainActivity.class);
+				intent.setClass(getApplicationContext() ,Chinese.class);
 				intent.putExtra("selected" ,selected);
 				Log.d("LOG" ,"name: " + name + " class: " + selected + " phoneNumber: " + mobilePhoneNumber);
 

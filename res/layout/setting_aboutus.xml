@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/setting_aboutUsMain_scrollVew"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none" >
+
+        <TextView
+            android:id="@+id/setting_aboutUsMain_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="\u3000\u3000浙江兰创通信有限公司（简称：兰创通信）是浙江浙大网新兰德科技股份有限公司的旗下公司，
+浙江浙大网新兰德科技股份有限公司成立于1996年11月，注册资金3656万元。\n\u3000\u30002002年公司在香港创业板(浙大兰德HK8106)上市，
+是国内第一家在香港创业板上市的大型电信增值服务企业。兰创通信是一家经营电信增值业务为主的公司，公司成立于2005年6月，
+注册资金1000万，位于素有人间天堂美誉的浙江杭州。
+\n\u3000\u3000兰创通信注重人才的吸纳和培养，提供优越的环境和良好的职业发展机会，因此吸引了大批优秀人才加盟。
+总部办公用房2000平方米，在全国28多个省市设立分公司及办事处，与移动运营商很多地方分公司建立了深层次战略合作伙伴关系。
+\n\u3000\u3000兰创通信本着创新，诚信，共赢的服务原则，为广大客户和用户提供与互联网、移动通信相结合的高质量移动增值服务。
+\n\u3000\u3000兰创通信拥有强大的互联网及移动通信方面的技术优势，具有领先的业务策划及运营能力，在移动增值运营业务领域具有强大的实力及丰富经验。
+兰创通信主要开发并运营基于互联网及无线增值应用的各类产品，产品通过手机和固定电话等媒介，用SMS、IVR等实现形式涉及了游戏娱乐、信息咨询、应用服务等各个领域。
+自兰创通信创办以来，公司的许多运营项目已经在中国电信、中国移动、中国联通、中国网通等通信运营商成功运营。
+并且在浙江具有涵盖平面、电视、电台多方面的媒体业务合作伙伴，积累了非常多的合作经验。
+\n\u3000\u3000今后兰创通信还将不断发展，完善运营服务体系，不断推出好的产品，提升兰创通信的行业领先性和竞争力，使兰创通信成为国内最领先的虚拟电信运营商。"
+            android:textSize="15sp" />
+    </ScrollView>
+
+</RelativeLayout>

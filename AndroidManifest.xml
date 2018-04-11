@@ -29,8 +29,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-
-        <!-- android:name="com.runcom.jiazhangbang.mainActivity.MainActivity" -->
         <activity
             android:name="com.runcom.jiazhangbang.chinese.Chinese"
             android:label="@string/app_name" >
@@ -50,13 +48,6 @@
 
         <activity android:name="com.runcom.jiazhangbang.welcome.Welcome" >
         </activity>
-        <!--
-        <activity
-            android:name="com.runcom.jiazhangbang.chinese.Chinese"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.mainActivity.MainActivity" >
-        </activity>
-        -->
         <activity
             android:name="com.runcom.jiazhangbang.play.Play"
             android:icon="@drawable/ic_come_back"
@@ -123,6 +114,11 @@
             android:name="com.runcom.jiazhangbang.setting.ListenWriteTipsSetting"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.setting.AboutUs"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.setting.Setting" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.setting.Setting"

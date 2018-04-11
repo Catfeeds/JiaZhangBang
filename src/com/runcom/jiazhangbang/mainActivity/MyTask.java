@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.SDCardHelper;
-import com.runcom.jiazhangbang.util.Util;
 
 /**
  * @author Administrator
@@ -40,58 +39,60 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 {
 	private Context context;
 	private ProgressDialog progressDialog;
-	private String path = Util.PICTURESPATH;
+	private String path;
 	private String fileName;
-	private Boolean flag = true;
+	private Boolean flag;
 
-	public MyTask(Context context)
-	{
-		this.context = context;
-		progressDialog = new ProgressDialog(context);
-		progressDialog.setIcon(R.drawable.ic_launcher);
-		progressDialog.setMessage("加载中...");
-	}
+	// public MyTask(Context context)
+	// {
+	// this.context = context;
+	// progressDialog = new ProgressDialog(context);
+	// progressDialog.setIcon(R.drawable.ic_launcher);
+	// progressDialog.setMessage("加载中...");
+	// }
 
-	public MyTask(Context context , String fileName)
-	{
-		this.context = context;
-		this.fileName = fileName;
-		progressDialog = new ProgressDialog(context);
-		progressDialog.setIcon(R.drawable.ic_launcher);
-		progressDialog.setMessage("加载中...");
-	}
+	// public MyTask(Context context , String fileName)
+	// {
+	// this.context = context;
+	// this.fileName = fileName;
+	// progressDialog = new ProgressDialog(context);
+	// progressDialog.setIcon(R.drawable.ic_launcher);
+	// progressDialog.setMessage("加载中...");
+	// }
 
-	public MyTask(final Context context , String path , String fileName)
-	{
-		this.context = context;
-		this.path = path;
-		this.fileName = fileName;
-		progressDialog = new ProgressDialog(context , 0);
-		progressDialog.setIcon(R.drawable.ic_launcher);
-		progressDialog.setMessage("更新内容加载中...");
-		progressDialog.setTitle("下载更新");
-		progressDialog.setCancelable(false);
-		progressDialog.setMax(100);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setButton(DialogInterface.BUTTON_POSITIVE ,"后台更新" ,new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog , int which )
-			{
-				Toast.makeText(context ,"已切换至后台更新" ,Toast.LENGTH_SHORT).show();
-				flag = true;
-			}
-		});
-		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE ,"取消" ,new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog , int which )
-			{
-				Toast.makeText(context ,"您取消了本次更新" ,Toast.LENGTH_SHORT).show();
-				flag = false;
-			}
-		});
-	}
+	// public MyTask(final Context context , String path , String fileName)
+	// {
+	// this.context = context;
+	// this.path = path;
+	// this.fileName = fileName;
+	// progressDialog = new ProgressDialog(context , 0);
+	// progressDialog.setIcon(R.drawable.ic_launcher);
+	// progressDialog.setMessage("更新内容加载中...");
+	// progressDialog.setTitle("下载更新");
+	// progressDialog.setCancelable(false);
+	// progressDialog.setMax(100);
+	// progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+	// progressDialog.setButton(DialogInterface.BUTTON_POSITIVE ,"后台更新" ,new
+	// DialogInterface.OnClickListener()
+	// {
+	// @Override
+	// public void onClick(DialogInterface dialog , int which )
+	// {
+	// Toast.makeText(context ,"已切换至后台更新" ,Toast.LENGTH_SHORT).show();
+	// flag = true;
+	// }
+	// });
+	// progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE ,"取消" ,new
+	// DialogInterface.OnClickListener()
+	// {
+	// @Override
+	// public void onClick(DialogInterface dialog , int which )
+	// {
+	// Toast.makeText(context ,"您取消了本次更新" ,Toast.LENGTH_SHORT).show();
+	// flag = false;
+	// }
+	// });
+	// }
 
 	public MyTask(final Context context , String path , String fileName , String contents , String title)
 	{

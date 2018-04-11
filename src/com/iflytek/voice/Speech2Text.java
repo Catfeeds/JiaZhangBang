@@ -100,7 +100,6 @@ public class Speech2Text
 				/**
 				 * 查找本地文件中是否包含识别到的词语
 				 */
-				// System.out.println("哥哥执行了一次");
 				Search.searchNameFromFile(context ,resultBuffer.toString() ,Util.LYRICSPATH);
 			}
 			else

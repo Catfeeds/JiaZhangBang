@@ -1,7 +1,11 @@
 package com.runcom.jiazhangbang.setting;
 
+import java.io.File;
+import java.text.DecimalFormat;
+
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -17,6 +21,7 @@ import android.widget.Toast;
 import com.iflytek.voice.Speech2Text;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.mainActivity.Update;
+import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
 public class Setting extends Activity
@@ -24,11 +29,11 @@ public class Setting extends Activity
 	private TextView setting_modify_textView ,
 	        setting_speech_recognition_textView , setting_clearCache_textView ,
 	        setting_opinion_textView , setting_checkUpdate_textView ,
-	        setting_aboutUs_textView , setting_version_textView;
+	        setting_aboutUs_textView , setting_version_textView ,
+	        setting_clearCache_detail;
 	private ImageView setting_modify_detail ,
-	        setting_speech_recognition_detail , setting_clearCache_detail ,
-	        setting_opinion_detail , setting_checkUpdate_detail ,
-	        setting_aboutUs_detail;
+	        setting_speech_recognition_detail , setting_opinion_detail ,
+	        setting_checkUpdate_detail , setting_aboutUs_detail;
 	private TableRow setting_modify_tableRow ,
 	        setting_speech_recognition_tableRow , setting_clearCache_tableRow ,
 	        setting_opinion_tableRow , setting_checkUpdate_tableRow ,
@@ -69,7 +74,22 @@ public class Setting extends Activity
 
 		setting_clearCache_textView = (TextView) findViewById(R.id.setting_clearCache_textView);
 		setting_clearCache_textView.setOnClickListener(listener);
-		setting_clearCache_detail = (ImageView) findViewById(R.id.setting_clearCache_detail);
+		setting_clearCache_detail = (TextView) findViewById(R.id.setting_clearCache_detail);
+
+		double size = getFileCache(Util.APPPATH ,0) * 1.0 / 1024;
+		if(size <= 0)
+		{
+			setting_clearCache_detail.setText("0KB");
+		}
+		else
+			if(size < 1024)
+			{
+				setting_clearCache_detail.setText(new DecimalFormat("#.00").format(size) + "KB");
+			}
+			else
+			{
+				setting_clearCache_detail.setText(new DecimalFormat("#.00").format(size * 1.0 / 1024) + "MB");
+			}
 		setting_clearCache_detail.setOnClickListener(listener);
 		setting_clearCache_tableRow = (TableRow) findViewById(R.id.setting_clearCache_tableRow);
 		setting_clearCache_tableRow.setOnClickListener(listener);
@@ -135,9 +155,7 @@ public class Setting extends Activity
 				case R.id.setting_clearCache_detail:
 				case R.id.setting_clearCache_textView:
 				case R.id.setting_clearCache_tableRow:
-					// Toast.makeText(getApplicationContext()
-					// ,"clearCache_detail..." ,Toast.LENGTH_SHORT).show();
-					Toast.makeText(getApplicationContext() ,"已清除57MB缓存" ,Toast.LENGTH_SHORT).show();
+					deleteCache();
 					break;
 				case R.id.setting_opinion_detail:
 				case R.id.setting_opinion_textView:
@@ -152,7 +170,7 @@ public class Setting extends Activity
 				case R.id.setting_aboutUs_detail:
 				case R.id.setting_aboutUs_textView:
 				case R.id.setting_aboutUs_tableRow:
-					Toast.makeText(getApplicationContext() ,"aboutUs_detail..." ,Toast.LENGTH_SHORT).show();
+					startActivity(new Intent().setClass(getApplicationContext() ,AboutUs.class));
 					break;
 				case R.id.setting_version_textView:
 					break;
@@ -160,6 +178,58 @@ public class Setting extends Activity
 		}
 
 	};
+
+	private void deleteCache()
+	{
+		long fileSizeCount = 0;
+		fileSizeCount = deleteFile(Util.APPPATH ,fileSizeCount);
+		Toast.makeText(getApplicationContext() ,"缓存已清完" ,Toast.LENGTH_SHORT).show();
+		setting_clearCache_detail.setText("0KB");
+	}
+
+	private long deleteFile(String filePath , long fileSizeCount )
+	{
+		File dir = new File(filePath);
+		File [] files = dir.listFiles();
+		for(File file : files)
+		{
+			if(file.isDirectory())
+			{
+				deleteFile(file.toString() ,fileSizeCount);
+				file.delete();
+			}
+			else
+				if(file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk"))
+				{
+					fileSizeCount += file.length();
+					file.delete();
+					// System.out.println("删除:" + file);
+				}
+		}
+		return fileSizeCount;
+
+	}
+
+	private long getFileCache(String filePath , long fileSizeCount )
+	{
+		File dir = new File(filePath);
+		File [] files = dir.listFiles();
+		for(File file : files)
+		{
+			if(file.isDirectory())
+			{
+				fileSizeCount += getFileCache(file.toString() ,fileSizeCount);
+			}
+			else
+				if(file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk"))
+				{
+					fileSizeCount += file.length();
+					// System.out.println(file.toString() + fileSizeCount);
+				}
+		}
+		// System.out.println(fileSizeCount);
+		return fileSizeCount;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
