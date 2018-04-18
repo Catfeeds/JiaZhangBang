@@ -14,7 +14,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -37,8 +36,7 @@ import com.umeng.analytics.MobclickAgent;
 
 public class ListenWriteGameMain extends Activity
 {
-	private int degree , grade , phase , unit;
-	private Intent intent = null;
+	private int course , grade , phase , unit;
 	private String [] phraseContent , voiceContent , pinyinContent;
 	private ArrayList < ListenWriteGameItemBean > gameItemBeanList ,
 	        tempGameItemBeanList;
@@ -70,13 +68,14 @@ public class ListenWriteGameMain extends Activity
 		String content = "游戏";
 		actionbar.setTitle(content);
 
-		intent = getIntent();
-		degree = intent.getIntExtra("degree" ,1);
-		grade = intent.getIntExtra("grade" ,1);
-		phase = intent.getIntExtra("phase" ,1);
-		unit = intent.getIntExtra("unit" ,1);
-		String str = "degree:" + degree + "\tgrade:" + grade + "\tphase:" + phase + "\tunit:" + unit;
-		System.out.println(str);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenTextMain] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenTextMain] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setCancelable(false);
@@ -161,7 +160,6 @@ public class ListenWriteGameMain extends Activity
 
 	private void initSimpleModelView()
 	{
-		// System.out.println("gegezhixingle**************************");
 		clickCount = 0;
 		textView_historyScore = (TextView) findViewById(R.id.listen_write_game_main_textView_historyScore);
 		int historyScore = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,99);
@@ -180,10 +178,6 @@ public class ListenWriteGameMain extends Activity
 		{
 			tempGameItemBeanList.add(gameItemBeanList.get(randomArray[i]));
 		}
-		// for(int i = 0 ; i < count * 2 ; i ++ )
-		// {
-		// System.out.println(tempGameItemBeanList.get(i).getPhrase());
-		// }
 		gridView = (GridView) findViewById(R.id.listen_write_game_main_gridView);
 		listenWriteGameMainGridViewAdapter = new ListenWriteGameMainGridViewAdapter(getApplicationContext() , tempGameItemBeanList);
 		gridView.setAdapter(listenWriteGameMainGridViewAdapter);
@@ -200,13 +194,6 @@ public class ListenWriteGameMain extends Activity
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
 				clickCount ++ ;
-				// String content = "phrase:" +
-				// tempGameItemBeanList.get(position).getPhrase() + "\nvoice:" +
-				// tempGameItemBeanList.get(position).getVoice() + "\npinyin:" +
-				// tempGameItemBeanList.get(position).getPinyin();
-				// System.out.println(content);
-				// Toast.makeText(getApplicationContext() ,content
-				// ,Toast.LENGTH_SHORT).show();
 				mediaPlayer.reset();
 				try
 				{
@@ -232,8 +219,6 @@ public class ListenWriteGameMain extends Activity
 						currentPosition = position;
 						if(tempGameItemBeanList.get(currentPosition).getPhrase() == tempGameItemBeanList.get(lastPosition).getPhrase() || tempGameItemBeanList.get(currentPosition).getPhrase() == tempGameItemBeanList.get(lastPosition).getPinyin())
 						{
-							// System.out.println("删除" + lastPosition + "和" +
-							// currentPosition);
 							tempGameItemBeanList.remove(lastPosition);
 							if(lastPosition < currentPosition)
 							{
@@ -250,23 +235,17 @@ public class ListenWriteGameMain extends Activity
 				}
 				else
 				{
-					// System.out.println("重复");
 					clickCount -- ;
 				}
 				textView_currentScore.setText("当前成绩：" + clickCount);
 				if(0 == tempGameItemBeanList.size())
 				{
-					// new Text2Speech(getApplicationContext() , "好厉害哟").play();
-					// Toast.makeText(getApplicationContext()
-					// ,"恭喜恭喜   ！！！\r\n过关了" ,Toast.LENGTH_SHORT).show();
 					int clickCountHistory = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,999);
 					System.out.println(clickCountHistory + "\n" + clickCount);
 					if(clickCount < clickCountHistory)
 					{
 						textView_historyScore.setText("历史成绩：" + clickCount);
 						MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScore ,clickCount);
-						// Toast.makeText(getApplicationContext()
-						// ,"恭喜恭喜  ！！！\r\n打破自己记录了" ,Toast.LENGTH_SHORT).show();
 					}
 
 					AlertDialog.Builder successDialog = new AlertDialog.Builder(ListenWriteGameMain.this);
@@ -297,10 +276,10 @@ public class ListenWriteGameMain extends Activity
 	private void initData()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
-		map.put("course" ,Util.ChineseCourse);
+		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
-		map.put("unit" ,unit + "");
+		map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -317,20 +296,7 @@ public class ListenWriteGameMain extends Activity
 			{
 				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 				{
-					if(1 == degree)
-					{
-						initSimpleModelView();
-					}
-					else
-						if(2 == degree)
-						{
-							initMediumModeView();
-						}
-						else
-							if(3 == degree)
-							{
-								initHardModeView();
-							}
+					initSimpleModelView();
 				}
 				else
 					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
@@ -383,20 +349,6 @@ public class ListenWriteGameMain extends Activity
 		});
 	}
 
-	private void initHardModeView()
-	{
-		// TODO Auto-generated method stub
-		progressDialog.dismiss();
-
-	}
-
-	private void initMediumModeView()
-	{
-		// TODO Auto-generated method stub
-		progressDialog.dismiss();
-
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item )
 	{
@@ -442,4 +394,13 @@ public class ListenWriteGameMain extends Activity
 		MobclickAgent.onPause(this);
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
+	}
 }

@@ -12,7 +12,6 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -66,7 +65,7 @@ public class FindNewWords extends Activity
 {
 
 	private Intent intent = new Intent();
-	private int grade;
+	private int course , grade;
 	private String contents;
 
 	private AutoCompleteTextView autoCompleteTextView;
@@ -86,8 +85,24 @@ public class FindNewWords extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.find_new_words_main);
 
-		// grade = getIntent().getIntExtra("selected" ,1);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.FindNewWords] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.FindNewWords] ,grade) + 1;
+		// phase = MySharedPreferences.getValue(getApplicationContext()
+		// ,Util.sharedPreferencesKeySettingChoose
+		// ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		// phase = MySharedPreferences.getValue(getApplicationContext()
+		// ,Util.sharedPreferencesKeySettingChoose
+		// ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) +
+		// 1;
+		// unit = MySharedPreferences.getValue(getApplicationContext()
+		// ,Util.sharedPreferencesKeySettingChoose
+		// ,Util.unitSharedPreferencesKeyString[0] ,0);
+		// unit = MySharedPreferences.getValue(getApplicationContext()
+		// ,Util.sharedPreferencesKeySettingChoose
+		// ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
+
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
@@ -120,7 +135,7 @@ public class FindNewWords extends Activity
 	private void initData1()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
-		map.put("course" ,Util.ChineseCourse);
+		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,"1");
 		map.put("unit" ,"-1");
@@ -188,7 +203,7 @@ public class FindNewWords extends Activity
 	private void initData2()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
-		map.put("course" ,Util.ChineseCourse);
+		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,"2");
 		map.put("unit" ,"-1");
@@ -384,7 +399,6 @@ public class FindNewWords extends Activity
 		imm.toggleSoftInput(0 ,InputMethodManager.HIDE_NOT_ALWAYS);
 	}
 
-	@SuppressLint("SetJavaScriptEnabled")
 	public void translate(View v )
 	{
 		contents = autoCompleteTextView.getText().toString();
@@ -500,5 +514,15 @@ public class FindNewWords extends Activity
 		super.onPause();
 		// MobclickAgent.onPageEnd("ChineseScreen");
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
 	}
 }

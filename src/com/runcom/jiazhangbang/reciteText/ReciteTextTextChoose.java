@@ -49,12 +49,10 @@ import com.umeng.analytics.MobclickAgent;
  * @author Administrator
  * 
  */
-public class ReciteTextTextChose extends Activity
+public class ReciteTextTextChoose extends Activity
 {
 	// private Intent intent = new Intent();
-	private int grade;
-	private int phase;
-	private int unit;
+	private int course , grade , phase , unit;
 	private SwipeMenuListView listView;
 	private MyText myText = new MyText();
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
@@ -68,9 +66,14 @@ public class ReciteTextTextChose extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_listview);
 
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -104,10 +107,10 @@ public class ReciteTextTextChose extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
-			map.put("course" ,Util.ChineseCourse);
+			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
-			map.put("unit" ,unit + "");
+			map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
 			System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
@@ -115,6 +118,7 @@ public class ReciteTextTextChose extends Activity
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
 					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					System.out.println(arg1);
 					finish();
 				}
 
@@ -123,6 +127,7 @@ public class ReciteTextTextChose extends Activity
 				{
 					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 					{
+						System.out.println("Ö´ÐÐ");
 						initTextLrc();
 					}
 					else
@@ -170,7 +175,7 @@ public class ReciteTextTextChose extends Activity
 						else
 							if(1 < part)
 							{
-								JSONArray subjsonArray = new JSONArray(textListJsonObject.getJSONArray("partlist"));
+								JSONArray subjsonArray = new JSONArray(textListJsonObject.getString("partlist"));
 								for(int k = 0 , length = subjsonArray.length() ; k < length ; k ++ )
 								{
 									myText = new MyText();
@@ -351,7 +356,7 @@ public class ReciteTextTextChose extends Activity
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-						String url = (textList.get(position).getSource().toString()).toString();
+						String url = Util.LYRICSPATH + lrcList.get(position);
 						share_intent.putExtra(Intent.EXTRA_TEXT ,url);
 						share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(Intent.createChooser(share_intent ,"·ÖÏí"));
@@ -365,7 +370,6 @@ public class ReciteTextTextChose extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.welcome ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -407,5 +411,15 @@ public class ReciteTextTextChose extends Activity
 		super.onPause();
 		// MobclickAgent.onPageEnd("ChineseScreen");
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
 	}
 }

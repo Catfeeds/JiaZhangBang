@@ -51,47 +51,17 @@
         <activity
             android:name="com.runcom.jiazhangbang.play.Play"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.mainActivity.MainActivity" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenText.ListenTextPhaseChose"
-            android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenText.ListenTextUnitChose"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenText.ListenTextPhaseChose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.listenText.ListenTextMain"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenText.ListenTextUnitChose" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenText.ListenText"
-            android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWrite"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteUnitChose"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWritePhaseChose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteTips"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteUnitChose"
+            android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -101,19 +71,24 @@
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChose"
+            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChoose"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteGameMain"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChose" >
+            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChoose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.setting.ListenWriteTipsSetting"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.setting.Opinion"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.setting.Setting" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.setting.AboutUs"
@@ -126,29 +101,19 @@
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.setting.SettingChose"
+            android:name="com.runcom.jiazhangbang.setting.SettingChoose"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose"
+            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextUnitChose"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextPhaseChose" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.reciteText.ReciteTextTextChose"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextUnitChose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.reciteText.ReciteTextMain"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextTextChose" >
+            android:parentActivityName="com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.findnewwords.FindNewWords"

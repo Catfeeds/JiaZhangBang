@@ -36,7 +36,7 @@
                 android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
                 android:background="@drawable/chinese_write_text"
-                android:onClick="listenAndWrite" >
+                android:onClick="listenWrite" >
 
                 <!-- android:text="@string/activity_chinese_listen_write" -->
             </Button>

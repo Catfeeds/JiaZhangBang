@@ -34,8 +34,7 @@ import com.umeng.analytics.MobclickAgent;
 public class ListenWriteTips extends Activity
 {
 	private Intent intent;
-	private int selected , unit;
-	private int phase = 1;// 1：上学期;2：下学期
+	private int course , grade , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int counts;
 	private TextView textView_information , textView_start , textView_reset;
@@ -48,22 +47,28 @@ public class ListenWriteTips extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_tips);
 
-		intent = getIntent();
-		// selected = intent.getIntExtra("selected" ,1);// 年级
-		selected = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
-		// phase = intent.getIntExtra("phase" ,1);// 上下册
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
-		// unit = intent.getIntExtra("id" ,1);// 单元
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenWriteTips] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenWriteTips] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenWriteTips] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		if(unit > 0)
+		{
+			unit -- ;
+		}
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenWriteTips] ,unit);
+
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "听写 " + Util.grade[selected] + "上学期" + Util.unit[unit];
+		String content = "听写 " + Util.grade[grade] + "上学期" + Util.unit[unit];
 		if(2 == phase)
-			content = "听写 " + Util.grade[selected] + "下学期" + Util.unit[unit];
+			content = "听写 " + Util.grade[grade] + "下学期" + Util.unit[unit];
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
@@ -87,10 +92,10 @@ public class ListenWriteTips extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
-			map.put("course" ,Util.ChineseCourse);
-			map.put("grade" ,selected + "");
+			map.put("course" ,course + "");
+			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
-			map.put("unit" ,unit + "");
+			map.put("unit" ,++ unit + "");
 			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
@@ -172,7 +177,7 @@ public class ListenWriteTips extends Activity
 			public void onClick(View v )
 			{
 				intent = new Intent();
-				intent.putExtra("selected" ,selected);
+				intent.putExtra("selected" ,grade);
 				intent.putExtra("phase" ,phase);
 				intent.putExtra("units" ,unit);
 				intent.setClass(getApplicationContext() ,ListenWriteMain.class);
@@ -193,7 +198,7 @@ public class ListenWriteTips extends Activity
 			public void onClick(View v )
 			{
 				intent = new Intent();
-				intent.putExtra("selected" ,selected);
+				intent.putExtra("selected" ,grade);
 				intent.putExtra("units" ,unit);
 				intent.setClass(getApplicationContext() ,ListenWriteTipsSetting.class);
 				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
@@ -261,4 +266,13 @@ public class ListenWriteTips extends Activity
 		MobclickAgent.onPause(this);
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
+	}
 }

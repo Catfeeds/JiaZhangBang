@@ -29,11 +29,11 @@ public class Setting extends Activity
 	private TextView setting_modify_textView ,
 	        setting_speech_recognition_textView , setting_clearCache_textView ,
 	        setting_opinion_textView , setting_checkUpdate_textView ,
-	        setting_aboutUs_textView , setting_version_textView ,
-	        setting_clearCache_detail;
+	        setting_aboutUs_textView , setting_checkUpdate_detail ,
+	        setting_version_textView , setting_clearCache_detail;
 	private ImageView setting_modify_detail ,
 	        setting_speech_recognition_detail , setting_opinion_detail ,
-	        setting_checkUpdate_detail , setting_aboutUs_detail;
+	        setting_aboutUs_detail;
 	private TableRow setting_modify_tableRow ,
 	        setting_speech_recognition_tableRow , setting_clearCache_tableRow ,
 	        setting_opinion_tableRow , setting_checkUpdate_tableRow ,
@@ -76,7 +76,11 @@ public class Setting extends Activity
 		setting_clearCache_textView.setOnClickListener(listener);
 		setting_clearCache_detail = (TextView) findViewById(R.id.setting_clearCache_detail);
 
-		double size = getFileCache(Util.APPPATH ,0) * 1.0 / 1024;
+		if( !new File(Util.APPPATH).exists())
+		{
+			new File(Util.APPPATH).mkdirs();
+		}
+		double size = getFileCache(Util.APPPATH ,0) * 1.0 / 2 / 1024;
 		if(size <= 0)
 		{
 			setting_clearCache_detail.setText("0KB");
@@ -103,7 +107,16 @@ public class Setting extends Activity
 
 		setting_checkUpdate_textView = (TextView) findViewById(R.id.setting_checkUpdate_textView);
 		setting_checkUpdate_textView.setOnClickListener(listener);
-		setting_checkUpdate_detail = (ImageView) findViewById(R.id.setting_checkUpdate_detail);
+		setting_checkUpdate_detail = (TextView) findViewById(R.id.setting_checkUpdate_detail);
+		try
+		{
+			String ver = this.getPackageManager().getPackageInfo(this.getPackageName() ,0).versionName;
+			setting_checkUpdate_detail.setText(ver);
+		}
+		catch(NameNotFoundException e)
+		{
+			setting_version_textView.setText("暂无版本更新");
+		}
 		setting_checkUpdate_detail.setOnClickListener(listener);
 		setting_checkUpdate_tableRow = (TableRow) findViewById(R.id.setting_checkUpdate_tableRow);
 		setting_checkUpdate_tableRow.setOnClickListener(listener);
@@ -117,15 +130,7 @@ public class Setting extends Activity
 
 		setting_version_textView = (TextView) findViewById(R.id.setting_version_textView);
 		setting_version_textView.setOnClickListener(listener);
-		try
-		{
-			String ver = this.getPackageManager().getPackageInfo(this.getPackageName() ,0).versionName;
-			setting_version_textView.setText("版本号：" + ver + "\n版权所有：浙江兰创通信有限公司");
-		}
-		catch(NameNotFoundException e)
-		{
-			setting_version_textView.setText("版权所有：浙江兰创通信有限公司");
-		}
+		setting_version_textView.setText("\n版权所有：浙江兰创通信有限公司");
 	}
 
 	/**
@@ -141,10 +146,6 @@ public class Setting extends Activity
 				case R.id.setting_modify_textView:
 				case R.id.setting_modify_tableRow:
 				case R.id.setting_modify_detail:
-					// startActivity(new
-					// Intent().setClass(getApplicationContext()
-					// ,SettingChose.class));
-					Toast.makeText(getApplicationContext() ,"modify..." ,Toast.LENGTH_LONG).show();
 					break;
 
 				case R.id.setting_speech_recognition_detail:
@@ -160,12 +161,12 @@ public class Setting extends Activity
 				case R.id.setting_opinion_detail:
 				case R.id.setting_opinion_textView:
 				case R.id.setting_opinion_tableRow:
-					Toast.makeText(getApplicationContext() ,"opinion_detail..." ,Toast.LENGTH_SHORT).show();
+					startActivity(new Intent().setClass(getApplicationContext() ,Opinion.class));
 					break;
 				case R.id.setting_checkUpdate_detail:
 				case R.id.setting_checkUpdate_textView:
 				case R.id.setting_checkUpdate_tableRow:
-					Update.update(Setting.this);
+					Update.update(Setting.this , false);
 					break;
 				case R.id.setting_aboutUs_detail:
 				case R.id.setting_aboutUs_textView:
@@ -219,12 +220,14 @@ public class Setting extends Activity
 			if(file.isDirectory())
 			{
 				fileSizeCount += getFileCache(file.toString() ,fileSizeCount);
+				// System.out.println("1:" + file.toString() + fileSizeCount);
 			}
 			else
 				if(file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk"))
 				{
 					fileSizeCount += file.length();
-					// System.out.println(file.toString() + fileSizeCount);
+					// System.out.println("2:" + file.toString() +
+					// fileSizeCount);
 				}
 		}
 		// System.out.println(fileSizeCount);

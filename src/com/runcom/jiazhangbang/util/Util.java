@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
-import android.util.Log;
 
 import com.runcom.jiazhangbang.R;
 
@@ -18,9 +17,9 @@ public class Util
 {
 	public static final Boolean debug = true;
 	public static final String grade[] =
-	{ "零年级", "一年级", "二年级", "三年级", "四年级", "五年级", "六年级" };
+	{ "全年级", "一年级", "二年级", "三年级", "四年级", "五年级", "六年级" };
 	public static final String unit[] =
-	{ "第零单元", "第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元", "第七单元", "第八单元" };
+	{ "全部单元", "第一单元", "第二单元", "第三单元", "第四单元", "第五单元", "第六单元", "第七单元", "第八单元" };
 	public static final String SECRETKEY = "8848@jzb";
 	public static final String REALSERVER = "http://jzb.nutnet.cn:8800/interface/";
 	public static final String RESOURCESERVER = "http://res.nutnet.cn:8800/";
@@ -32,21 +31,27 @@ public class Util
 	public static final String ChineseCourse = "1";
 	public static final String EnglishCourse = "2";
 
-	public static final int FirstStartAndSetChose = 0;
 	public static final int ListenTextMain = 1;
 	public static final int ListenWriteTips = 2;
-	public static final int ReciteTextTextChose = 3;
+	public static final int ReciteTextTextChoose = 3;
 	public static final int Repeat = 4;
 	public static final int FindNewWords = 5;
-	public static final int RecordText = 6;
+	public static final int playGame = 6;
+	public static final int RecordText = 7;
 
-	public static final String sharedPreferencesKeyFirstStart = "FirstStartKey";
-	public static final String firstStartSharedPreferencesKeyString = "FirstStart";
-	public static final String sharedPreferencesKeySettingChose = "SettingChoseKey";
-	public static final String courseSharedPreferencesKeyString = "SettingChoseCourse";
-	public static final String gradeSharedPreferencesKeyString = "SettingChoseGrade";
-	public static final String phaseSharedPreferencesKeyString = "SettingChosePhase";
-	public static final String unitSharedPreferencesKeyString = "SettingChoseUnit";
+	public static final String sharedPreferencesKeySettingChoose = "SettingChooseKey";
+
+	public static final String [] courseSharedPreferencesKeyString =
+	{ "SettingChooseCourse", "SettingChooseCourseListenText", "SettingChooseCourseListenWrite", "SettingChooseCourseReciteText", "SettingChooseCourseRepeat", "SettingChooseCourseFindNewWords", "SettingChooseCoursePlayGame", "SettingChooseCourseRecord" };
+
+	public static final String [] gradeSharedPreferencesKeyString =
+	{ "SettingChooseGrade", "SettingChooseGradeListenText", "SettingChooseGradeListenWrite", "SettingChooseGradeReciteText", "SettingChooseGradeRepeat", "SettingChooseGradeFindNewWords", "SettingChooseGradePlayGame", "SettingChooseGradeRecord" };
+
+	public static final String [] phaseSharedPreferencesKeyString =
+	{ "SettingChoosePhase", "SettingChoosePhaseListenText", "SettingChoosePhaseListenWrite", "SettingChoosePhaseReciteText", "SettingChoosePhaseRepeat", "SettingChoosePhaseFindNewWords", "SettingChoosePhasePlayGame", "SettingChoosePhaseRecord" };
+
+	public static final String [] unitSharedPreferencesKeyString =
+	{ "SettingChooseUnit", "SettingChooseUnitListenText", "SettingChooseUnitListenWrite", "SettingChooseUnitReciteText", "SettingChooseUnitRepeat", "SettingChooseUnitFindNewWords", "SettingChooseUnitPlayGame", "SettingChooseUnitRecord" };
 
 	public static TreeMap < String , String > getMap(Context context )
 	{
@@ -61,8 +66,7 @@ public class Util
 		}
 		catch(NameNotFoundException e)
 		{
-			Log.d("LOG" ,"exception:" + e.toString());
-			e.printStackTrace();
+			System.out.println(e);
 		}
 
 		String dev = android.provider.Settings.Secure.getString(context.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);

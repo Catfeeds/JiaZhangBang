@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/setting_opinion_opinion_editText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/setting_opinion_phone_number_editText"
+        android:layout_alignParentTop="true"
+        android:layout_margin="15dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/setting_opinion_background_shape_white"
+        android:gravity="top"
+        android:hint="请输入您的宝贵意见或建议，我们将努力改进(不少于五个字)"
+        android:padding="5dp"
+        android:textSize="17sp" />
+
+    <EditText
+        android:id="@+id/setting_opinion_phone_number_editText"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_alignLeft="@+id/setting_opinion_opinion_editText"
+        android:layout_alignRight="@+id/setting_opinion_opinion_editText"
+        android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        android:background="@drawable/setting_opinion_background_shape_white"
+        android:hint="请留下手机号码，以便我们回复您"
+        android:inputType="phone"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:textSize="17sp" >
+    </EditText>
+
+    <Button
+        android:id="@+id/setting_opinion_submit_button"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/setting_opinion_phone_number_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:layout_marginTop="68dp"
+        android:background="@drawable/setting_submit_shape_blue"
+        android:focusable="true"
+        android:text="提交" />
+
+</RelativeLayout>

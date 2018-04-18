@@ -12,7 +12,7 @@
         android:gravity="top" >
 
         <Spinner
-            android:id="@+id/listenText_spinner"
+            android:id="@+id/repeat_spinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#696969"
@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/listenText_spinner"
+            android:layout_below="@+id/repeat_spinner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:src="@drawable/listen_text_down" />
@@ -50,6 +50,7 @@
         android:layout_above="@+id/listenText_linearLayout_seekbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:background="#696969"
         android:gravity="center_horizontal"
         android:text="" />
 
@@ -60,6 +61,7 @@
         android:layout_above="@+id/listenText_linearLayout_control"
         android:layout_alignLeft="@+id/listenText_linearLayout_control"
         android:layout_alignStart="@+id/listenText_linearLayout_control"
+        android:background="#696969"
         android:gravity="center" >
 
         <TextView
@@ -89,32 +91,37 @@
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_alignParentBottom="true"
+        android:background="#696969"
         android:gravity="center" >
 
         <ImageButton
             android:id="@+id/listenText_showText"
             android:layout_width="57dp"
             android:layout_height="wrap_content"
+            android:background="#696969"
             android:onClick="showText"
-            android:src="@drawable/listen_text_detail" />
+            android:src="@drawable/detail" />
 
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
+            android:background="#696969"
             android:onClick="previousText"
             android:src="@drawable/listen_text_previous_text"
             android:visibility="invisible" />
 
         <ImageButton
-            android:id="@+id/media_play"
+            android:id="@+id/media_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#696969"
             android:onClick="playText"
-            android:src="@drawable/play_pause" />
+            android:src="@drawable/pause" />
 
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
+            android:background="#696969"
             android:onClick="nextText"
             android:src="@drawable/listen_text_next_text"
             android:visibility="invisible" />
@@ -123,8 +130,9 @@
             android:id="@+id/listenText_detail"
             android:layout_width="57dp"
             android:layout_height="wrap_content"
+            android:background="#696969"
             android:onClick="detailSetting"
-            android:src="@drawable/listen_text_detail" />
+            android:src="@drawable/detail" />
     </LinearLayout>
 
 </RelativeLayout>

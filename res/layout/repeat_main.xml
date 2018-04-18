@@ -12,7 +12,7 @@
         android:gravity="top" >
 
         <Spinner
-            android:id="@+id/listenText_spinner"
+            android:id="@+id/repeat_spinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#696969"
@@ -22,7 +22,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/listenText_spinner"
+            android:layout_below="@+id/repeat_spinner"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:contentDescription="@string/hello_world"
@@ -39,7 +39,7 @@
         android:layout_below="@+id/listenText_topLinearLayout"
         android:background="#969696"
         android:ellipsize="marquee"
-        android:scrollbars="none"
+        android:scrollbars="vertical"
         android:singleLine="true"
         android:verticalScrollbarPosition="defaultPosition" >
 
@@ -60,8 +60,10 @@
         android:layout_above="@+id/listenText_linearLayout_seekbar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
+        android:background="#696969"
         android:gravity="center_horizontal"
-        android:text="" />
+        android:text=""
+        android:textSize="17sp" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"
@@ -69,7 +71,9 @@
         android:layout_height="57dp"
         android:layout_above="@+id/listenText_linearLayout_control"
         android:layout_alignStart="@+id/listenText_linearLayout_control"
-        android:gravity="center" >
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/listenText_textView_curr_time"
@@ -94,38 +98,35 @@
     <LinearLayout
         android:id="@+id/listenText_linearLayout_control"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
+        android:layout_height="77dp"
         android:layout_alignParentBottom="true"
+        android:background="#696969"
         android:gravity="center" >
 
         <ImageButton
-            android:layout_width="57dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/hello_world"
-            android:onClick="previousText"
-            android:src="@drawable/listen_text_previous_text" />
-
-        <ImageButton
-            android:id="@+id/media_play"
+            android:id="@+id/media_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/hello_world"
-            android:onClick="playText"
-            android:src="@drawable/play_pause" />
+            android:layout_margin="15dp"
+            android:background="#696969"
+            android:src="@drawable/stop" />
 
         <ImageButton
-            android:layout_width="57dp"
+            android:id="@+id/media_start"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/hello_world"
-            android:onClick="nextText"
-            android:src="@drawable/listen_text_next_text" />
+            android:layout_margin="15dp"
+            android:background="#696969"
+            android:onClick="repeatSwitching"
+            android:src="@drawable/record_pause" />
 
         <ImageButton
-            android:layout_width="57dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/hello_world"
+            android:layout_margin="15dp"
+            android:background="#696969"
             android:onClick="onDetailSetting"
-            android:src="@drawable/listen_text_detail" />
+            android:src="@drawable/detail" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -20,7 +20,7 @@ public class Update
 {
 	private static String content , install;
 
-	public static void update(final Context context )
+	public static void update(final Context context , final Boolean first )
 	{
 		TreeMap < String , String > map = Util.getMap(context);
 		System.out.println(Util.REALSERVER + "getver.php?" + URL.getParameter(map));
@@ -29,14 +29,15 @@ public class Update
 			@Override
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
-				Toast.makeText(context ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
-				System.out.println(arg1);
+				if( !first)
+					Toast.makeText(context ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				// System.out.println(arg1);
 			}
 
 			@Override
 			public void onResponse(String arg0 , int arg1 )
 			{
-				if(Util.okHttpUtilsResultOkStringValue.equals(arg0))
+				if(Util.okHttpUtilsResultOkStringValue.equals(arg0) && !first)
 				{
 					Toast.makeText(context ,"当前已是最新版本" ,Toast.LENGTH_SHORT).show();
 				}
@@ -49,12 +50,17 @@ public class Update
 							updateFile.delete();
 						}
 						new MyTask(context , Util.UPDATEPath , Util.appName , content , "更新下载").execute(install);
-						updateFile.delete();
+						updateFile.deleteOnExit();
 					}
 					else
-					{
-						Toast.makeText(context ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
-					}
+						if(Util.okHttpUtilsResultOkStringValue.equals(arg0) && first)
+						{
+
+						}
+						else
+						{
+							Toast.makeText(context ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						}
 			}
 
 			@Override

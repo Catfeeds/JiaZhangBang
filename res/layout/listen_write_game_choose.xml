@@ -6,7 +6,7 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/setting_chose_grade_textview"
+        android:id="@+id/setting_choose_grade_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -18,7 +18,7 @@
         android:textSize="27sp" />
 
     <TextView
-        android:id="@+id/setting_chose_phase_textview"
+        android:id="@+id/setting_choose_phase_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -30,7 +30,7 @@
         android:textSize="27sp" />
 
     <TextView
-        android:id="@+id/setting_chose_unit_textview"
+        android:id="@+id/setting_choose_unit_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -42,60 +42,61 @@
         android:textSize="27sp" />
 
     <Spinner
-        android:id="@+id/setting_chose_grade_spinner"
+        android:id="@+id/setting_choose_grade_spinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/setting_chose_grade_textview"
+        android:layout_alignTop="@+id/setting_choose_grade_textview"
         android:layout_marginLeft="34dp"
-        android:layout_toRightOf="@+id/setting_chose_grade_textview"
+        android:layout_toRightOf="@+id/setting_choose_grade_textview"
         android:gravity="top"
         android:spinnerMode="dialog" />
 
     <Spinner
-        android:id="@+id/setting_chose_phase_spinner"
+        android:id="@+id/setting_choose_phase_spinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/setting_chose_phase_textview"
+        android:layout_alignTop="@+id/setting_choose_phase_textview"
         android:layout_marginLeft="34dp"
-        android:layout_toRightOf="@+id/setting_chose_phase_textview"
+        android:layout_toRightOf="@+id/setting_choose_phase_textview"
         android:gravity="top"
         android:spinnerMode="dropdown" />
 
     <Spinner
-        android:id="@+id/setting_chose_unit_spinner"
+        android:id="@+id/setting_choose_unit_spinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignTop="@+id/setting_chose_unit_textview"
+        android:layout_alignTop="@+id/setting_choose_unit_textview"
         android:layout_marginLeft="34dp"
-        android:layout_toRightOf="@+id/setting_chose_unit_textview"
+        android:layout_toRightOf="@+id/setting_choose_unit_textview"
         android:gravity="top"
         android:spinnerMode="dialog" />
 
     <Button
-        android:id="@+id/setting_chose_submit_button"
-        android:layout_width="wrap_content"
+        android:id="@+id/setting_choose_submit_button"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/setting_chose_unit_textview"
+        android:layout_below="@+id/setting_choose_unit_textview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="57dp"
+        android:background="@drawable/setting_submit_shape_blue"
         android:text="开始游戏" />
 
     <Spinner
-        android:id="@+id/setting_chose_course_spinner"
+        android:id="@+id/setting_choose_course_spinner"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_above="@+id/setting_chose_grade_spinner"
-        android:layout_alignLeft="@+id/setting_chose_grade_spinner"
+        android:layout_above="@+id/setting_choose_grade_spinner"
+        android:layout_alignLeft="@+id/setting_choose_grade_spinner"
         android:layout_marginBottom="26dp"
         android:gravity="top"
         android:spinnerMode="dropdown" />
 
     <TextView
-        android:id="@+id/setting_chose_course_textview"
+        android:id="@+id/setting_choose_course_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/setting_chose_course_spinner"
-        android:layout_toLeftOf="@+id/setting_chose_grade_spinner"
+        android:layout_alignTop="@+id/setting_choose_course_spinner"
+        android:layout_toLeftOf="@+id/setting_choose_grade_spinner"
         android:clickable="true"
         android:singleLine="true"
         android:text="难度"

@@ -86,7 +86,7 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="4dp"
-                android:background="@drawable/find_new_words_search_box_delete_selector"
+                android:background="@drawable/find_new_words_delete_alll"
                 android:visibility="invisible" />
         </LinearLayout>
     </LinearLayout>

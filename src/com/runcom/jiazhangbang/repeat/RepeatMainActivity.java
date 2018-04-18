@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,13 +45,13 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	private String fileAllNameAmr = null;
 	private String fileAllNameMp3 = null;
 	// 音频文件保存的路径
-	private String path = Util.RECORDPATH;
+	private String recordPath = Util.RECORDPATH;
 	// 界面控件z
 	private Button startRecord;// 开始录音
-	private Button startPlay;// 开始播放
+	private ImageButton startPlay;// 开始播放
 	private Button stopRecord;// 完成录音
 	private Button stopPlay;// 停止播放
-	private TextView time;// 计时显示
+	private TextView time , textView_tips;// 计时显示
 	private ListView mListView;// 音频文件列表
 	private MAdapter mAdapter;
 	private Button delete;// 删除按钮
@@ -72,7 +72,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	private int second = 0;
 	private int minute = 0;
 	private int hour = 0;
-	private View whichSelecte = null;// 记录被选中的Item
+	private int currentPosition = 0;
 	private long limitTime = 0;// 录音文件最短时间1秒
 
 	@Override
@@ -88,9 +88,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle("录音");
-		// 初始化录音列表
 		initList();
-		// 初始化控件
 		initView();
 	}
 
@@ -99,7 +97,6 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	{
 		delete = (Button) findViewById(R.id.delete);
 		delete.setOnClickListener(this);
-		// 对按钮的可点击事件的控制是保证不出现空指针的重点！！
 		delete.setEnabled(false);
 		share = (Button) findViewById(R.id.share);
 		share.setOnClickListener(this);
@@ -112,14 +109,20 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		stopRecord = (Button) findViewById(R.id.stopRecord);
 		stopRecord.setOnClickListener(this);
 		stopRecord.setEnabled(false);
-		startPlay = (Button) findViewById(R.id.startPlay);
+		startPlay = (ImageButton) findViewById(R.id.startPlay);
 		startPlay.setOnClickListener(this);
 		startPlay.setEnabled(false);
 		stopPlay = (Button) findViewById(R.id.stopPlay);
 		stopPlay.setOnClickListener(this);
 		stopPlay.setEnabled(false);
 		time = (TextView) findViewById(R.id.time);
-		mListView = (ListView) findViewById(R.id.listview);
+		mListView = (ListView) findViewById(R.id.repeat_record_main_listview);
+		if(0 == list.size())
+		{
+			mListView.setVisibility(View.GONE);
+			textView_tips = (TextView) findViewById(R.id.repeat_record_main_textView);
+			textView_tips.setVisibility(View.VISIBLE);
+		}
 		mAdapter = new MAdapter(this , list);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnItemClickListener(this);
@@ -129,17 +132,16 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	@SuppressLint("DefaultLocale")
 	private void initList()
 	{
-		String recordePath = Util.APPPATH;
-		File recordePathFile = new File(recordePath);
+		File recordePathFile = new File(recordPath);
 		if( !recordePathFile.exists())
 		{
 			try
 			{
-				recordePathFile.getParentFile().createNewFile();
+				recordePathFile.getParentFile().mkdirs();
+				recordePathFile.mkdir();
 			}
-			catch(IOException e)
+			catch(Exception e)
 			{
-				e.printStackTrace();
 			}
 		}
 
@@ -151,32 +153,24 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		else
 		{
 			// 根据后缀名进行判断、获取文件夹中的音频文件
-			File file = new File(recordePath);
+			File file = new File(recordPath);
 			File files[] = file.listFiles();
+			int length = files.length;
+			String childFileName = null;
+			ArrayList < String > listTemp = new ArrayList < String >();
 
 			for(File childFile : files)
 			{
-				String childFileName = childFile.toString();
-				if(childFileName.endsWith(".amr") || childFileName.endsWith(".mp3") || childFileName.endsWith(".wav"))
-					list.add(childFileName.substring(childFileName.lastIndexOf("/") + 1));
+				childFileName = childFile.toString();
+				if(childFileName.length() > 0 && (childFileName.endsWith(".amr") || childFileName.endsWith(".mp3") || childFileName.endsWith(".wav")))
+					listTemp.add(childFileName.substring(childFileName.lastIndexOf("/") + 1));
 			}
-			// if(files != null)
-			// {
-			// for(int i = 0 ; i < files.length ; i ++ )
-			// {
-			// if(files[i].getName().indexOf(".") >= 0)
-			// {
-			// // 只取.amr .mp3
-			// // .mp4 文件
-			// String fileStr =
-			// files[i].getName().substring(files[i].getName().indexOf("."));
-			// if(fileStr.toLowerCase().equals(".mp3") ||
-			// fileStr.toLowerCase().equals(".amr") ||
-			// fileStr.toLowerCase().equals(".mp4"))
-			// list.add(files[i].getName());
-			// }
-			// }
-			// }
+
+			for(int i = length - 1 ; i >= 0 ; i -- )
+			{
+				list.add(listTemp.get(i).toString());
+			}
+
 		}
 	}
 
@@ -225,6 +219,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				break;
 			case R.id.stopPlay:
 				// 停止播放
+				startPlay.setBackgroundResource(R.drawable.pause);
 				startPlay.setEnabled(true);
 				stopPlay.setEnabled(false);
 				startRecord.setEnabled(true);
@@ -241,17 +236,19 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				break;
 			case R.id.delete:
 				// 删除录音文件
-				deleteRecord();
+				if(playFileName != null)
+					deleteRecord();
 				break;
 			case R.id.share:
 				// 分享录音文件
-				shareRecord();
+				if(playFileName != null)
+					shareRecord();
 				break;
 			case R.id.pausePlay:
 				// 暂停播放
 				if(isPausePlay)
 				{
-					pausePlay.setText("暂停播放");
+					// pausePlay.setText("暂停");
 					pausePlay.setEnabled(true);
 					isPausePlay = false;
 					mPlayer.start();
@@ -262,7 +259,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 					{
 						mPlayer.pause();
 					}
-					pausePlay.setText("继续播放");
+					// pausePlay.setText("继续");
 					pausePlay.setEnabled(true);
 					isPausePlay = true;
 				}
@@ -318,7 +315,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		}
 		else
 		{
-			Toast.makeText(getApplicationContext() ,"录音文件不存在" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,"录音文件不存在，请重试" ,Toast.LENGTH_SHORT).show();
 		}
 		startPlay.setEnabled(false);
 		playFileName = null;
@@ -326,6 +323,11 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		share.setEnabled(false);
 		startRecord.setEnabled(true);
 		time.setText("您本次的录音时长为： 00:00:00");
+		if(currentPosition >= 0 && currentPosition < list.size())
+		{
+			mAdapter.setItemisSelectedMap(currentPosition ,false);
+			mAdapter.notifyDataSetChanged();
+		}
 	}
 
 	// 删除录音文件
@@ -350,11 +352,17 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		delete.setEnabled(false);
 		startRecord.setEnabled(true);
 		time.setText("您本次的录音时长为： 00:00:00");
+		if(currentPosition >= 0 && currentPosition < list.size())
+		{
+			mAdapter.setItemisSelectedMap(currentPosition ,false);
+			mAdapter.notifyDataSetChanged();
+		}
 	}
 
 	// 播放录音
 	private void playRecord()
 	{
+		startPlay.setBackgroundResource(R.drawable.play);
 		// 对按钮的可点击事件的控制是保证不出现空指针的重点！！
 		startRecord.setEnabled(false);
 		delete.setEnabled(false);
@@ -380,6 +388,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				mPlayer = null;
 				startRecord.setEnabled(true);
 				startPlay.setEnabled(true);
+				startPlay.setBackgroundResource(R.drawable.pause);
 				stopPlay.setEnabled(false);
 				delete.setEnabled(true);
 				share.setEnabled(true);
@@ -395,6 +404,19 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		}
 		catch(Exception e)
 		{
+			// 删除所选中的录音文件
+			File file = new File(playFileName);
+			if(file.exists())
+			{
+				file.delete();
+				list.remove(deleteStr);
+				mAdapter.notifyDataSetChanged();
+			}
+			else
+			{
+				list.remove(deleteStr);
+				mAdapter.notifyDataSetChanged();
+			}
 			// 若出现异常被捕获后，同样要释放掉资源
 			// 否则程序会不稳定，不适合正式项目上使用
 			if(mPlayer != null)
@@ -402,7 +424,13 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				mPlayer.release();
 				mPlayer = null;
 			}
-			Toast.makeText(this ,"播放失败,可返回重试！" ,Toast.LENGTH_LONG).show();
+			if(currentPosition >= 0 && currentPosition < list.size())
+			{
+				mAdapter.setItemisSelectedMap(currentPosition ,false);
+				mAdapter.notifyDataSetChanged();
+			}
+			startPlay.setBackgroundResource(R.drawable.pause);
+			Toast.makeText(this ,"文件失效" ,Toast.LENGTH_LONG).show();
 			stopPlay.setEnabled(false);
 			delete.setEnabled(true);
 			share.setEnabled(true);
@@ -421,8 +449,8 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		stopRecord.setEnabled(false);
 		timer.cancel();
 		// 最后合成的音频文件
-		fileAllNameAmr = path + getTime() + ".amr";
-		fileAllNameMp3 = path + getTime() + ".mp3";
+		fileAllNameAmr = recordPath + getTime() + ".amr";
+		fileAllNameMp3 = recordPath + getTime() + ".mp3";
 		String fileNameAmr = getTime() + ".amr";
 		// String fileNameMp3 = getTime() + ".mp3";
 		FileOutputStream fileOutputStream = null;
@@ -457,7 +485,6 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				{
 					while(fileInputStream.read(mByte) != -1)
 					{
-
 						fileOutputStream.write(mByte ,6 ,length - 6);
 					}
 				}
@@ -530,7 +557,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	private void startRecord()
 	{
 		stopRecord.setText("暂停录音");
-		startRecord.setText("录音中");
+		startRecord.setText("录音中...");
 		startRecord.setEnabled(false);
 		startPlay.setEnabled(false);
 		stopRecord.setEnabled(true);
@@ -541,12 +568,12 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 			// 新录音清空列表
 			mList.clear();
 		}
-		File file = new File(path);
+		File file = new File(recordPath);
 		if( !file.exists())
 		{
 			file.mkdirs();
 		}
-		fileAllNameAmr = path + "/" + getTime() + ".amr";
+		fileAllNameAmr = recordPath + getTime() + ".amr";
 		isPause = false;
 		mRecorder = new MediaRecorder();
 		mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -624,7 +651,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	@SuppressLint("SimpleDateFormat")
 	private String getTime()
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 		String time = formatter.format(curDate);
 		return time;
@@ -649,18 +676,24 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				share.setEnabled(false);
 			}
 		}
-		startPlay.setText("播放录音");
+		// startPlay.setText("播放");
 		// 列表文件的选中效果
-		if(whichSelecte != null)
-		{
-			whichSelecte.setBackgroundColor(getResources().getColor(R.color.no));
-		}
 		view.setBackgroundColor(getResources().getColor(R.color.yes));
+		if(currentPosition >= 0 && mAdapter.getisSelectedAt(currentPosition) && currentPosition < list.size())
+		{
+			mAdapter.setItemisSelectedMap(currentPosition ,false);
+			mAdapter.notifyDataSetChanged();
+		}
+		if( !mAdapter.getisSelectedAt(position))
+		{
+			mAdapter.setItemisSelectedMap(position ,true);
+			mAdapter.notifyDataSetChanged();
+			currentPosition = position;
+		}
 		// 要播放文件的路径
-		playFileName = path + "/" + list.get(position);
+		playFileName = recordPath + list.get(position);
 		// 要删除文件的名称
 		deleteStr = list.get(position);
-		whichSelecte = view;
 		time.setText(list.get(position));
 	}
 
@@ -720,7 +753,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 			// 暂停播放
 			mPlayer.pause();
 			isPausePlay = true;
-			pausePlay.setText("继续播放");
+			// pausePlay.setText("继续");
 			pausePlay.setEnabled(true);
 		}
 

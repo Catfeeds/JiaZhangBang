@@ -45,6 +45,14 @@ public class Amr2Mp3
 		{
 			System.out.println(e + "\n" + e.toString());
 		}
+		System.err.println("Íê³É");
+	}
+
+	public static void main(String [] args )
+	{
+		String sourcePath = "D:\\2018.04.13.16.09.04.amr";
+		String targetPath = "D:\\2018.04.13.16.09.04.mp3";
+		changeToMp3(sourcePath ,targetPath);
 	}
 
 }

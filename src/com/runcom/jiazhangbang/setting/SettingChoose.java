@@ -22,15 +22,18 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findnewwords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextMain;
+import com.runcom.jiazhangbang.listenWrite.ListenWriteGameMain;
 import com.runcom.jiazhangbang.listenWrite.ListenWriteTips;
-import com.runcom.jiazhangbang.reciteText.ReciteTextTextChose;
+import com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class SettingChose extends Activity
+public class SettingChoose extends Activity
 {
+
+	private int chooseId;
 	private Spinner spinner_course , spinner_grade , spinner_phase ,
 	        spinner_unit;
 	private Button button_submit;
@@ -38,17 +41,13 @@ public class SettingChose extends Activity
 	        adapter_phase , adapter_unit;
 	private int courseSpinnerValue , gradeSpinnerValue , phaseSpinnerValue ,
 	        unitSpinnerValue;
-	private static final String sharedPreferencesKey = Util.sharedPreferencesKeySettingChose;
-	private static final String courseSharedPreferencesKeyString = Util.courseSharedPreferencesKeyString;
-	private static final String gradeSharedPreferencesKeyString = Util.gradeSharedPreferencesKeyString;
-	private static final String phaseSharedPreferencesKeyString = Util.phaseSharedPreferencesKeyString;
-	private static final String unitSharedPreferencesKeyString = Util.unitSharedPreferencesKeyString;
+	private final String sharedPreferencesKey = Util.sharedPreferencesKeySettingChoose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.setting_chose);
+		setContentView(R.layout.setting_choose);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -56,9 +55,9 @@ public class SettingChose extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "选择";
+		String content = "返回";
 		actionbar.setTitle(content);
-
+		chooseId = getIntent().getIntExtra("class" ,Util.ListenTextMain);
 		initLayout();
 		initData();
 		initView();
@@ -66,24 +65,28 @@ public class SettingChose extends Activity
 
 	private void initView()
 	{
-		courseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,courseSharedPreferencesKeyString ,1);
-		gradeSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,gradeSharedPreferencesKeyString ,1);
-		phaseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,phaseSharedPreferencesKeyString ,1);
-		unitSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,unitSharedPreferencesKeyString ,1);
+		courseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,0);
+		gradeSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		phaseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		unitSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,0);
 
-		spinner_course.setSelection(courseSpinnerValue - 1 ,true);
-		spinner_grade.setSelection(gradeSpinnerValue - 1 ,true);
-		spinner_phase.setSelection(phaseSpinnerValue - 1 ,true);
-		spinner_unit.setSelection(unitSpinnerValue - 1 ,true);
+		courseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[chooseId] ,courseSpinnerValue);
+		gradeSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[chooseId] ,gradeSpinnerValue);
+		phaseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[chooseId] ,phaseSpinnerValue);
+		if(chooseId == Util.ListenWriteTips && unitSpinnerValue > 0)
+		{
+			unitSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue - 1);
+		}
 
+		spinner_course.setSelection(courseSpinnerValue ,true);
+		spinner_grade.setSelection(gradeSpinnerValue ,true);
+		spinner_phase.setSelection(phaseSpinnerValue ,true);
+		spinner_unit.setSelection(unitSpinnerValue ,true);
 	}
 
 	private void initData()
 	{
 		List < String > courseDataList = new ArrayList < String >();
-		List < String > gradeDataList = new ArrayList < String >();
-		List < String > phaseDataList = new ArrayList < String >();
-		List < String > unitDataList = new ArrayList < String >();
 
 		courseDataList.add("语文");
 		courseDataList.add("英语");
@@ -97,7 +100,7 @@ public class SettingChose extends Activity
 			@Override
 			public void onItemSelected(AdapterView < ? > parent , View view , int position , long id )
 			{
-				courseSpinnerValue = position + 1;
+				courseSpinnerValue = position;
 			}
 
 			@Override
@@ -107,6 +110,7 @@ public class SettingChose extends Activity
 			}
 		});
 
+		List < String > gradeDataList = new ArrayList < String >();
 		gradeDataList.add("一年级");
 		gradeDataList.add("二年级");
 		gradeDataList.add("三年级");
@@ -122,7 +126,7 @@ public class SettingChose extends Activity
 			@Override
 			public void onItemSelected(AdapterView < ? > parent , View view , int position , long id )
 			{
-				gradeSpinnerValue = position + 1;
+				gradeSpinnerValue = position;
 			}
 
 			@Override
@@ -133,6 +137,7 @@ public class SettingChose extends Activity
 
 		});
 
+		List < String > phaseDataList = new ArrayList < String >();
 		phaseDataList.add("上学期");
 		phaseDataList.add("下学期");
 
@@ -144,7 +149,7 @@ public class SettingChose extends Activity
 			@Override
 			public void onItemSelected(AdapterView < ? > parent , View view , int position , long id )
 			{
-				phaseSpinnerValue = position + 1;
+				phaseSpinnerValue = position;
 			}
 
 			@Override
@@ -155,6 +160,11 @@ public class SettingChose extends Activity
 
 		});
 
+		List < String > unitDataList = new ArrayList < String >();
+		if(Util.ListenWriteTips != chooseId)
+		{
+			unitDataList.add(Util.unit[0]);
+		}
 		for(int i = 1 ; i <= 8 ; i ++ )
 		{
 			unitDataList.add(Util.unit[i]);
@@ -168,7 +178,7 @@ public class SettingChose extends Activity
 			@Override
 			public void onItemSelected(AdapterView < ? > parent , View view , int position , long id )
 			{
-				unitSpinnerValue = position + 1;
+				unitSpinnerValue = position;
 			}
 
 			@Override
@@ -191,30 +201,38 @@ public class SettingChose extends Activity
 				// "\nunitSpinnerValue:" + unitSpinnerValue;
 				// Toast.makeText(getApplicationContext() ,content
 				// ,Toast.LENGTH_LONG).show();
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,courseSharedPreferencesKeyString ,courseSpinnerValue);
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,gradeSharedPreferencesKeyString ,gradeSpinnerValue);
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,phaseSharedPreferencesKeyString ,phaseSpinnerValue);
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,unitSharedPreferencesKeyString ,unitSpinnerValue);
-				Toast.makeText(getApplicationContext() ,"修改成功" ,Toast.LENGTH_LONG).show();
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,courseSharedPreferencesKeyString
+				// ,courseSpinnerValue);
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,gradeSharedPreferencesKeyString
+				// ,gradeSpinnerValue);
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,phaseSharedPreferencesKeyString
+				// ,phaseSpinnerValue);
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,unitSharedPreferencesKeyString
+				// ,unitSpinnerValue);
+				// Toast.makeText(getApplicationContext() ,"修改成功"
+				// ,Toast.LENGTH_LONG).show();
 			}
 		});
 	}
 
 	private void initLayout()
 	{
-		spinner_course = (Spinner) findViewById(R.id.setting_chose_course_spinner);
-		spinner_grade = (Spinner) findViewById(R.id.setting_chose_grade_spinner);
-		spinner_phase = (Spinner) findViewById(R.id.setting_chose_phase_spinner);
-		spinner_unit = (Spinner) findViewById(R.id.setting_chose_unit_spinner);
+		spinner_course = (Spinner) findViewById(R.id.setting_choose_course_spinner);
+		spinner_grade = (Spinner) findViewById(R.id.setting_choose_grade_spinner);
+		spinner_phase = (Spinner) findViewById(R.id.setting_choose_phase_spinner);
+		spinner_unit = (Spinner) findViewById(R.id.setting_choose_unit_spinner);
 
-		button_submit = (Button) findViewById(R.id.setting_chose_submit_button);
+		button_submit = (Button) findViewById(R.id.setting_choose_submit_button);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		if(0 != getIntent().getIntExtra("class" ,0))
-			getMenuInflater().inflate(R.menu.setting_chose_menu ,menu);
+		getMenuInflater().inflate(R.menu.setting_choose_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -223,20 +241,31 @@ public class SettingChose extends Activity
 	{
 		switch(item.getItemId())
 		{
-			case R.id.setting_chose_menu:
-				int position = getIntent().getIntExtra("class" ,0);
-				switch(position)
+			case R.id.setting_choose_menu_next:
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[chooseId] ,courseSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[chooseId] ,gradeSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[chooseId] ,phaseSpinnerValue);
+				if(chooseId == Util.ListenWriteTips)
 				{
-					case Util.FirstStartAndSetChose:
-						break;
+					unitSpinnerValue ++ ;
+				}
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue);
+
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,courseSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,gradeSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,phaseSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,unitSpinnerValue);
+
+				switch(chooseId)
+				{
 					case Util.ListenTextMain:
 						startActivity(new Intent().setClass(getApplicationContext() ,ListenTextMain.class));
 						break;
 					case Util.ListenWriteTips:
 						startActivity(new Intent().setClass(getApplicationContext() ,ListenWriteTips.class));
 						break;
-					case Util.ReciteTextTextChose:
-						startActivity(new Intent().setClass(getApplicationContext() ,ReciteTextTextChose.class));
+					case Util.ReciteTextTextChoose:
+						startActivity(new Intent().setClass(getApplicationContext() ,ReciteTextTextChoose.class));
 						break;
 					case Util.Repeat:
 						startActivity(new Intent().setClass(getApplicationContext() ,Repeat.class));
@@ -244,16 +273,17 @@ public class SettingChose extends Activity
 					case Util.FindNewWords:
 						startActivity(new Intent().setClass(getApplicationContext() ,FindNewWords.class));
 						break;
+					case Util.playGame:
+						startActivity(new Intent().setClass(getApplicationContext() ,ListenWriteGameMain.class));
+						break;
 					case Util.RecordText:
-						Toast.makeText(getApplicationContext() ,"recordText敬请期待..." ,Toast.LENGTH_LONG).show();
+						Toast.makeText(SettingChoose.this ,"recordText敬请期待..." ,Toast.LENGTH_LONG).show();
 						// TODO RecordText
-						// startActivity(new
-						// Intent().setClass(getApplicationContext()
-						// ,ReciteTextTextChose.class));
 						break;
 					default:
 						break;
 				}
+
 				break;
 			case android.R.id.home:
 				onBackPressed();

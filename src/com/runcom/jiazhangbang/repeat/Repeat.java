@@ -5,54 +5,46 @@ package com.runcom.jiazhangbang.repeat;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnBufferingUpdateListener;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
@@ -64,6 +56,7 @@ import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -83,54 +76,41 @@ import com.umeng.analytics.MobclickAgent;
  * 
  */
 
-@SuppressLint("HandlerLeak")
-public class Repeat extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
+public class Repeat extends Activity
 {
+	private MediaRecorder mediaRecorder = null;// 录音器
+	private Timer timer;
+	private String fileAllNameAmr = null;
+	private String fileAllNameMp3 = null;
+	private String recordPath = Util.RECORDPATH;
+	private ArrayList < String > myRecordList = new ArrayList < String >();// 待合成的录音片段
+	private int second = 0;
+	private int minute = 0;
+	private int hour = 0;
+	private TextView time;// 计时显示
 
-	VideoView videoView;
-	// spinner
 	private Spinner spinner;
-
-	// seekbar
-	private SeekBar seekBar;
-	private ImageButton btnPlay;
-	private TextView tv_currTime , tv_totalTime , tv_lrc;
-	List < MyAudio > play_list = new ArrayList < MyAudio >();
+	private ImageButton startRecord , stopRecord;
+	private TextView tv_lrc;
+	private List < MyAudio > play_list = new ArrayList < MyAudio >();
 	private List < String > play_list_copy = new ArrayList < String >();
-	MyAudio myAudio;
-	public MediaPlayer mp;
-	int currIndex = 0;// 表示当前播放的音乐索引
-	private boolean seekBarFlag = true;// 控制进度条线程标记
+	private List < String > play_list_id = new ArrayList < String >();
+	private MyAudio myAudio;
+	private int currIndex = 0;// 表示当前播放的音乐索引
 
 	// 定义当前播放器的状态
 	private static final int IDLE = 0;
 	private static final int PAUSE = 1;
 	private static final int START = 2;
-	private static final int CURR_TIME_VALUE = 1;
 
 	private int play_currentState = IDLE; // 当前播放器的状态
-	// 定义线程池（同时只能有一个线程运行）
-	private ExecutorService es = Executors.newSingleThreadExecutor();
-
-	// initialization
 	private Intent intent;
 	private String lyricsPath;
-	int grade;
+	private int course , grade , phase , unit;
 
-	// 歌词处理
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
-	private int index = 0;
-	private float progress = 0.000f;
-	private int CurrentTime = 0;
-	private int CountTime = 0;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
-
-	// rocord
-	private int record_currentVoice = 0;
-	private MediaRecorder myAutoRecorder;
-	// private AudioRecord audioRecord;
-	private String outputFile = Util.RECORDPATH + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss" , Locale.CHINA).format(new Date()) + ".mp3";
 
 	private ProgressDialog progressDialog;
 
@@ -140,17 +120,24 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.repeat_main);
 
-		// intent = getIntent();
-		// grade = intent.getIntExtra("selected" ,0);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.Repeat] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.Repeat] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
+
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "朗读" + Util.grade[grade];
-		// new Text2Speech(getApplicationContext() , content).play();
+		String content = "朗读" + Util.grade[grade] + "上学期" + Util.unit[unit];
+		if(2 == phase)
+			content = "朗读" + Util.grade[grade] + "下学期" + Util.unit[unit];
 		actionbar.setTitle(content);
 
 		progressDialog = new ProgressDialog(this);
@@ -165,26 +152,113 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 
 	private void initPlayView()
 	{
-		mp = new MediaPlayer();
-		mp.setOnCompletionListener(this);
-		mp.setOnErrorListener(this);
-		mp.setOnBufferingUpdateListener(this);
-		// spinner
-		spinner = (Spinner) findViewById(R.id.listenText_spinner);
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
-		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
-		seekBar.setOnSeekBarChangeListener(this);
-		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
-		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
+		spinner = (Spinner) findViewById(R.id.repeat_spinner);
+		startRecord = (ImageButton) findViewById(R.id.media_start);
+		stopRecord = (ImageButton) findViewById(R.id.media_stop);
 		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
+		time = (TextView) findViewById(R.id.listen_write_textView_nameShow);
+		initTitle();
+	}
 
-		initData();
-		initRecord();
+	/**
+	 * 初始化数据
+	 */
+	private void initTitle()
+	{
+		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("course" ,course + "");
+		map.put("grade" ,grade + "");
+		map.put("phase" ,phase + "");
+		map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
+		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
+		OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+		{
+			@Override
+			public void onError(Call arg0 , Exception arg1 , int arg2 )
+			{
+				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+				finish();
+			}
+
+			@Override
+			public void onResponse(String arg0 , int arg1 )
+			{
+				if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+				{
+					initData();
+				}
+				else
+					if(Util.okHttpUtilsResultExceptionStringValue.equalsIgnoreCase(arg0))
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsMissingResourceString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+						finish();
+					}
+			}
+
+			@Override
+			public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+			{
+				String response = arg0.body().string().trim();
+				JSONObject jsonObject = new JSONObject(response);
+				String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+				if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+				{
+					return result;
+				}
+				// play_list_title.clear();
+				play_list_id.clear();
+				// System.out.println(jsonObject.toString());
+				JSONArray jsonArray = jsonObject.getJSONArray("textlist");
+				JSONObject textListJsonObject = null;
+				int leng = jsonArray.length();
+				if(leng <= 0)
+				{
+					return Util.okHttpUtilsResultExceptionStringValue;
+				}
+				for(int i = 0 ; i < leng ; i ++ )
+				{
+					textListJsonObject = new JSONObject(jsonArray.getString(i));
+					String parts = textListJsonObject.getString("parts");
+					int part = Integer.valueOf(parts);
+					if(1 == part)
+					{
+						// play_list_title.add(textListJsonObject.getString("title"));
+						play_list_id.add(textListJsonObject.getString("id"));
+					}
+					else
+						if(1 < part)
+						{
+							JSONArray subjsonArray = textListJsonObject.getJSONArray("partlist");
+							int length = subjsonArray.length();
+							for(int k = 0 ; k < length ; k ++ )
+							{
+								JSONObject subjsonObject = new JSONObject(subjsonArray.getString(k));
+								// play_list_title.add(subjsonObject.getString("title"));
+								play_list_id.add(subjsonObject.getString("id"));
+							}
+						}
+						else
+						{
+							Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
+							System.exit(0);
+						}
+				}
+
+				return result;
+			}
+
+		});
 
 	}
 
 	private void initData()
 	{
+
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
@@ -192,70 +266,77 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		}
 		else
 		{
-			String url = "http://jzb.nutnet.cn:8800/interface/getfulltext.php?app=Jiazhangbang&build=57&dev=2b8b2d1541a790dd&lang=zh-Hans&os=6.0&term=0&textid=18&ver=1.3&sign=A5983D53ACCDA6FD5E7819CEE99FAC2A";
-			System.out.println(url);
-			OkHttpUtils.get().url(url).build().execute(new Callback < String >()
+			TreeMap < String , String > map = null;
+			play_list.clear();
+			play_list_copy.clear();
+			final int leng = play_list_id.size();
+			for(int i = 0 ; i < leng ; i ++ )
 			{
-
-				@Override
-				public void onError(Call arg0 , Exception arg1 , int arg2 )
+				final int ii = i;
+				map = Util.getMap(getApplicationContext());
+				map.put("textid" ,play_list_id.get(i));
+				System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
+				OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 				{
-					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
-					finish();
-				}
 
-				@Override
-				public void onResponse(String arg0 , int arg1 )
-				{
-					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
-					{
-						initSpinner();
-					}
-					else
+					@Override
+					public void onError(Call arg0 , Exception arg1 , int arg2 )
 					{
 						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
 						finish();
 					}
-				}
 
-				@Override
-				public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
-				{
-					play_list.clear();
-					play_list_copy.clear();
-
-					String response = arg0.body().string().trim();
-					JSONObject jsonObject = new JSONObject(response);
-					String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
-					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+					@Override
+					public void onResponse(String arg0 , int arg1 )
 					{
+						if(leng - 1 == ii)
+						{
+							initSpinner();
+						}
+						else
+							if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
+							{
+								Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+								finish();
+							}
+					}
+
+					@Override
+					public String parseNetworkResponse(Response arg0 , int arg1 ) throws Exception
+					{
+						String response = arg0.body().string().trim();
+						JSONObject jsonObject = new JSONObject(response);
+						String result = jsonObject.getString(Util.okHttpUtilsResultStringKey);
+						if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(result))
+						{
+							return result;
+						}
+						JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
+						JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
+
+						myAudio = new MyAudio();
+						String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+						String title = jsonObject_partlist.getString("title");
+						play_list_copy.add(title);
+						myAudio.setName(title);
+						if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+							new LrcFileDownloader(lyric_copy , title + ".lrc").start();
+						myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
+						String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
+						myAudio.setSource(source_copy);
+						play_list.add(myAudio);
 						return result;
 					}
-					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
-					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
-					myAudio = new MyAudio();
-					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
-					String title = jsonObject_partlist.getString("title");
-					myAudio.setName(title);
-					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
-						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
-					myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
-					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
-					myAudio.setSource(source_copy);
-					play_list.add(myAudio);
-					play_list_copy.add(myAudio.getName());
-
-					return result;
-				}
-
-			});
+				});
+			}
 		}
 	}
 
 	private void initSpinner()
 	{
 
+		initLyric();
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
 
@@ -267,7 +348,7 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 			public void onItemSelected(AdapterView < ? > arg0 , View arg1 , int arg2 , long arg3 )
 			{
 				currIndex = arg2;
-				start();
+				initLyric();
 			}
 
 			@Override
@@ -276,11 +357,22 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 			}
 		});
 
-	}
+		stopRecord.setOnClickListener(new OnClickListener()
+		{
 
-	public String getName(String url )
-	{
-		return url.contains("/") ? url.substring(url.lastIndexOf("/") + 1 ,url.lastIndexOf(".")) : url.substring(0 ,url.lastIndexOf("."));
+			@Override
+			public void onClick(View v )
+			{
+				if(play_currentState != IDLE)
+				{
+					stopRecord();
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext() ,"请开始录音" ,Toast.LENGTH_LONG).show();
+				}
+			}
+		});
 	}
 
 	private void initLyric()
@@ -320,25 +412,10 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		LyricList = mLrcRead.GetLyricContent();
 		mLyricView.setSentenceEntities(LyricList);
 		mLyricView.setBackgroundColor(Color.parseColor("#969696"));
-		mHandler.post(mRunnable);
 		myHandler.post(myRunnable);
-		// MyHandler.post(MyRunnable);
 	}
 
-	Handler mHandler = new Handler();
 	Handler myHandler = new Handler();
-	Handler MyHandler = new Handler();
-
-	Runnable mRunnable = new Runnable()
-	{
-		public void run()
-		{
-			mLyricView.SetIndex(Index());
-			mLyricView.SetProgress(Progress());
-			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,10);
-		}
-	};
 
 	Runnable myRunnable = new Runnable()
 	{
@@ -347,155 +424,12 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		public void run()
 		{
 			String tempString = "";
-			Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " + Index());
-			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.1 ; i ++ )
+			for(int i = 0 ; i < LyricList.size() * 1.5 ; i ++ )
 				tempString += " \n";
 			tv_lrc.setText(tempString);
 			myHandler.postDelayed(myRunnable ,1700);
 		}
 	};
-
-	private int index_MyRunnable_before = 0 , index_MyRunnable_after = 0;
-	Runnable MyRunnable = new Runnable()
-	{
-
-		@Override
-		public void run()
-		{
-			Log.d("LOGMyRunnable" ,"gege is running");
-
-			index_MyRunnable_before = index_MyRunnable_after;
-			index_MyRunnable_after = Index();
-			if(index_MyRunnable_before < index_MyRunnable_after)
-			{
-				// play();
-				mp.pause();
-				btnPlay.setImageResource(R.drawable.play_pause);
-				play_currentState = START;
-				// if(play_currentState == START)
-				{
-					// 录音**********************************************************
-					Log.d("LOGluyin" ,"gege is recording");
-					// try
-					// {
-					// Thread.sleep(3 * 1000);
-					// }
-					// catch(InterruptedException e)
-					// {
-					// e.printStackTrace();
-					// }
-					// play_currentState = START;
-					// play();
-				}
-			}
-			else
-			{
-				mp.start();
-				btnPlay.setImageResource(R.drawable.play_start);
-				play_currentState = PAUSE;
-			}
-			MyHandler.postAtTime(MyRunnable ,1000);
-		}
-
-	};
-
-	public float Progress()
-	{
-		if(mp.isPlaying())
-		{
-			CurrentTime = mp.getCurrentPosition();
-			CountTime = mp.getDuration();
-		}
-		if(CurrentTime < CountTime)
-		{
-			for(int i = 0 ; i < LyricList.size() ; i ++ )
-			{
-				if(i < LyricList.size() - 1)
-				{
-					if(CurrentTime < LyricList.get(i).getLyricTime() && i == 0)
-					{
-						index = i;
-						progress = 0;
-					}
-					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
-					{
-						index = i;
-						progress = (float) ((float) (CurrentTime - LyricList.get(i).getLyricTime()) / (float) (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
-					}
-				}
-
-				if(i == LyricList.size() - 1 && CurrentTime > LyricList.get(i).getLyricTime())
-				{
-					index = i;
-					progress = 1;
-				}
-			}
-		}
-		return progress;
-	}
-
-	public int Index()
-	{
-		if(mp.isPlaying())
-		{
-			CurrentTime = mp.getCurrentPosition();
-			CountTime = mp.getDuration();
-		}
-		if(CurrentTime < CountTime)
-		{
-			for(int i = 0 ; i < LyricList.size() ; i ++ )
-			{
-				if(i < LyricList.size() - 1)
-				{
-					if(CurrentTime < LyricList.get(i).getLyricTime() && i == 0)
-					{
-						index = i;
-					}
-					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
-					{
-						index = i;
-					}
-				}
-
-				if(i == LyricList.size() - 1 && CurrentTime > LyricList.get(i).getLyricTime())
-				{
-					index = i;
-				}
-			}
-		}
-
-		return index;
-	}
-
-	public Handler hander = new Handler()
-	{
-		public void handleMessage(Message msg )
-		{
-			switch(msg.what)
-			{
-				case CURR_TIME_VALUE:
-					tv_currTime.setText(msg.obj.toString());
-					break;
-				default:
-					break;
-			}
-		};
-	};
-
-	public void settingFinishTime(long time )
-	{
-		final Timer timer = new Timer();
-		TimerTask task = new TimerTask()
-		{
-			@Override
-			public void run()
-			{
-				mp.stop();
-				finish();
-			}
-		};
-		timer.schedule(task ,1000 * time);
-	}
 
 	public void onDetailSetting(View v )
 	{
@@ -505,330 +439,210 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		startActivity(intent);
 	}
 
-	// 播放按钮
-	public void playText(View v )
-	{
-		play();
-	}
-
-	public void play()
+	public void repeatSwitching(View v )
 	{
 		switch(play_currentState)
 		{
 			case IDLE:
-				start();
+				play_currentState = PAUSE;
+				startRecord.setImageResource(R.drawable.play);
+				startRecord();
+				recordTime();
 				break;
 			case PAUSE:
-				mp.pause();
-				btnPlay.setImageResource(R.drawable.play_pause);
 				play_currentState = START;
+				startRecord.setImageResource(R.drawable.record_pause);
+				mediaRecorder.stop();
+				mediaRecorder.release();
+				timer.cancel();
+				myRecordList.add(fileAllNameAmr);
+
 				break;
 			case START:
-				mp.start();
-				btnPlay.setImageResource(R.drawable.play_start);
 				play_currentState = PAUSE;
+				startRecord.setImageResource(R.drawable.play);
+				startRecord();
+				recordTime();
+				break;
+			default:
+				break;
 		}
 
 	}
 
-	// 快退按钮
-	public void previousText(View v )
+	// 完成录音
+	private void stopRecord()
 	{
-		previous();
-	}
 
-	public void previous()
-	{
-		// Log.d("LOG" ,currIndex + "");
-		if(currIndex >= 1 && play_list.size() > 0)
+		play_currentState = IDLE;
+		mediaRecorder.release();
+		mediaRecorder = null;
+
+		startRecord.setImageResource(R.drawable.record_pause);
+		timer.cancel();
+		// 最后合成的音频文件
+		fileAllNameAmr = recordPath + getTime() + ".amr";
+		fileAllNameMp3 = recordPath + getTime() + ".mp3";
+		FileOutputStream fileOutputStream = null;
+		try
 		{
-			currIndex -- ;
-			spinner.setSelection(currIndex);
-			start();
+			fileOutputStream = new FileOutputStream(fileAllNameAmr);
 		}
-		else
-			if(play_list.size() <= 0)
-			{
-				Toast.makeText(getApplicationContext() ,"播放列表为空" ,Toast.LENGTH_SHORT).show();
-			}
-			else
-			{
-				Toast.makeText(getApplicationContext() ,"当前已经是第一首了" ,Toast.LENGTH_SHORT).show();
-			}
-	}
-
-	// 快进按钮
-	public void nextText(View v )
-	{
-		next();
-	}
-
-	public void next()
-	{
-		if(currIndex < play_list.size() - 1)
+		catch(FileNotFoundException e)
 		{
-			++ currIndex;
-			spinner.setSelection(currIndex);
-			start();
 		}
-		else
-			if(currIndex == play_list.size())
+		FileInputStream fileInputStream = null;
+		try
+		{
+			for(int i = 0 ; i < myRecordList.size() ; i ++ )
 			{
-				Toast.makeText(getApplicationContext() ,"播放列表为空" ,Toast.LENGTH_SHORT).show();
-			}
-			else
-				if(currIndex == play_list.size() - 1)
+				File file = new File(myRecordList.get(i));
+				// 把因为暂停所录出的多段录音进行读取
+				fileInputStream = new FileInputStream(file);
+				byte [] mByte = new byte [fileInputStream.available()];
+				int length = mByte.length;
+				// 第一个录音文件的前六位是不需要删除的
+				if(i == 0)
 				{
-					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
-					currIndex = -1;
-					next();
+					while(fileInputStream.read(mByte) != -1)
+					{
+						fileOutputStream.write(mByte ,0 ,length);
+					}
 				}
+				// 之后的文件，去掉前六位
 				else
 				{
-					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了lelele" ,Toast.LENGTH_SHORT).show();
-					currIndex = -1;
-					next();
+					while(fileInputStream.read(mByte) != -1)
+					{
+						fileOutputStream.write(mByte ,6 ,length - 6);
+					}
 				}
-	}
+			}
 
-	// 开始播放
-	public void start()
-	{
-		if(play_list.size() > 0 && currIndex < play_list.size())
+			Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
+
+		}
+		catch(Exception e)
 		{
-			String SongPath = play_list.get(currIndex).getSource();
-			mp.reset();
+			Toast.makeText(this ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			System.out.println(e);
+		}
+		finally
+		{
 			try
 			{
-				mp.setDataSource(SongPath);
-				mp.prepare();
-				mp.start();
-				Log.d("LOG" ,SongPath);
-				initSeekBar();
-				es.execute(this);
-				btnPlay.setImageResource(R.drawable.play_start);
-				play_currentState = PAUSE;
-				initLyric();
+				fileOutputStream.flush();
+				fileInputStream.close();
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
-				Log.d("LOG" ,"bugle");
+				System.out.println(e);
 			}
+			minute = 0;
+			hour = 0;
+			second = 0;
 		}
-		else
+		for(int i = 0 ; i < myRecordList.size() ; i ++ )
 		{
-			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	// 监听器，当当前歌曲播放完时触发
-	public void onCompletion(MediaPlayer mp )
-	{
-		if(currIndex < play_list.size() - 1 && currIndex >= 0)
-		{
-			next();
-		}
-		else
-		{
-			tv_currTime.setText("00:00");
-			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	// 当播放异常时触发
-	public boolean onError(MediaPlayer mp , int what , int extra )
-	{
-		mp.reset();
-		return false;
-	}
-
-	// 初始化SeekBar
-	private void initSeekBar()
-	{
-		seekBar.setMax(mp.getDuration());
-		seekBar.setProgress(0);
-		tv_totalTime.setText(toTime(mp.getDuration()));
-	}
-
-	private String toTime(int time )
-	{
-		int minute = time / 1000 / 60;
-		int s = time / 1000 % 60;
-		String mm = null;
-		String ss = null;
-		if(minute < 10)
-			mm = "0" + minute;
-		else
-			mm = minute + "";
-
-		if(s < 10)
-			ss = "0" + s;
-		else
-			ss = "" + s;
-
-		return mm + ":" + ss;
-	}
-
-	public void run()
-	{
-		seekBarFlag = true;
-		while(seekBarFlag)
-		{
-			if(mp.getCurrentPosition() < seekBar.getMax())
+			File file = new File(myRecordList.get(i));
+			if(file.exists())
 			{
-				seekBar.setProgress(mp.getCurrentPosition());
-				Message msg = hander.obtainMessage(CURR_TIME_VALUE ,toTime(mp.getCurrentPosition()));
-				hander.sendMessage(msg);
-				try
-				{
-					Thread.sleep(500);
-				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
+				file.delete();
 			}
-			else
+		}
+		time.setText("完成");
+		Toast.makeText(getApplicationContext() ,"录音成功" ,Toast.LENGTH_LONG).show();
+	}
+
+	// 开始录音
+	@SuppressWarnings("deprecation")
+	private void startRecord()
+	{
+		myRecordList.clear();
+		File file = new File(recordPath);
+		if( !file.exists())
+		{
+			file.mkdirs();
+		}
+		fileAllNameAmr = recordPath + getTime() + ".amr";
+		mediaRecorder = new MediaRecorder();
+		mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+		// 选择amr格式
+		mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+		mediaRecorder.setOutputFile(fileAllNameAmr);
+		mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		try
+		{
+			mediaRecorder.prepare();
+		}
+		catch(Exception e)
+		{
+			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件。 否则会出现各种异常。
+			Toast.makeText(this ,"录音器启动失败，请返回重试！" ,Toast.LENGTH_LONG).show();
+			mediaRecorder.release();
+			mediaRecorder = null;
+			this.finish();
+		}
+		if(mediaRecorder != null)
+		{
+			mediaRecorder.start();
+		}
+
+	}
+
+	// 计时器异步更新界面
+	@SuppressLint("HandlerLeak")
+	Handler handler = new Handler()
+	{
+		@Override
+		public void handleMessage(Message msg )
+		{
+			time.setText("您本次的录音时长为：" + String.format("%1$02d:%2$02d:%3$02d" ,hour ,minute ,second));
+			super.handleMessage(msg);
+		}
+	};
+
+	// 录音计时
+	private void recordTime()
+	{
+		TimerTask timerTask = new TimerTask()
+		{
+
+			@Override
+			public void run()
 			{
-				seekBarFlag = false;
+				second ++ ;
+				if(second >= 60)
+				{
+					second = 0;
+					minute ++ ;
+					if(minute >= 60)
+					{
+						minute = 0;
+						hour ++ ;
+					}
+				}
+				handler.sendEmptyMessage(1);
 			}
-		}
+
+		};
+		timer = new Timer();
+		timer.schedule(timerTask ,1000 ,1000);
 	}
 
-	// SeekBar监听器
-	public void onProgressChanged(SeekBar seekBar , int progress , boolean fromUser )
+	// 获得当前时间
+	@SuppressLint("SimpleDateFormat")
+	private String getTime()
 	{
-		// 是否由用户改变
-		if(fromUser)
-		{
-			mp.seekTo(progress);
-		}
-	}
-
-	@Override
-	public void onBufferingUpdate(MediaPlayer mp , int percent )
-	{
-		seekBar.setSecondaryProgress(percent * mp.getDuration() / 100);
-	}
-
-	public void onStartTrackingTouch(SeekBar seekBar )
-	{
-	}
-
-	public void onStopTrackingTouch(SeekBar seekBar )
-	{
-	}
-
-	// 初始化录音配置
-	private void initRecord()
-	{
-		myAutoRecorder = new MediaRecorder();
-		// 从麦克风源进行录音
-		myAutoRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-		// 设置输出格式
-		myAutoRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-		// 设置编码格式
-		myAutoRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
-
-		myAutoRecorder.setOutputFile(outputFile);
-	}
-
-	public void recordStart()
-	{
-		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		record_currentVoice = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC ,0 ,0);
-
-		try
-		{
-			myAutoRecorder.prepare();
-			myAutoRecorder.start();
-		}
-		catch(Exception e)
-		{
-			Log.d("LOG" ,e.toString());
-			e.printStackTrace();
-		}
-		Toast.makeText(getApplicationContext() ,"Recording..." ,Toast.LENGTH_LONG).show();
-
-	}
-
-	public void recordPause()
-	{
-		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		record_currentVoice = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC ,0 ,0);
-
-		try
-		{
-			myAutoRecorder.prepare();
-			myAutoRecorder.start();
-		}
-		catch(Exception e)
-		{
-			Log.d("LOG" ,e.toString());
-			e.printStackTrace();
-		}
-		Toast.makeText(getApplicationContext() ,"Recording..." ,Toast.LENGTH_LONG).show();
-
-	}
-
-	public void recordStop()
-	{
-		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC ,record_currentVoice ,0);
-
-		myAutoRecorder.stop();
-		myAutoRecorder.release();
-		myAutoRecorder = null;
-		Toast.makeText(getApplicationContext() ,"Record successfully!!!\n文件保存在:" + outputFile ,Toast.LENGTH_LONG).show();
-
-	}
-
-	public void recordPlay()
-	{
-		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC ,record_currentVoice ,0);
-		mp.pause();
-		btnPlay.setImageResource(R.drawable.play_pause);
-		// play_currentState = START;
-
-		MediaPlayer m = new MediaPlayer();
-		try
-		{
-			m.setDataSource(outputFile);
-			m.prepare();
-			m.start();
-			Toast.makeText(getApplicationContext() ,"Your record is playing." ,Toast.LENGTH_LONG).show();
-		}
-		catch(Exception e)
-		{
-			Log.d("LOG" ,e.toString());
-			e.printStackTrace();
-		}
-	}
-
-	public void recordShare()
-	{
-		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC ,record_currentVoice ,0);
-
-		Intent intent = new Intent(Intent.ACTION_SEND);
-
-		intent.setType("audio/*");
-		intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-		String url = outputFile.toString();
-		Uri uri = Uri.parse(url);
-		intent.putExtra(Intent.EXTRA_STREAM ,uri);
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(Intent.createChooser(intent ,"分享"));
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+		String time = formatter.format(curDate);
+		return time;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.time_setting ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -838,8 +652,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				mp.stop();
-				seekBarFlag = false;
 				onBackPressed();
 				break;
 		}
@@ -852,8 +664,6 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			mp.stop();
-			seekBarFlag = false;
 			finish();
 			return true;
 		}
@@ -872,6 +682,16 @@ public class Repeat extends Activity implements Runnable , OnCompletionListener 
 	{
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
 	}
 
 }

@@ -57,6 +57,7 @@
         android:layout_above="@+id/linearLayout2"
         android:layout_alignLeft="@+id/linearLayout2"
         android:layout_alignStart="@+id/linearLayout2"
+        android:background="#969696"
         android:gravity="center"
         android:text="@string/hello_world" />
 
@@ -65,30 +66,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#969696"
         android:gravity="center" >
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#969696"
             android:contentDescription="上一曲"
             android:onClick="previous"
             android:src="@drawable/play_previous" />
 
         <ImageButton
-            android:id="@+id/media_play"
+            android:id="@+id/media_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#969696"
             android:contentDescription="播放/暂停"
             android:onClick="play"
-            android:src="@drawable/play_pause" />
+            android:src="@drawable/pause" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#969696"
             android:contentDescription="下一曲"
             android:onClick="next"
             android:src="@drawable/play_next" />
-
     </LinearLayout>
 
 </RelativeLayout>

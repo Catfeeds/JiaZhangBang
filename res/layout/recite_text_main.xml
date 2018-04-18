@@ -3,14 +3,199 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView 
-	    android:id="@+id/recite_text_main_listview"
-	    android:layout_width="match_parent"
-        android:layout_above="@+id/recite_text_main_linear_layout_score"
-	    android:layout_height="wrap_content"
-	    android:background="#25CB73"
-        android:layout_alignParentTop="true">
+    <ListView
+        android:id="@+id/recite_text_main_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/recite_text_main_nameShow"
+        android:layout_alignParentTop="true"
+        android:background="#25CB73"
+        android:visibility="visible" >
     </ListView>
+
+    <TextView
+        android:id="@+id/recite_text_main_listview_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/recite_text_main_nameShow"
+        android:layout_alignParentTop="true"
+        android:background="#25CB73"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="录音中..."
+        android:textSize="27sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/recite_text_main_nameShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/listenText_linearLayout_seekbar"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:background="#696969"
+        android:gravity="center_horizontal"
+        android:text=""
+        android:textSize="17sp" />
+
+    <LinearLayout
+        android:id="@+id/listenText_linearLayout_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_above="@+id/listenText_linearLayout_control"
+        android:layout_alignStart="@+id/listenText_linearLayout_control"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/listenText_textView_curr_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp" />
+
+        <SeekBar
+            android:id="@+id/listenText_seekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100" />
+
+        <TextView
+            android:id="@+id/listenText_textView_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/listenText_linearLayout_control"
+        android:layout_width="match_parent"
+        android:layout_height="87dp"
+        android:layout_above="@+id/recite_text_main_linear_layout_score"
+        android:background="#696969"
+        android:gravity="center" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/recite_text_main_stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#696969"
+                android:src="@drawable/stop" />
+
+            <TextView
+                android:id="@+id/recite_text_main_stop_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/recite_text_main_stop"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/recite_text_main_stop"
+                android:gravity="center_horizontal"
+                android:text="停止录音"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/recite_text_main_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#696969"
+                android:onClick="reciteSwitching"
+                android:src="@drawable/record_pause" />
+
+            <TextView
+                android:id="@+id/recite_text_main_start_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/recite_text_main_start"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/recite_text_main_start"
+                android:gravity="center_horizontal"
+                android:text="开始录音"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/recite_text_main_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#696969"
+                android:src="@drawable/pause" />
+
+            <TextView
+                android:id="@+id/recite_text_main_play_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/recite_text_main_play"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/recite_text_main_play"
+                android:gravity="center_horizontal"
+                android:text="播放录音"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/recite_text_main_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#696969"
+                android:src="@drawable/submit" />
+
+            <TextView
+                android:id="@+id/recite_text_main_submit_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/recite_text_main_submit"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/recite_text_main_submit"
+                android:gravity="center_horizontal"
+                android:text="提交成绩"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/recite_text_main_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#696969"
+                android:src="@drawable/detail" />
+
+            <TextView
+                android:id="@+id/recite_text_main_detail_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/recite_text_main_detail"
+                android:layout_alignParentBottom="true"
+                android:layout_alignRight="@+id/recite_text_main_detail"
+                android:gravity="center_horizontal"
+                android:text="成绩列表"
+                android:textSize="13sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/recite_text_main_linear_layout_score"
@@ -29,15 +214,16 @@
             android:gravity="center_horizontal|center_vertical"
             android:text="自动得分 "
             android:textColor="#FFFFFF"
-            android:textSize="27sp" 
-            android:visibility="gone"/>
+            android:textSize="27sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
             android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:visibility="gone" >
 
             <TextView
                 android:id="@+id/recite_text_main_textview_autojudge"
@@ -46,16 +232,17 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:text="自动评分"
                 android:textColor="#FFFFFF"
-                android:textSize="27sp"/>
+                android:textSize="27sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/recite_text_main_textview_submitscore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal|center_vertical|top"
+                android:paddingStart="15dp"
                 android:text="提交"
                 android:textColor="#FFFFFF"
-                android:paddingStart="15dp"
                 android:textSize="27sp" />
 
             <TextView

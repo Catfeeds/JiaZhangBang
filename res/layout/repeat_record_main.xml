@@ -1,62 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:id="@+id/repeat_record_main_linear_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/startRecord"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="开始录音" />
-
-        <Button
-            android:id="@+id/stopRecord"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="完成录音" />
-
-        <Button
-            android:id="@+id/startPlay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="开始播放" />
-
-        <Button
-            android:id="@+id/stopPlay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="停止播放" />
-
-        <Button
-            android:id="@+id/pausePlay"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="暂停播放" />
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:text="删除" />
-
-        <Button
-            android:id="@+id/share"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:text="分享" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/time"
@@ -66,13 +12,101 @@
         android:gravity="center_horizontal"
         android:text="您本次的录音时长为： 00:00:00"
         android:textColor="#0000ff"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="gone" />
 
     <ListView
-        android:id="@+id/listview"
+        android:id="@+id/repeat_record_main_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp" >
+        android:layout_above="@+id/repeat_record_main_linear_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/no"
+        android:visibility="visible" >
     </ListView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/repeat_record_main_textView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/repeat_record_main_linear_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/no"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="本地暂无录音"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/repeat_record_main_linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="77dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/startRecord"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开始录音"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/stopRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="完成录音"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/pausePlay"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:text="暂停"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/startPlay"
+            android:layout_width="37dp"
+            android:layout_height="38dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/pause"
+            android:text="" />
+
+        <Button
+            android:id="@+id/stopPlay"
+            android:layout_width="37dp"
+            android:layout_height="38dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/stop"
+            android:text="" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="37dp"
+            android:layout_height="38dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/find_new_words_delete_alll"
+            android:text="" />
+
+        <Button
+            android:id="@+id/share"
+            android:layout_width="37dp"
+            android:layout_height="38dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/share"
+            android:text="" />
+    </LinearLayout>
+
+</RelativeLayout>

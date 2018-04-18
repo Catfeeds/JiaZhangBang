@@ -24,7 +24,7 @@ public class LyricView extends ScrollView
 	private Paint CurrentPaint;
 	private Paint NotCurrentPaint;
 	private Paint ThirdCurrentPaint;
-	public float TextHigh = Util.sp2px(getContext() ,57);
+	private float TextHigh = Util.sp2px(getContext() ,57);
 	// public float TextHigh = Util.sp2px(getContext() ,37);
 	float TextSize = Util.sp2px(getContext() ,15);
 	private int Index = 0 , newIndex = 0;

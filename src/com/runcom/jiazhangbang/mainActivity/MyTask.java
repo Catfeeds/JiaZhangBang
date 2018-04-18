@@ -41,7 +41,7 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 	private ProgressDialog progressDialog;
 	private String path;
 	private String fileName;
-	private Boolean flag;
+	private Boolean flag = true;
 
 	// public MyTask(Context context)
 	// {

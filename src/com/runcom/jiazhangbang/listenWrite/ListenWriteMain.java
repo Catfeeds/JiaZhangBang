@@ -49,8 +49,7 @@ import com.umeng.analytics.MobclickAgent;
 public class ListenWriteMain extends Activity implements OnCompletionListener , OnErrorListener
 {
 	private long startTime , endTime;
-	// private Intent intent;
-	private int grade , phase , unit;
+	private int course , grade , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int leng;
 	private String [] phraseContent , voiceContent;
@@ -86,13 +85,18 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_main);
 
-		// intent = getIntent();
-		// grade = intent.getIntExtra("selected" ,1);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
-		// phase = intent.getIntExtra("phase" ,1);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
-		// unit = intent.getIntExtra("units" ,1);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenWriteTips] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenWriteTips] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenWriteTips] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		if(unit > 0)
+		{
+			unit -- ;
+		}
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenWriteTips] ,unit);
 
 		// 两个词语间隔秒数
 		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
@@ -150,9 +154,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 
 	private void initNewWordsData()
 	{
-		// Log.d("log*************2" ,"classes : " + selected + "\nunits : " +
-		// units + "\nuri : " + Util.SERVERADDRESS_listenWriteMain + "&classes="
-		// + selected + "&units=" + units);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
@@ -161,10 +162,10 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
-			map.put("course" ,Util.ChineseCourse);
+			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
-			map.put("unit" ,unit + "");
+			map.put("unit" ,++ unit + "");
 			System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 			{
@@ -672,6 +673,16 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	public void onConfigurationChanged(Configuration newConfig )
 	{
 		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
 	}
 
 }

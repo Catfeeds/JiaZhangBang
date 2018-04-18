@@ -126,16 +126,6 @@
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
                         android:text="0KB" />
-                    <!--
-                    <ImageView
-                        android:id="@+id/setting_clearCache_detail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="right"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20.0dip"
-                        android:src="@drawable/setting_detail" />
-                    -->
                 </TableRow>
 
                 <TextView
@@ -196,14 +186,14 @@
                         android:textColor="#ff333333"
                         android:textSize="16.0sp" />
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/setting_checkUpdate_detail"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/setting_detail" />
+                        android:text="暂无更新" />
                 </TableRow>
 
                 <TextView

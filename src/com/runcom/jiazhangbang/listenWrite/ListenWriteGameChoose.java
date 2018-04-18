@@ -21,7 +21,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class ListenWriteGameChose extends Activity
+public class ListenWriteGameChoose extends Activity
 {
 	private int degreeSpinnerValue , gradeSpinnerValue , phaseSpinnerValue ,
 	        unitSpinnerValue;
@@ -35,7 +35,7 @@ public class ListenWriteGameChose extends Activity
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listen_write_game_chose);
+		setContentView(R.layout.listen_write_game_choose);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -205,13 +205,13 @@ public class ListenWriteGameChose extends Activity
 
 	private void initLayout()
 	{
-		degreeSpinner = (Spinner) findViewById(R.id.setting_chose_course_spinner);
+		degreeSpinner = (Spinner) findViewById(R.id.setting_choose_course_spinner);
 
-		gradeSpinner = (Spinner) findViewById(R.id.setting_chose_grade_spinner);
-		phaseSpinner = (Spinner) findViewById(R.id.setting_chose_phase_spinner);
-		unitSpinner = (Spinner) findViewById(R.id.setting_chose_unit_spinner);
+		gradeSpinner = (Spinner) findViewById(R.id.setting_choose_grade_spinner);
+		phaseSpinner = (Spinner) findViewById(R.id.setting_choose_phase_spinner);
+		unitSpinner = (Spinner) findViewById(R.id.setting_choose_unit_spinner);
 
-		startButton = (Button) findViewById(R.id.setting_chose_submit_button);
+		startButton = (Button) findViewById(R.id.setting_choose_submit_button);
 	}
 
 	@Override

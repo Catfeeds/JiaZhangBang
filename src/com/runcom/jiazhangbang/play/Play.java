@@ -86,7 +86,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 
 	private void initPlayView()
 	{
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		btnPlay = (ImageButton) findViewById(R.id.media_start);
 		seekBar = (SeekBar) findViewById(R.id.seekBar1);
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.textView1_curr_time);
@@ -224,7 +224,7 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 				initSeekBar();
 				es.execute(this);
 				tv_showName.setText(resultBuffer);
-				btnPlay.setImageResource(R.drawable.play_start);
+				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 			}
 			catch(IOException e)
@@ -248,12 +248,12 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 				break;
 			case PAUSE:
 				mp.pause();
-				btnPlay.setImageResource(R.drawable.play_pause);
+				btnPlay.setImageResource(R.drawable.pause);
 				currState = START;
 				break;
 			case START:
 				mp.start();
-				btnPlay.setImageResource(R.drawable.play_start);
+				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 		}
 	}

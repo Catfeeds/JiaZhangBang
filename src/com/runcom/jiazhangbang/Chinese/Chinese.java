@@ -12,11 +12,10 @@ import android.widget.Toast;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenWrite.ListenWriteGameChose;
+import com.runcom.jiazhangbang.mainActivity.Update;
 import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.setting.Setting;
-import com.runcom.jiazhangbang.setting.SettingChose;
-import com.runcom.jiazhangbang.storage.MySharedPreferences;
+import com.runcom.jiazhangbang.setting.SettingChoose;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.runcom.jiazhangbang.welcome.Welcome;
@@ -33,19 +32,7 @@ public class Chinese extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
-		firstStartAndSetChose();
-	}
-
-	private void firstStartAndSetChose()
-	{
-		Boolean first = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeyFirstStart ,Util.firstStartSharedPreferencesKeyString ,true);
-		if(first)
-		{
-			intent.putExtra("class" ,Util.FirstStartAndSetChose);
-			intent.setClass(getApplicationContext() ,SettingChose.class);
-			MySharedPreferences.putValue(getApplicationContext() ,Util.sharedPreferencesKeyFirstStart ,Util.firstStartSharedPreferencesKeyString ,false);
-			startActivity(intent);
-		}
+		Update.update(Chinese.this ,true);
 	}
 
 	/**
@@ -56,7 +43,7 @@ public class Chinese extends Activity
 	public void listenText(View v )
 	{
 		intent.putExtra("class" ,Util.ListenTextMain);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -73,10 +60,10 @@ public class Chinese extends Activity
 	 * 
 	 * @param v
 	 */
-	public void listenAndWrite(View v )
+	public void listenWrite(View v )
 	{
 		intent.putExtra("class" ,Util.ListenWriteTips);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -95,8 +82,8 @@ public class Chinese extends Activity
 	 */
 	public void reciteText(View v )
 	{
-		intent.putExtra("class" ,Util.ReciteTextTextChose);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.putExtra("class" ,Util.ReciteTextTextChoose);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -116,7 +103,7 @@ public class Chinese extends Activity
 	public void repeat(View v )
 	{
 		intent.putExtra("class" ,Util.Repeat);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -136,7 +123,7 @@ public class Chinese extends Activity
 	public void findNewWords(View v )
 	{
 		intent.putExtra("class" ,Util.FindNewWords);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -149,13 +136,16 @@ public class Chinese extends Activity
 	}
 
 	/**
-	 * 玩游戏
+	 * 6玩游戏
 	 * 
 	 * @param v
 	 */
 	public void playGame(View v )
 	{
-		intent.setClass(getApplicationContext() ,ListenWriteGameChose.class);
+		intent.putExtra("class" ,Util.playGame);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
+		// intent.setClass(getApplicationContext()
+		// ,ListenWriteGameChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -168,14 +158,14 @@ public class Chinese extends Activity
 	}
 
 	/**
-	 * 6录课文
+	 * 7录课文
 	 * 
 	 * @param v
 	 */
 	public void recordText(View v )
 	{
 		intent.putExtra("class" ,Util.RecordText);
-		intent.setClass(getApplicationContext() ,SettingChose.class);
+		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();

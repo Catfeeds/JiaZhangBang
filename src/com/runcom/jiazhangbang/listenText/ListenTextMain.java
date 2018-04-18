@@ -82,7 +82,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
 	private String lyricsPath;
-	private int grade , phase , unit;
+	private int course , grade , phase , unit;
 	// 歌词处理
 	private LrcRead mLrcRead;
 	private LyricView mLyricView;
@@ -102,13 +102,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text);
 
-		// intent = getIntent();
-		// grade = intent.getIntExtra("selected" ,1);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.gradeSharedPreferencesKeyString ,1);
-		// phase = intent.getIntExtra("phase" ,1);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.phaseSharedPreferencesKeyString ,1);
-		// unit = (int) intent.getLongExtra("id" ,1);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChose ,Util.unitSharedPreferencesKeyString ,1);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenTextMain] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenTextMain] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -119,7 +120,6 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		String content = "听课文" + Util.grade[grade] + "上学期" + Util.unit[unit];
 		if(2 == phase)
 			content = "听课文" + Util.grade[grade] + "下学期" + Util.unit[unit];
-		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
 		mp = new MediaPlayer();
@@ -139,8 +139,8 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	private void initPlayView()
 	{
-		spinner = (Spinner) findViewById(R.id.listenText_spinner);
-		btnPlay = (ImageButton) findViewById(R.id.media_play);
+		spinner = (Spinner) findViewById(R.id.repeat_spinner);
+		btnPlay = (ImageButton) findViewById(R.id.media_start);
 		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
@@ -157,10 +157,10 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	private void initTitle()
 	{
 		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
-		map.put("course" ,Util.ChineseCourse);
+		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
-		map.put("unit" ,unit + "");
+		map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
 		System.out.println(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "gettextlist.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -589,12 +589,12 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				break;
 			case PAUSE:
 				mp.pause();
-				btnPlay.setImageResource(R.drawable.play_pause);
+				btnPlay.setImageResource(R.drawable.pause);
 				currState = START;
 				break;
 			case START:
 				mp.start();
-				btnPlay.setImageResource(R.drawable.play_start);
+				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 		}
 
@@ -684,7 +684,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				mp.start();
 				initSeekBar();
 				es.execute(this);
-				btnPlay.setImageResource(R.drawable.play_start);
+				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 				initLyric();
 			}
@@ -846,4 +846,13 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		MobclickAgent.onPause(this);
 	}
 
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
+	}
 }

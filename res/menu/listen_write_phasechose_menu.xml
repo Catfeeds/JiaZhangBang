@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/listen_write_phase_chose_test_item"
+        android:id="@+id/listen_write_phase_choose_test_item"
         android:showAsAction="always"
         android:title="听写游戏测试"/>
 
