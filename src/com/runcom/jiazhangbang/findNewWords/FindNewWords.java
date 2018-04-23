@@ -65,7 +65,7 @@ public class FindNewWords extends Activity
 {
 
 	private Intent intent = new Intent();
-	private int course , grade;
+	private int course , grade , phase , unit;
 	private String contents;
 
 	private AutoCompleteTextView autoCompleteTextView;
@@ -89,19 +89,10 @@ public class FindNewWords extends Activity
 		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.FindNewWords] ,course) + 1;
 		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
 		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.FindNewWords] ,grade) + 1;
-		// phase = MySharedPreferences.getValue(getApplicationContext()
-		// ,Util.sharedPreferencesKeySettingChoose
-		// ,Util.phaseSharedPreferencesKeyString[0] ,0);
-		// phase = MySharedPreferences.getValue(getApplicationContext()
-		// ,Util.sharedPreferencesKeySettingChoose
-		// ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) +
-		// 1;
-		// unit = MySharedPreferences.getValue(getApplicationContext()
-		// ,Util.sharedPreferencesKeySettingChoose
-		// ,Util.unitSharedPreferencesKeyString[0] ,0);
-		// unit = MySharedPreferences.getValue(getApplicationContext()
-		// ,Util.sharedPreferencesKeySettingChoose
-		// ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.FindNewWords] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.FindNewWords] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -109,8 +100,9 @@ public class FindNewWords extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "查生词" + Util.grade[grade];
-		// new Text2Speech(getApplicationContext() , content).play();
+		String content = "查生词" + Util.grade[grade] + "上学期" + Util.unit[unit];
+		if(2 == phase)
+			content = "查生词" + Util.grade[grade] + "下学期" + Util.unit[unit];
 		actionbar.setTitle(content);
 
 		progressDialog = new ProgressDialog(this);
@@ -137,8 +129,8 @@ public class FindNewWords extends Activity
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
-		map.put("phase" ,"1");
-		map.put("unit" ,"-1");
+		map.put("phase" ,phase + "");
+		map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{
@@ -205,8 +197,8 @@ public class FindNewWords extends Activity
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
-		map.put("phase" ,"2");
-		map.put("unit" ,"-1");
+		map.put("phase" ,phase + "");
+		map.put("unit" ,0 == unit ? -- unit + "" : unit + "");
 		System.out.println(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map));
 		OkHttpUtils.get().url(Util.REALSERVER + "getphrase.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
 		{

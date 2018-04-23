@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,8 +69,7 @@ import com.umeng.analytics.MobclickAgent;
 public class ReciteTextMain extends Activity implements Checkable
 {
 	private int flag = 0;
-	private TextView autoJudge_textView , submitScore_textView ,
-	        historyScore_textView;
+	TextView autoJudge_textView , submitScore_textView , historyScore_textView;
 	private Intent intent;
 	private ListView listView;
 	private MyListViewMainAdapter myListViewMainAdapter;
@@ -77,9 +77,9 @@ public class ReciteTextMain extends Activity implements Checkable
 	private ArrayList < MyTextContent > myTextContentArraylist = new ArrayList < MyTextContent >();
 	private int dataMax;
 	private int [] counts = null;
-	private String [] scores = new String [11];
+	private String [] scores = new String [10];
 	private int note = 0 , temp = 0;
-	private float ans = 100.0f;
+	private float ans = 100;
 	private String name , lrc;
 	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
 	private ImageButton imageButton_record_stop , startRecord ,
@@ -110,7 +110,7 @@ public class ReciteTextMain extends Activity implements Checkable
 	private String recordPath = Util.RECORDPATH;
 	private Timer timer;
 	private Boolean isRecord = true;
-
+	private String playName;
 	private MediaPlayer mediaPlayer = null;// 播放器
 
 	@Override
@@ -138,7 +138,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		progressDialog.setMessage("正在获取数据......");
 		progressDialog.show();
 
-		Arrays.fill(scores ,"       暂无");
+		Arrays.fill(scores ,"");
 		initView();
 	}
 
@@ -226,14 +226,19 @@ public class ReciteTextMain extends Activity implements Checkable
 							play_currentState = START_play;
 							imageButton_play_record.setImageResource(R.drawable.pause);
 							textView_play_record.setText("开始播放");
-							mediaPlayer.pause();
-							// TODO
+							if(mediaPlayer != null)
+							{
+								mediaPlayer.pause();
+							}
 							break;
 						case START_play:
 							play_currentState = PAUSE_play;
 							imageButton_play_record.setImageResource(R.drawable.play);
 							textView_play_record.setText("暂停播放");
-							mediaPlayer.start();
+							if(mediaPlayer != null)
+							{
+								mediaPlayer.start();
+							}
 							break;
 						default:
 							break;
@@ -252,36 +257,44 @@ public class ReciteTextMain extends Activity implements Checkable
 			@Override
 			public void onClick(View v )
 			{
-				int right = 0;
-				for(int i = 0 ; i < dataMax ; i ++ )
-					if(0 == counts[i])
-						right ++ ;
-				ans = (float) (right * 1.0 / dataMax) * 100;
-				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this);
-				builder.setTitle("确定提交本次成绩：" + ans);
-				builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
+				if(isRecord)
 				{
-
-					@Override
-					public void onClick(DialogInterface dialog , int which )
-					{
-						Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分" ,Toast.LENGTH_SHORT).show();
-						if(temp > 10)
-							temp = 0;
-						scores[temp] = "第" + (note + 1) + "次成绩：          " + ans;
-						++ temp;
-						++ note;
-					}
-				});
-				builder.setPositiveButton("放弃" ,new DialogInterface.OnClickListener()
+					Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+				}
+				else
 				{
-
-					@Override
-					public void onClick(DialogInterface dialog , int which )
+					int right = 0;
+					for(int i = 0 ; i < dataMax ; i ++ )
+						if(0 == counts[i])
+							right ++ ;
+					ans = (float) (right * 1.0 / dataMax) * 100;
+					ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));// 保留一位小数
+					AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this);
+					builder.setTitle("确定提交本次成绩：" + ans);
+					builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
 					{
-					}
-				});
-				builder.show();
+
+						@Override
+						public void onClick(DialogInterface dialog , int which )
+						{
+							Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分" ,Toast.LENGTH_SHORT).show();
+							if(temp > 9)
+								temp = 0;
+							scores[temp] = "\t\t\t\t\t\t\t第" + (note + 1) + "次：\t\t" + ans;
+							++ temp;
+							++ note;
+						}
+					});
+					builder.setPositiveButton("放弃" ,new DialogInterface.OnClickListener()
+					{
+
+						@Override
+						public void onClick(DialogInterface dialog , int which )
+						{
+						}
+					});
+					builder.show();
+				}
 			}
 		});
 
@@ -295,7 +308,7 @@ public class ReciteTextMain extends Activity implements Checkable
 				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this , R.style.NoBackGroundDialog);
 				builder.setIcon(R.drawable.ic_launcher);
 				getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-				builder.setTitle("您的历史成绩");
+				builder.setTitle("历史成绩");
 				builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
 				{
 
@@ -351,46 +364,54 @@ public class ReciteTextMain extends Activity implements Checkable
 
 		}
 
-		autoJudge_textView = (TextView) findViewById(R.id.recite_text_main_textview_autojudge);
-		autoJudge_textView.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v )
-			{
-				int right = 0;
-				String paragraph = "";
-				for(int i = 0 ; i < dataMax ; i ++ )
-					if(0 == counts[i])
-						right ++ ;
-					else
-						paragraph += (i + 1) + "、";
-				ans = (float) (right * 1.0 / dataMax) * 100;
-				if(paragraph.isEmpty())
-					Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans + " 分" + "\n恭喜你 继续保持哟！" ,Toast.LENGTH_SHORT).show();
-				else
-					Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans + " 分" + "\n错误段落为：\n" + paragraph.substring(0 ,paragraph.length() - 1) + "." ,Toast.LENGTH_SHORT).show();
-			}
-		});
+		// autoJudge_textView = (TextView)
+		// findViewById(R.id.recite_text_main_textview_autojudge);
+		// autoJudge_textView.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v )
+		// {
+		// int right = 0;
+		// String paragraph = "";
+		// for(int i = 0 ; i < dataMax ; i ++ )
+		// if(0 == counts[i])
+		// right ++ ;
+		// else
+		// paragraph += (i + 1) + "、";
+		// ans = (float) (right * 1.0 / dataMax) * 100;
+		// ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));
+		// if(paragraph.isEmpty())
+		// Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans +
+		// " 分" + "\n恭喜你 继续保持哟！" ,Toast.LENGTH_SHORT).show();
+		// else
+		// Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans +
+		// " 分" + "\n错误段落为：\n" + paragraph.substring(0 ,paragraph.length() - 1)
+		// + "." ,Toast.LENGTH_SHORT).show();
+		// }
+		// });
 
-		submitScore_textView = (TextView) findViewById(R.id.recite_text_main_textview_submitscore);
-		submitScore_textView.setOnClickListener(new OnClickListener()
-		{
-			@Override
-			public void onClick(View v )
-			{
-				int right = 0;
-				for(int i = 0 ; i < dataMax ; i ++ )
-					if(0 == counts[i])
-						right ++ ;
-				ans = (float) (right * 1.0 / dataMax) * 100;
-				Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分" ,Toast.LENGTH_SHORT).show();
-				if(temp > 10)
-					temp = 0;
-				scores[temp] = "第" + (note + 1) + "次成绩：          " + ans;
-				++ temp;
-				++ note;
-			}
-		});
+		// submitScore_textView = (TextView)
+		// findViewById(R.id.recite_text_main_textview_submitscore);
+		// submitScore_textView.setOnClickListener(new OnClickListener()
+		// {
+		// @Override
+		// public void onClick(View v )
+		// {
+		// int right = 0;
+		// for(int i = 0 ; i < dataMax ; i ++ )
+		// if(0 == counts[i])
+		// right ++ ;
+		// ans = (float) (right * 1.0 / dataMax) * 100;
+		// ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));
+		// Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分"
+		// ,Toast.LENGTH_SHORT).show();
+		// if(temp > 10)
+		// temp = 0;
+		// scores[temp] = "第" + (note + 1) + "次：          " + ans;
+		// ++ temp;
+		// ++ note;
+		// }
+		// });
 
 		historyScore_textView = (TextView) findViewById(R.id.recite_text_main_textview_history_score);
 		historyScore_textView.setOnClickListener(new OnClickListener()
@@ -402,7 +423,7 @@ public class ReciteTextMain extends Activity implements Checkable
 				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this , R.style.NoBackGroundDialog);
 				builder.setIcon(R.drawable.ic_launcher);
 				getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-				builder.setTitle("您的历史成绩");
+				builder.setTitle("历史成绩");
 				builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
 				{
 
@@ -455,7 +476,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		try
 		{
 			// 播放所选中的录音
-			mediaPlayer.setDataSource(fileAllNameAmr);
+			mediaPlayer.setDataSource(recordPath + playName + ".amr");
 			mediaPlayer.prepare();
 			mediaPlayer.start();
 		}
@@ -555,15 +576,36 @@ public class ReciteTextMain extends Activity implements Checkable
 		textView_listView_tips.setVisibility(View.GONE);
 		listView.setVisibility(View.VISIBLE);
 		record_currentState = IDLE_record;
+		// mediaRecorder.stop();
 		mediaRecorder.release();
 		mediaRecorder = null;
+		myRecordList.add(fileAllNameAmr);
 
 		startRecord.setImageResource(R.drawable.record_pause);
 		textView_record_pause.setText("开始录音");
 		timer.cancel();
+
+		// final EditText editText = new EditText(ReciteTextMain.this);
+		// AlertDialog.Builder inputDialog = new
+		// AlertDialog.Builder(ReciteTextMain.this);
+		// inputDialog.setTitle("要保存录音吗？").setView(editText);
+		// inputDialog.setPositiveButton("保存" ,new
+		// DialogInterface.OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog , int which )
+		// {
 		// 最后合成的音频文件
-		fileAllNameAmr = recordPath + getTime() + ".amr";
-		fileAllNameMp3 = recordPath + getTime() + ".mp3";
+		// playName = editText.getText().toString().trim();
+		// if(playName.isEmpty() || Judge.isNotName(playName))
+		// {
+		playName = getTime();
+		// Toast.makeText(getApplicationContext() ,"输入名字不合法,自动命名为：" + playName
+		// ,Toast.LENGTH_SHORT).show();
+		// }
+		fileAllNameAmr = recordPath + playName + ".amr";
+		fileAllNameMp3 = recordPath + playName + ".mp3";
 		FileOutputStream fileOutputStream = null;
 		try
 		{
@@ -599,13 +641,14 @@ public class ReciteTextMain extends Activity implements Checkable
 					}
 				}
 			}
-
-			Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
-
+			if( !fileAllNameAmr.isEmpty())
+				Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
+			time.setText("录音完成");
 		}
 		catch(Exception e)
 		{
-			Toast.makeText(this ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			time.setText("录音合成出错，请重试！");
 			System.out.println(e);
 		}
 		finally
@@ -619,9 +662,6 @@ public class ReciteTextMain extends Activity implements Checkable
 			{
 				System.out.println(e);
 			}
-			minute = 0;
-			hour = 0;
-			second = 0;
 		}
 		for(int i = 0 ; i < myRecordList.size() ; i ++ )
 		{
@@ -631,8 +671,32 @@ public class ReciteTextMain extends Activity implements Checkable
 				file.delete();
 			}
 		}
-		time.setText("完成");
-		Toast.makeText(getApplicationContext() ,"录音成功" ,Toast.LENGTH_LONG).show();
+		// }
+		// });
+		// inputDialog.setNegativeButton("放弃" ,new
+		// DialogInterface.OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(DialogInterface dialog , int which )
+		// {
+		// time.setText("");
+		// for(int i = 0 ; i < myRecordList.size() ; i ++ )
+		// {
+		// File file = new File(myRecordList.get(i));
+		// if(file.exists())
+		// {
+		// file.delete();
+		// }
+		// }
+		// }
+		// });
+		// inputDialog.show();
+
+		minute = 0;
+		hour = 0;
+		second = 0;
+
 	}
 
 	// 获得当前时间
@@ -662,38 +726,44 @@ public class ReciteTextMain extends Activity implements Checkable
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				if(0 == counts[position])
+				if(isRecord)
 				{
-					counts[position] = 1;
-					flag -- ;
-					if(flag < 0)
+					Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+				}
+				else
+				{
+					if(0 == counts[position])
 					{
-						flag = 0;
+						counts[position] = 1;
+						flag -- ;
+						if(flag < 0)
+						{
+							flag = 0;
+						}
+						if(menuItem != null)
+						{
+							menuItem.setTitle("成绩：" + flag + "/" + myTextContentArraylist.size());
+						}
+					}
+					else
+					{
+						counts[position] = 0;
+						flag ++ ;
+						if(flag >= myTextContentArraylist.size())
+						{
+							flag = myTextContentArraylist.size();
+						}
 					}
 					if(menuItem != null)
 					{
 						menuItem.setTitle("成绩：" + flag + "/" + myTextContentArraylist.size());
 					}
+					boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
+					myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);
+					myListViewMainAdapter.notifyDataSetChanged();
+					if(Util.debug)
+						Toast.makeText(getApplication() ,"position : " + position + "\nstate : " + counts[position] ,Toast.LENGTH_SHORT).show();
 				}
-				else
-				{
-					counts[position] = 0;
-					flag ++ ;
-					if(flag >= myTextContentArraylist.size())
-					{
-						flag = myTextContentArraylist.size();
-					}
-				}
-				if(menuItem != null)
-				{
-					menuItem.setTitle("成绩：" + flag + "/" + myTextContentArraylist.size());
-				}
-				boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
-				myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);
-				myListViewMainAdapter.notifyDataSetChanged();
-				if(Util.debug)
-					Toast.makeText(getApplication() ,"position : " + position + "\nstate : " + counts[position] ,Toast.LENGTH_SHORT).show();
-
 			}
 		});
 	}

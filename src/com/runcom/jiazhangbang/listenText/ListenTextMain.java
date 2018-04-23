@@ -812,7 +812,11 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				mp.stop();
+				if(mp != null)
+				{
+					mp.release();
+					mp = null;
+				}
 				onBackPressed();
 				break;
 		}

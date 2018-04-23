@@ -142,7 +142,7 @@ public class Chinese extends Activity
 	 */
 	public void playGame(View v )
 	{
-		intent.putExtra("class" ,Util.playGame);
+		intent.putExtra("class" ,Util.PlayGame);
 		intent.setClass(getApplicationContext() ,SettingChoose.class);
 		// intent.setClass(getApplicationContext()
 		// ,ListenWriteGameChoose.class);
@@ -185,13 +185,12 @@ public class Chinese extends Activity
 		intent.putExtra("selected" ,grade);
 		intent.setClass(getApplicationContext() ,Welcome.class);
 		startActivity(intent);
-		// TODO Auto-generated method stub
+		// TODO myNotification
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.welcome ,menu);//TODO
 		getMenuInflater().inflate(R.menu.setting_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}

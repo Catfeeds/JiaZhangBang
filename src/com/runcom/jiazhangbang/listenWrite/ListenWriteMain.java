@@ -18,7 +18,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -33,7 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
@@ -60,7 +59,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	private NewWords newWords , newWordsStar;
 
 	private GridView gridView;
-	private TextView textView_pause , textView_stop;
+	private ImageButton imageButton_pause , imageButton_stop;
 
 	private int WAIT_TIME = 5;
 	private Timer timer = new Timer();
@@ -137,10 +136,10 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				@Override
 				public void run()
 				{
-					if(WAIT_TIME > 2)
-						Toast.makeText(getApplicationContext() ,"倒计时 " + (WAIT_TIME - 2) ,1).show();
+					if(WAIT_TIME > 0)
+						Toast.makeText(getApplicationContext() ,"倒计时 " + WAIT_TIME ,1).show();
 					WAIT_TIME -- ;
-					if(WAIT_TIME <= 0)
+					if(WAIT_TIME < -11)
 					{
 						play();
 						startTime = System.currentTimeMillis();
@@ -290,9 +289,9 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			}
 		});
 
-		textView_pause = (TextView) findViewById(R.id.listen_write_main_textView_pause);
-		textView_stop = (TextView) findViewById(R.id.listen_write_main_textView_stop);
-		textView_pause.setOnClickListener(new OnClickListener()
+		imageButton_pause = (ImageButton) findViewById(R.id.listen_write_main_textView_pause);
+		imageButton_stop = (ImageButton) findViewById(R.id.listen_write_main_textView_stop);
+		imageButton_pause.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v )
@@ -301,7 +300,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			}
 		});
 
-		textView_stop.setOnClickListener(new OnClickListener()
+		imageButton_stop.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v )
@@ -324,8 +323,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 						myListenWriteMainAdapter = new MyListenWriteMainAdapter(getApplicationContext() , newWordsList);
 						gridView.setAdapter(myListenWriteMainAdapter);
 						myListenWriteMainAdapter.notifyDataSetChanged();
-						textView_stop.setEnabled(false);
-						textView_pause.setEnabled(false);
+						imageButton_stop.setEnabled(false);
+						imageButton_pause.setEnabled(false);
 					}
 				});
 
@@ -359,17 +358,23 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				start();
 				break;
 			case PAUSE:
-				mp.pause();
-				// btnPlay.setImageResource(R.drawable.play_pause);
-				textView_pause.setText("继续");
+				if(mp != null)
+				{
+					mp.pause();
+				}
+				imageButton_pause.setBackgroundResource(R.drawable.pause);
 				play_currentState = START;
 				break;
 			case START:
-				// Log.d("LOG" ,"start02" + currentIndex + 1 + ":" +
-				// playList.size());
-				mp.start();
-				textView_pause.setText("暂停");
-				// btnPlay.setImageResource(R.drawable.play_start);
+				if(mp != null)
+				{
+					mp.start();
+				}
+				else
+				{
+					start();
+				}
+				imageButton_pause.setBackgroundResource(R.drawable.play);
 				play_currentState = PAUSE;
 				break;
 		}
@@ -390,8 +395,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			myListenWriteMainAdapter = new MyListenWriteMainAdapter(getApplicationContext() , newWordsList);
 			gridView.setAdapter(myListenWriteMainAdapter);
 			myListenWriteMainAdapter.notifyDataSetChanged();
-			textView_stop.setEnabled(false);
-			textView_pause.setEnabled(false);
+			imageButton_stop.setEnabled(false);
+			imageButton_pause.setEnabled(false);
 			endTime = System.currentTimeMillis();
 			long time = endTime - startTime;
 			int totalTime = (int) (time / 1000);
@@ -409,56 +414,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			// }
 			start();
 	}
-
-	@SuppressWarnings("unused")
-	private Thread threadPlay = new Thread(new Runnable()
-	{
-
-		@Override
-		public void run()
-		{
-			if(currentIndex != 0 && currentIndex != playList.size())
-			{
-				try
-				{
-					Thread.sleep(intervalValue * 1000);
-				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-			}
-			// Log.d("LOG" ,"start03" + currentIndex + 1 + ":" +
-			// playList.size());
-			if(playList.size() > 0 && currentIndex < playList.size())
-			{
-				String SongPath = playList.get(currentIndex);
-				SongPath = "http://106.14.208.25:8080/wgcwgc/001.wav";
-				mp.reset();
-				try
-				{
-					// Log.d("LOG" ,"start04" + currentIndex);
-					mp.setDataSource(SongPath);
-					// Log.d("LOG" ,"start05:" + SongPath);
-					mp.prepare();
-					mp.start();
-					// Log.d("LOG" ,SongPath);
-					// es.execute((Runnable) this);
-					// btnPlay.setImageResource(R.drawable.play_start);
-					play_currentState = PAUSE;
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-					Log.d("LOG" ,"bug了");
-				}
-			}
-			else
-			{
-				Toast.makeText(getApplicationContext() ,"播放完毕" ,Toast.LENGTH_SHORT).show();
-			}
-		}
-	});
 
 	// 开始播放
 	private void start()
@@ -603,7 +558,11 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		{
 			case android.R.id.home:
 				if(mp != null || mp.isPlaying())
-					mp.stop();
+				{
+					mp.release();
+					mp = null;
+					// mp.stop();
+				}
 				try
 				{
 					runnableView.wait();
@@ -669,12 +628,12 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		MobclickAgent.onPause(this);
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig )
-	{
-		super.onConfigurationChanged(newConfig);
-	}
-	
+	// @Override
+	// public void onConfigurationChanged(Configuration newConfig )
+	// {
+	// super.onConfigurationChanged(newConfig);
+	// }
+
 	@Override
 	protected void onDestroy()
 	{

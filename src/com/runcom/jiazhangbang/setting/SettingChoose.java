@@ -73,11 +73,15 @@ public class SettingChoose extends Activity
 		courseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[chooseId] ,courseSpinnerValue);
 		gradeSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[chooseId] ,gradeSpinnerValue);
 		phaseSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[chooseId] ,phaseSpinnerValue);
+		unitSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue);
+		System.out.println("1:" + unitSpinnerValue);
 		if(chooseId == Util.ListenWriteTips && unitSpinnerValue > 0)
 		{
 			unitSpinnerValue = MySharedPreferences.getValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue - 1);
+			System.out.println("2:" + unitSpinnerValue);
 		}
 
+		System.out.println("3:" + unitSpinnerValue);
 		spinner_course.setSelection(courseSpinnerValue ,true);
 		spinner_grade.setSelection(gradeSpinnerValue ,true);
 		spinner_phase.setSelection(phaseSpinnerValue ,true);
@@ -242,19 +246,23 @@ public class SettingChoose extends Activity
 		switch(item.getItemId())
 		{
 			case R.id.setting_choose_menu_next:
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[chooseId] ,courseSpinnerValue);
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[chooseId] ,gradeSpinnerValue);
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[chooseId] ,phaseSpinnerValue);
-				if(chooseId == Util.ListenWriteTips)
-				{
-					unitSpinnerValue ++ ;
-				}
-				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue);
-
 				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,courseSpinnerValue);
 				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,gradeSpinnerValue);
 				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,phaseSpinnerValue);
 				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,unitSpinnerValue);
+
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.courseSharedPreferencesKeyString[chooseId] ,courseSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[chooseId] ,gradeSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[chooseId] ,phaseSpinnerValue);
+				MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,Util.unitSharedPreferencesKeyString[chooseId] ,unitSpinnerValue);
+				// if(chooseId == Util.ListenWriteTips && unitSpinnerValue > 7)
+				// {
+				// unitSpinnerValue -- ;
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey
+				// ,Util.unitSharedPreferencesKeyString[chooseId]
+				// ,unitSpinnerValue);
+				// }
 
 				switch(chooseId)
 				{
@@ -273,12 +281,12 @@ public class SettingChoose extends Activity
 					case Util.FindNewWords:
 						startActivity(new Intent().setClass(getApplicationContext() ,FindNewWords.class));
 						break;
-					case Util.playGame:
+					case Util.PlayGame:
 						startActivity(new Intent().setClass(getApplicationContext() ,ListenWriteGameMain.class));
 						break;
 					case Util.RecordText:
 						Toast.makeText(SettingChoose.this ,"recordText¾´ÇëÆÚ´ý..." ,Toast.LENGTH_LONG).show();
-						// TODO RecordText
+						// TODO settingChoose RecordText
 						break;
 					default:
 						break;

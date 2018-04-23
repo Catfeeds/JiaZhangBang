@@ -5,38 +5,38 @@
     android:background="#999999"
     android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/listen_write_tips_informations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="请检查网络连接"
-            android:textSize="37sp" />
+    <TextView
+        android:id="@+id/listen_write_tips_informations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="请检查网络连接"
+        android:textSize="37sp" />
 
-        <TextView
-            android:id="@+id/listen_write_tips_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginTop="57dp"
-            android:background="#999999"
-            android:gravity="center_vertical|center_horizontal"
-            android:singleLine="true"
-            android:text="开始"
-            android:textSize="47sp" />
+    <TextView
+        android:id="@+id/listen_write_tips_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/setting_submit_shape_blue"
+        android:gravity="center_vertical|center_horizontal"
+        android:singleLine="true"
+        android:text="开始"
+        android:textSize="47sp" />
 
-        <TextView
-            android:id="@+id/listen_write_tips_reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_marginBottom="57dp"
-            android:layout_marginTop="57dp"
-            android:background="#999999"
-            android:gravity="center_vertical|center_horizontal"
-            android:singleLine="true"
-            android:text="重置"
-            android:textSize="47sp" />
+    <TextView
+        android:id="@+id/listen_write_tips_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="57dp"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/setting_submit_shape_blue"
+        android:gravity="center_vertical|center_horizontal"
+        android:singleLine="true"
+        android:text="重置"
+        android:textSize="47sp" />
 
 </LinearLayout>

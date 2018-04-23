@@ -13,6 +13,8 @@ import java.util.TimerTask;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -162,8 +164,8 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 			for(File childFile : files)
 			{
 				childFileName = childFile.toString();
-				if(childFileName.length() > 0 && (childFileName.endsWith(".amr") || childFileName.endsWith(".mp3") || childFileName.endsWith(".wav")))
-					listTemp.add(childFileName.substring(childFileName.lastIndexOf("/") + 1));
+				if(childFileName.length() > 0 && (childFileName.endsWith(".amr")))
+					listTemp.add(childFileName.substring(childFileName.lastIndexOf("/") + 1 ,childFileName.lastIndexOf(".")));
 			}
 
 			for(int i = length - 1 ; i >= 0 ; i -- )
@@ -334,13 +336,32 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	private void deleteRecord()
 	{
 		// 删除所选中的录音文件
-		File file = new File(playFileName);
+		final File file = new File(playFileName);
 		if(file.exists())
 		{
-			file.delete();
-			list.remove(deleteStr);
-			mAdapter.notifyDataSetChanged();
-			time.setText("");
+			AlertDialog.Builder builder = new AlertDialog.Builder(RepeatMainActivity.this);
+			builder.setTitle("确定要删除吗？");
+			builder.setNegativeButton("取消" ,new DialogInterface.OnClickListener()
+			{
+				@Override
+				public void onClick(DialogInterface dialog , int which )
+				{
+
+				}
+			});
+			builder.setPositiveButton("确定" ,new DialogInterface.OnClickListener()
+			{
+
+				@Override
+				public void onClick(DialogInterface dialog , int which )
+				{
+					file.delete();
+					list.remove(deleteStr);
+					mAdapter.notifyDataSetChanged();
+					time.setText("");
+				}
+			});
+			builder.show();
 		}
 		else
 		{
@@ -451,7 +472,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		// 最后合成的音频文件
 		fileAllNameAmr = recordPath + getTime() + ".amr";
 		fileAllNameMp3 = recordPath + getTime() + ".mp3";
-		String fileNameAmr = getTime() + ".amr";
+		String fileNameAmr = getTime();
 		// String fileNameMp3 = getTime() + ".mp3";
 		FileOutputStream fileOutputStream = null;
 		try
@@ -691,10 +712,10 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 			currentPosition = position;
 		}
 		// 要播放文件的路径
-		playFileName = recordPath + list.get(position);
+		playFileName = recordPath + list.get(position) + ".amr";
 		// 要删除文件的名称
 		deleteStr = list.get(position);
-		time.setText(list.get(position));
+		time.setText(list.get(position) + ".amr");
 	}
 
 	// Activity被销毁的时候 释放资源
@@ -775,9 +796,15 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		{
 			case android.R.id.home:
 				if(mPlayer != null)
-					mPlayer.stop();
+				{
+					mPlayer.release();
+					mPlayer = null;
+				}
 				if(mRecorder != null)
-					mRecorder.stop();
+				{
+					mRecorder.release();
+					mRecorder = null;
+				}
 				finish();
 				// onBackPressed();
 				break;

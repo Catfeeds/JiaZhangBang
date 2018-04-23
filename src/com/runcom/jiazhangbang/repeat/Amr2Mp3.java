@@ -8,18 +8,15 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 
-@SuppressLint("UseValueOf")
 public class Amr2Mp3
 {
 	public static void transformation(String sourcePath , String targetPath )
 	{
-		// String sourcePath =
-		// "E:\\Eclipse_Web\\lbtm\\webapp\\uploadFiles\\1395047224460.amr";
-		// String targetPath =
-		// "E:\\Eclipse_Web\\lbtm\\webapp\\uploadFiles\\1395047224460.mp3";
+		System.out.println(sourcePath + "\n" + targetPath);
 		changeToMp3(sourcePath ,targetPath);
 	}
 
+	@SuppressLint("UseValueOf")
 	public static void changeToMp3(String sourcePath , String targetPath )
 	{
 		File source = new File(sourcePath);
@@ -43,9 +40,8 @@ public class Amr2Mp3
 		}
 		catch(Exception e)
 		{
-			System.out.println(e + "\n" + e.toString());
+			System.out.println("\ne:\n" + e.toString());
 		}
-		System.err.println("Íê³É");
 	}
 
 	public static void main(String [] args )

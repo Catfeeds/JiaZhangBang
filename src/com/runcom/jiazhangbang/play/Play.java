@@ -80,7 +80,6 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
 		actionbar.setTitle("智能识文 ");
-		// System.out.println("play 执行了");
 		initPlayView();
 	}
 
@@ -101,13 +100,11 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		Intent intent = getIntent();
 		filePath = intent.getStringExtra("filePath");
 		resultBuffer = intent.getStringExtra("resultBuffer");
-		// TODO
+		// TODO Play 智能识文 设置mp3地址
 		source = "http://res.nutnet.cn:8800/cn/4-2/mp3/001-1.mp3";
 		lyricsPath = Util.LYRICSPATH + filePath.substring(filePath.lastIndexOf("/"));
 		play_list.clear();
 		play_list.add(source);
-		// Log.d("LOG" ,"source: " + source + "\nname: " + name +
-		// "\nlyricPath: " + lyricsPath + "\nfilePath: " + filePath);
 		initLyric();
 		start();
 	}
@@ -378,7 +375,11 @@ public class Play extends Activity implements Runnable , OnCompletionListener , 
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				mp.stop();
+				if(mp != null)
+				{
+					mp.release();
+					mp = null;
+				}
 				onBackPressed();
 				break;
 		}

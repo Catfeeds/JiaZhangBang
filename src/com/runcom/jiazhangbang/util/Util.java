@@ -15,7 +15,7 @@ import com.runcom.jiazhangbang.R;
 
 public class Util
 {
-	public static final Boolean debug = true;
+	public static final Boolean debug = false;
 	public static final String grade[] =
 	{ "全年级", "一年级", "二年级", "三年级", "四年级", "五年级", "六年级" };
 	public static final String unit[] =
@@ -23,6 +23,7 @@ public class Util
 	public static final String SECRETKEY = "8848@jzb";
 	public static final String REALSERVER = "http://jzb.nutnet.cn:8800/interface/";
 	public static final String RESOURCESERVER = "http://res.nutnet.cn:8800/";
+	public static final String update = "http://down.nutnet.cn:8800/android/jzb_newest.apk";
 	public static String build = "57";
 	public static final String market = "2";
 	public static String os = Build.VERSION.RELEASE;
@@ -36,7 +37,7 @@ public class Util
 	public static final int ReciteTextTextChoose = 3;
 	public static final int Repeat = 4;
 	public static final int FindNewWords = 5;
-	public static final int playGame = 6;
+	public static final int PlayGame = 6;
 	public static final int RecordText = 7;
 
 	public static final String sharedPreferencesKeySettingChoose = "SettingChooseKey";

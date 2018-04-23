@@ -6,7 +6,7 @@ package com.runcom.jiazhangbang.findnewwords;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -37,8 +37,8 @@ import com.umeng.analytics.MobclickAgent;
 
 public class FindNewWordsWeb extends Activity
 {
-	WebView webView;
-	Intent intent;
+	private WebView webView;
+	private ProgressDialog progressDialog;
 
 	/*
 	 * (non-Javadoc)
@@ -62,6 +62,13 @@ public class FindNewWordsWeb extends Activity
 		// new Text2Speech(getApplicationContext() , content).play();
 		actionbar.setTitle(content);
 
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("正在获取数据......");
+		progressDialog.show();
+
 		webView = (WebView) findViewById(R.id.find_new_words_contnets_show_webview);
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
@@ -73,7 +80,6 @@ public class FindNewWordsWeb extends Activity
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view , String url )
 			{
-				// TODO Auto-generated method stub
 				// 返回值是true的时候控制去WebView打开，为false调用系统浏览器或第三方浏览器
 				view.loadUrl(url);
 				return true;
@@ -85,7 +91,7 @@ public class FindNewWordsWeb extends Activity
 			@Override
 			public void onProgressChanged(WebView view , int newProgress )
 			{
-				// TODO Auto-generated method stub
+				progressDialog.dismiss();
 				if(newProgress == 100)
 				{
 					// 网页加载完成
@@ -148,5 +154,15 @@ public class FindNewWordsWeb extends Activity
 		super.onPause();
 		// MobclickAgent.onPageEnd("ChineseScreen");
 		MobclickAgent.onPause(this);
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		if(progressDialog != null)
+		{
+			progressDialog.dismiss();
+		}
+		super.onDestroy();
 	}
 }

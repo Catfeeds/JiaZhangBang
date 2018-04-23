@@ -26,11 +26,14 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
@@ -41,6 +44,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +53,7 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.judge.Judge;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.listenText.LyricView;
@@ -125,9 +130,9 @@ public class Repeat extends Activity
 		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
 		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.Repeat] ,grade) + 1;
 		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.Repeat] ,phase) + 1;
 		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.Repeat] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -473,85 +478,175 @@ public class Repeat extends Activity
 	// 完成录音
 	private void stopRecord()
 	{
-
 		play_currentState = IDLE;
 		mediaRecorder.release();
 		mediaRecorder = null;
-
+		myRecordList.add(fileAllNameAmr);
 		startRecord.setImageResource(R.drawable.record_pause);
 		timer.cancel();
-		// 最后合成的音频文件
-		fileAllNameAmr = recordPath + getTime() + ".amr";
-		fileAllNameMp3 = recordPath + getTime() + ".mp3";
-		FileOutputStream fileOutputStream = null;
-		try
+
+		final EditText editText = new EditText(Repeat.this);
+		AlertDialog.Builder inputDialog = new AlertDialog.Builder(Repeat.this);
+		inputDialog.setTitle("要保存录音吗？").setView(editText);
+		inputDialog.setPositiveButton("保存" ,new DialogInterface.OnClickListener()
 		{
-			fileOutputStream = new FileOutputStream(fileAllNameAmr);
-		}
-		catch(FileNotFoundException e)
-		{
-		}
-		FileInputStream fileInputStream = null;
-		try
-		{
-			for(int i = 0 ; i < myRecordList.size() ; i ++ )
+			@Override
+			public void onClick(DialogInterface dialog , int which )
 			{
-				File file = new File(myRecordList.get(i));
-				// 把因为暂停所录出的多段录音进行读取
-				fileInputStream = new FileInputStream(file);
-				byte [] mByte = new byte [fileInputStream.available()];
-				int length = mByte.length;
-				// 第一个录音文件的前六位是不需要删除的
-				if(i == 0)
+				// 最后合成的音频文件
+				String playName = editText.getText().toString().trim();
+				if(playName.isEmpty() || Judge.isNotName(playName))
 				{
-					while(fileInputStream.read(mByte) != -1)
+					playName = getTime();
+					if(playName.isEmpty())
 					{
-						fileOutputStream.write(mByte ,0 ,length);
+						Toast.makeText(getApplicationContext() ,"已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
+					}
+					else
+					{
+						Toast.makeText(getApplicationContext() ,"输入名字不符合要求\n已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
 					}
 				}
-				// 之后的文件，去掉前六位
-				else
+
+				if(isExit(playName))
 				{
-					while(fileInputStream.read(mByte) != -1)
+					playName += "_" + getTime();
+					Toast.makeText(getApplicationContext() ,"文件已存在\n已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
+				}
+
+				fileAllNameAmr = recordPath + playName + ".amr";
+				fileAllNameMp3 = recordPath + playName + ".mp3";
+				FileOutputStream fileOutputStream = null;
+				try
+				{
+					fileOutputStream = new FileOutputStream(fileAllNameAmr);
+				}
+				catch(FileNotFoundException e)
+				{
+				}
+				FileInputStream fileInputStream = null;
+				try
+				{
+					for(int i = 0 ; i < myRecordList.size() ; i ++ )
 					{
-						fileOutputStream.write(mByte ,6 ,length - 6);
+						File file = new File(myRecordList.get(i));
+						// 把因为暂停所录出的多段录音进行读取
+						fileInputStream = new FileInputStream(file);
+						byte [] mByte = new byte [fileInputStream.available()];
+						int length = mByte.length;
+						// 第一个录音文件的前六位是不需要删除的
+						if(i == 0)
+						{
+							while(fileInputStream.read(mByte) != -1)
+							{
+								fileOutputStream.write(mByte ,0 ,length);
+							}
+						}
+						// 之后的文件，去掉前六位
+						else
+						{
+							while(fileInputStream.read(mByte) != -1)
+							{
+								fileOutputStream.write(mByte ,6 ,length - 6);
+							}
+						}
+					}
+
+					Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
+					time.setText("录音完成");
+				}
+				catch(Exception e)
+				{
+					Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+					time.setText("录音合成出错，请重试！");
+					System.out.println(e);
+				}
+				finally
+				{
+					try
+					{
+						fileOutputStream.flush();
+						fileInputStream.close();
+					}
+					catch(Exception e)
+					{
+						System.out.println(e);
+					}
+				}
+
+				for(int i = 0 ; i < myRecordList.size() ; i ++ )
+				{
+					File file = new File(myRecordList.get(i));
+					if(file.exists())
+					{
+						file.delete();
 					}
 				}
 			}
-
-			Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
-
-		}
-		catch(Exception e)
+		});
+		inputDialog.setNegativeButton("放弃" ,new DialogInterface.OnClickListener()
 		{
-			Toast.makeText(this ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
-			System.out.println(e);
-		}
-		finally
+
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				time.setText("");
+				for(int i = 0 ; i < myRecordList.size() ; i ++ )
+				{
+					File file = new File(myRecordList.get(i));
+					if(file.exists())
+					{
+						file.delete();
+					}
+				}
+			}
+		});
+		inputDialog.show();
+
+		minute = 0;
+		hour = 0;
+		second = 0;
+	}
+
+	private Boolean isExit(String name )
+	{
+		File recordePathFile = new File(recordPath);
+		if( !recordePathFile.exists())
 		{
 			try
 			{
-				fileOutputStream.flush();
-				fileInputStream.close();
+				recordePathFile.getParentFile().mkdirs();
+				recordePathFile.mkdir();
 			}
 			catch(Exception e)
 			{
-				System.out.println(e);
 			}
-			minute = 0;
-			hour = 0;
-			second = 0;
 		}
-		for(int i = 0 ; i < myRecordList.size() ; i ++ )
+
+		// 判断SD卡是否存在
+		if( !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
-			File file = new File(myRecordList.get(i));
-			if(file.exists())
+			Toast.makeText(this ,"SD卡状态异常，" ,Toast.LENGTH_LONG).show();
+		}
+		else
+		{
+			// 根据后缀名进行判断、获取文件夹中的音频文件
+			File file = new File(recordPath);
+			File files[] = file.listFiles();
+			String childFileName = null;
+			for(File childFile : files)
 			{
-				file.delete();
+				childFileName = childFile.toString();
+				if(childFileName.length() > 0 && (childFileName.endsWith(".amr")))
+				{
+					if((childFileName.substring(childFileName.lastIndexOf("/") + 1 ,childFileName.lastIndexOf("."))).equals(name))
+					{
+						return true;
+					}
+				}
 			}
 		}
-		time.setText("完成");
-		Toast.makeText(getApplicationContext() ,"录音成功" ,Toast.LENGTH_LONG).show();
+		return false;
 	}
 
 	// 开始录音

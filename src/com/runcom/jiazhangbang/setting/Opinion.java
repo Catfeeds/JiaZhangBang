@@ -73,7 +73,7 @@ public class Opinion extends Activity
 						}
 						else
 						{
-							button_submit.setEnabled(false);//TODO 提交服务器
+							button_submit.setEnabled(false);//TODO 意见建议 提交服务器
 							Toast.makeText(getApplicationContext() ,"感谢您的意见和建议，我们会做的更好的~" ,Toast.LENGTH_SHORT).show();
 						}
 			}

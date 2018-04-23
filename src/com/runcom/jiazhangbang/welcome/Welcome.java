@@ -99,7 +99,6 @@ public class Welcome extends Activity
 
 	private boolean judge(String name , String mobilePhoneNumber )
 	{
-		// TODO Auto-generated method stub
 		// Log.d("LOG" ,name + " " + name.length());
 		if(name.length() >= 2 && Judge.isMobilePhoneNumber(mobilePhoneNumber))
 			return true;

@@ -116,7 +116,6 @@ public class MyListViewAdapter extends BaseAdapter
 		// }
 		// else
 		// {
-		// // TODO download lyrics and get source link
 		// Toast.makeText(inflater.getContext() ,"您点击了" +
 		// audioList.get(position).getName().toString()
 		// ,Toast.LENGTH_SHORT).show();
@@ -181,7 +180,6 @@ public class MyListViewAdapter extends BaseAdapter
 		// }
 		// else
 		// {
-		// // TODO download musics
 		// Toast.makeText(inflater.getContext() ,"正在下载" +
 		// audioList.get(position).getName().toString() + "..."
 		// ,Toast.LENGTH_SHORT).show();

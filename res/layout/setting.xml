@@ -71,7 +71,8 @@
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
                     android:paddingBottom="16.0dip"
-                    android:paddingTop="16.0dip" >
+                    android:paddingTop="16.0dip"
+                    android:visibility="gone" >
 
                     <TextView
                         android:id="@+id/setting_speech_recognition_textView"
@@ -87,17 +88,18 @@
                     <ImageView
                         android:id="@+id/setting_speech_recognition_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="27dp"
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/setting_detail" />
+                        android:src="@drawable/listen_text_next_text" />
                 </TableRow>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#000000" />
+                    android:background="#000000"
+                    android:visibility="gone" />
 
                 <TableRow
                     android:id="@+id/setting_clearCache_tableRow"
@@ -155,11 +157,11 @@
                     <ImageView
                         android:id="@+id/setting_opinion_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="27dp"
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/setting_detail" />
+                        android:src="@drawable/listen_text_next_text" />
                 </TableRow>
 
                 <TextView
@@ -223,11 +225,11 @@
                     <ImageView
                         android:id="@+id/setting_aboutUs_detail"
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="27dp"
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/setting_detail" />
+                        android:src="@drawable/listen_text_next_text" />
                 </TableRow>
 
                 <TextView
