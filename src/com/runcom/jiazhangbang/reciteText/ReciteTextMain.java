@@ -45,7 +45,6 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.LrcRead;
 import com.runcom.jiazhangbang.listenText.LyricContent;
-import com.runcom.jiazhangbang.repeat.Amr2Mp3;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -106,7 +105,6 @@ public class ReciteTextMain extends Activity implements Checkable
 	private MediaRecorder mediaRecorder = null;// 录音器
 	private ArrayList < String > myRecordList = new ArrayList < String >();// 待合成的录音片段
 	private String fileAllNameAmr = null;
-	private String fileAllNameMp3 = null;
 	private String recordPath = Util.RECORDPATH;
 	private Timer timer;
 	private Boolean isRecord = true;
@@ -144,36 +142,47 @@ public class ReciteTextMain extends Activity implements Checkable
 
 	public void reciteSwitching(View v )
 	{
-		isRecord = true;
-		textView_listView_tips.setVisibility(View.VISIBLE);
-		listView.setVisibility(View.GONE);
-		switch(record_currentState)
+		if(play_currentState != IDLE_play)
 		{
-			case IDLE_record:
-				record_currentState = PAUSE_record;
-				startRecord.setImageResource(R.drawable.play);
-				textView_record_pause.setText("暂停录音");
-				startRecord();
-				recordTime();
-				break;
-			case PAUSE_record:
-				record_currentState = START_record;
-				startRecord.setImageResource(R.drawable.record_pause);
-				textView_record_pause.setText("开始录音");
-				mediaRecorder.stop();
-				mediaRecorder.release();
-				timer.cancel();
-				myRecordList.add(fileAllNameAmr);
-				break;
-			case START_record:
-				record_currentState = PAUSE_record;
-				startRecord.setImageResource(R.drawable.play);
-				textView_record_pause.setText("暂停录音");
-				startRecord();
-				recordTime();
-				break;
-			default:
-				break;
+			if(Util.debug)
+				Toast.makeText(getApplicationContext() ,"播放未完成" ,Toast.LENGTH_SHORT).show();
+			time.setText("播放未完成");
+			mediaPlayer.release();
+			mediaPlayer = null;
+		}
+		else
+		{
+			isRecord = true;
+			textView_listView_tips.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
+			switch(record_currentState)
+			{
+				case IDLE_record:
+					record_currentState = PAUSE_record;
+					startRecord.setImageResource(R.drawable.play);
+					textView_record_pause.setText("暂停录音");
+					startRecord();
+					recordTime();
+					break;
+				case PAUSE_record:
+					record_currentState = START_record;
+					startRecord.setImageResource(R.drawable.record_pause);
+					textView_record_pause.setText("开始录音");
+					mediaRecorder.stop();
+					mediaRecorder.release();
+					timer.cancel();
+					myRecordList.add(fileAllNameAmr);
+					break;
+				case START_record:
+					record_currentState = PAUSE_record;
+					startRecord.setImageResource(R.drawable.play);
+					textView_record_pause.setText("暂停录音");
+					startRecord();
+					recordTime();
+					break;
+				default:
+					break;
+			}
 		}
 
 	}
@@ -199,7 +208,9 @@ public class ReciteTextMain extends Activity implements Checkable
 				}
 				else
 				{
-					Toast.makeText(getApplicationContext() ,"请开始录音" ,Toast.LENGTH_LONG).show();
+					if(Util.debug)
+						Toast.makeText(getApplicationContext() ,"请开始录音" ,Toast.LENGTH_LONG).show();
+					time.setText("请开始录音");
 				}
 			}
 		});
@@ -246,7 +257,9 @@ public class ReciteTextMain extends Activity implements Checkable
 				}
 				else
 				{
-					Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					if(Util.debug)
+						Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					time.setText("请先完成录制");
 				}
 			}
 		});
@@ -259,7 +272,9 @@ public class ReciteTextMain extends Activity implements Checkable
 			{
 				if(isRecord)
 				{
-					Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					if(Util.debug)
+						Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					time.setText("请先完成录制");
 				}
 				else
 				{
@@ -448,6 +463,11 @@ public class ReciteTextMain extends Activity implements Checkable
 
 	}
 
+	public void onCompletion(MediaPlayer mp )
+	{
+		play_currentState = IDLE_play;
+	}
+
 	// 播放录音
 	private void playRecord()
 	{
@@ -517,7 +537,9 @@ public class ReciteTextMain extends Activity implements Checkable
 		catch(Exception e)
 		{
 			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件。 否则会出现各种异常。
-			Toast.makeText(this ,"录音器启动失败，请返回重试！" ,Toast.LENGTH_LONG).show();
+			if(Util.debug)
+				Toast.makeText(this ,"录音器启动失败，请稍后重试！" ,Toast.LENGTH_LONG).show();
+			time.setText("录音器启动失败，请稍后重试！");
 			mediaRecorder.release();
 			mediaRecorder = null;
 			this.finish();
@@ -576,7 +598,6 @@ public class ReciteTextMain extends Activity implements Checkable
 		textView_listView_tips.setVisibility(View.GONE);
 		listView.setVisibility(View.VISIBLE);
 		record_currentState = IDLE_record;
-		// mediaRecorder.stop();
 		mediaRecorder.release();
 		mediaRecorder = null;
 		myRecordList.add(fileAllNameAmr);
@@ -605,7 +626,6 @@ public class ReciteTextMain extends Activity implements Checkable
 		// ,Toast.LENGTH_SHORT).show();
 		// }
 		fileAllNameAmr = recordPath + playName + ".amr";
-		fileAllNameMp3 = recordPath + playName + ".mp3";
 		FileOutputStream fileOutputStream = null;
 		try
 		{
@@ -641,13 +661,12 @@ public class ReciteTextMain extends Activity implements Checkable
 					}
 				}
 			}
-			if( !fileAllNameAmr.isEmpty())
-				Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
 			time.setText("录音完成");
 		}
 		catch(Exception e)
 		{
-			Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			if(Util.debug)
+				Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
 			time.setText("录音合成出错，请重试！");
 			System.out.println(e);
 		}
@@ -728,7 +747,9 @@ public class ReciteTextMain extends Activity implements Checkable
 			{
 				if(isRecord)
 				{
-					Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					if(Util.debug)
+						Toast.makeText(getApplicationContext() ,"请先完成录制" ,Toast.LENGTH_SHORT).show();
+					time.setText("请先完成录制");
 				}
 				else
 				{

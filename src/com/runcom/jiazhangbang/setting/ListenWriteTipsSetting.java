@@ -34,7 +34,7 @@ public class ListenWriteTipsSetting extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle("÷ÿ÷√ ");
+		actionbar.setTitle("±£¥Ê");
 
 		initView();
 		initNumberPicker();

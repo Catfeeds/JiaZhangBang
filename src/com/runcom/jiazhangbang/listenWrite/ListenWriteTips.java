@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,8 @@ public class ListenWriteTips extends Activity
 	private int course , grade , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int counts;
-	private TextView textView_information , textView_start , textView_reset;
+	private TextView textView_information ;
+	private Button textView_start , textView_reset;
 	private final int WORDSTIME = 2;
 	private ProgressDialog progressDialog;
 
@@ -158,9 +160,9 @@ public class ListenWriteTips extends Activity
 		frequencyValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
 
 		textView_information = (TextView) findViewById(R.id.listen_write_tips_informations);
-		textView_start = (TextView) findViewById(R.id.listen_write_tips_start);
+		textView_start = (Button) findViewById(R.id.listen_write_tips_start);
 		textView_start.setEnabled(true);
-		textView_reset = (TextView) findViewById(R.id.listen_write_tips_reset);
+		textView_reset = (Button) findViewById(R.id.listen_write_tips_reset);
 		textView_reset.setEnabled(true);
 		int totalTime = (WORDSTIME + intervalValue) * counts * frequencyValue;
 		int hours = totalTime / 3600;

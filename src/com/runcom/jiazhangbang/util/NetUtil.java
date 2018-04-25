@@ -30,6 +30,7 @@ public class NetUtil
 		{
 			return NETWORK_MOBILE;
 		}
+		//ÎÞÍøÂç×´Ì¬
 		return NETWORK_NONE;
 	}
 }

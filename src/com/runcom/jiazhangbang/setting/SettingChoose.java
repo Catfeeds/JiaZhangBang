@@ -27,6 +27,7 @@ import com.runcom.jiazhangbang.listenWrite.ListenWriteTips;
 import com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
+import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -286,6 +287,7 @@ public class SettingChoose extends Activity
 						break;
 					case Util.RecordText:
 						Toast.makeText(SettingChoose.this ,"recordText¾´ÇëÆÚ´ý..." ,Toast.LENGTH_LONG).show();
+						System.out.println(NetUtil.getNetworkState(getApplicationContext()));
 						// TODO settingChoose RecordText
 						break;
 					default:

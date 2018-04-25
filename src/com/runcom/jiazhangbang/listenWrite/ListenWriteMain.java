@@ -18,6 +18,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
@@ -74,8 +75,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 
 	private int play_currentState = IDLE; // 当前播放器的状态
 
-	// private ExecutorService es = Executors.newSingleThreadExecutor();
-
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -125,6 +124,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		initNewWordsData();
 	}
 
+	Toast toast = null;
+
 	TimerTask task = new TimerTask()
 	{
 
@@ -133,21 +134,45 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		{
 			runOnUiThread(new Runnable()
 			{
+				// @Override
+				// public void run()
+				// {
+				// if(WAIT_TIME > 0)
+				// Toast.makeText(getApplicationContext() ,"倒计时 " + WAIT_TIME
+				// ,1).show();
+				// WAIT_TIME -- ;
+				// if(WAIT_TIME < -11)
+				// {
+				// play();
+				// startTime = System.currentTimeMillis();
+				// timer.cancel();
+				// task.cancel();
+				// }
+				// }
 				@Override
 				public void run()
 				{
-					if(WAIT_TIME > 0)
-						Toast.makeText(getApplicationContext() ,"倒计时 " + WAIT_TIME ,1).show();
-					WAIT_TIME -- ;
-					if(WAIT_TIME < -11)
+					if(toast != null)
 					{
-						play();
+						toast.cancel();
+					}
+					toast = Toast.makeText(getApplicationContext() ,"倒计时 " + WAIT_TIME ,Toast.LENGTH_SHORT);
+					if(WAIT_TIME > 0)
+					{
+						toast.show();
+					}
+					if(WAIT_TIME <= 0)
+					{
+						toast.cancel();
+						start();
 						startTime = System.currentTimeMillis();
 						timer.cancel();
 						task.cancel();
 					}
+					WAIT_TIME -- ;
 				}
 			});
+
 		}
 	};
 
@@ -285,7 +310,10 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				Toast.makeText(getApplicationContext() ,(newWordsList.get(position).getId() + 1) + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
+				if(Util.debug)
+				{
+					Toast.makeText(getApplicationContext() ,(newWordsList.get(position).getId() + 1) + "\n" + newWordsList.get(position).getName() ,Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 
@@ -317,9 +345,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 						{
 							mp.stop();
 							mp.release();
+							mp = null;
 						}
-						// Log.d("log*********" ,"3***" +
-						// newWordsList.toString());
 						myListenWriteMainAdapter = new MyListenWriteMainAdapter(getApplicationContext() , newWordsList);
 						gridView.setAdapter(myListenWriteMainAdapter);
 						myListenWriteMainAdapter.notifyDataSetChanged();
@@ -338,8 +365,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				});
 				dialog.show();
 
-				// Toast.makeText(getApplicationContext() ,"结束。。。"
-				// ,Toast.LENGTH_SHORT).show();
 			}
 		});
 
@@ -353,14 +378,29 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 
 		switch(play_currentState)
 		{
+		// case IDLE:
+		// start();
+		// break;
 			case IDLE:
-				// threadPlay.start();
-				start();
+				if(mp != null)
+				{
+					mp.pause();
+				}
+				else
+				{
+					mp = null;
+				}
+				imageButton_pause.setBackgroundResource(R.drawable.pause);
+				play_currentState = START;
 				break;
 			case PAUSE:
 				if(mp != null)
 				{
 					mp.pause();
+				}
+				else
+				{
+					mp = null;
 				}
 				imageButton_pause.setBackgroundResource(R.drawable.pause);
 				play_currentState = START;
@@ -383,36 +423,45 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	@Override
 	public void onCompletion(MediaPlayer mp )
 	{
-		++ currentIndex;
-		if(currentIndex >= playList.size())
+		if(play_currentState == START)
 		{
-			// if(mp != null || mp.isPlaying())
-			// {
-			// mp.release();
-			// mp.stop();
-			// }
-			Toast.makeText(getApplicationContext() ,"听写完毕" ,Toast.LENGTH_SHORT).show();
-			myListenWriteMainAdapter = new MyListenWriteMainAdapter(getApplicationContext() , newWordsList);
-			gridView.setAdapter(myListenWriteMainAdapter);
-			myListenWriteMainAdapter.notifyDataSetChanged();
-			imageButton_stop.setEnabled(false);
-			imageButton_pause.setEnabled(false);
-			endTime = System.currentTimeMillis();
-			long time = endTime - startTime;
-			int totalTime = (int) (time / 1000);
-			int hours = totalTime / 3600;
-			int minutes = totalTime % 3600 / 60;
-			int seconds = totalTime % 3600 % 60;
-			Toast.makeText(getApplicationContext() ,"总用时：" + hours + "小时" + minutes + "分" + seconds + "秒" ,Toast.LENGTH_SHORT).show();
-
+			if(mp != null)
+			{
+				mp.pause();
+			}
+			else
+			{
+				mp = null;
+			}
 		}
 		else
-			// if(threadPlay.isAlive() || threadPlay != null)
-			// {
-			// threadPlay.stop();
-			// threadPlay.start();
-			// }
-			start();
+		{
+			++ currentIndex;
+			if(currentIndex >= playList.size())
+			{
+				if(mp != null)
+				{
+					mp.release();
+					mp = null;
+				}
+				Toast.makeText(getApplicationContext() ,"听写完毕" ,Toast.LENGTH_SHORT).show();
+				myListenWriteMainAdapter = new MyListenWriteMainAdapter(getApplicationContext() , newWordsList);
+				gridView.setAdapter(myListenWriteMainAdapter);
+				myListenWriteMainAdapter.notifyDataSetChanged();
+				imageButton_stop.setEnabled(false);
+				imageButton_pause.setEnabled(false);
+				endTime = System.currentTimeMillis();
+				long time = endTime - startTime;
+				int totalTime = (int) (time / 1000);
+				int hours = totalTime / 3600;
+				int minutes = totalTime % 3600 / 60;
+				int seconds = totalTime % 3600 % 60;
+				Toast.makeText(getApplicationContext() ,"总用时：" + hours + "小时" + minutes + "分" + seconds + "秒" ,Toast.LENGTH_LONG).show();
+
+			}
+			else
+				start();
+		}
 	}
 
 	// 开始播放
@@ -429,32 +478,23 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				e.printStackTrace();
 			}
 		}
-		// Log.d("LOG" ,"start03" + currentIndex + 1 + ":" + playList.size());
 		if(playList.size() > 0 && currentIndex < playList.size())
 		{
 			String SongPath = playList.get(currentIndex);
-			// SongPath = "http://106.14.208.25:8080/wgcwgc/001.wav";
 			mp.reset();
 			try
 			{
-				// Log.d("LOG" ,"start04" + currentIndex);
 				mp.setDataSource(SongPath);
-				// Log.d("LOG" ,"start05:" + SongPath);
 				mp.prepare();
 				mp.start();
-				// Log.d("LOG" ,SongPath);
-				// es.execute((Runnable) this);
-				// btnPlay.setImageResource(R.drawable.play_start);
 				play_currentState = PAUSE;
 			}
 			catch(Exception e)
 			{
-				// e.printStackTrace();
 				Toast.makeText(getApplicationContext() ,"音频出错 已自动跳过" ,Toast.LENGTH_SHORT).show();
 				currentIndex += frequencyValue;
 				notifyDataAdapter();
 				start();
-				Log.d("LOG" ,"bug了");
 			}
 		}
 		else
@@ -475,8 +515,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			if(playList.size() > 0 && currentIndex < playList.size())
 			{
 				String SongPath = playList.get(currentIndex);
-				// Log.d("LOG" ,SongPath);
-				// SongPath = "http://106.14.208.25:8080/wgcwgc/001.wav";
 				mp.reset();
 				try
 				{
@@ -487,8 +525,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
-					Log.d("LOG" ,"bug了");
+					System.out.println(e);
 				}
 			}
 			else
@@ -561,18 +598,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				{
 					mp.release();
 					mp = null;
-					// mp.stop();
 				}
-				try
-				{
-					runnableView.wait();
-				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				// Toast.makeText(getApplicationContext()
-				// ,"onOptiosItemSelected..." ,Toast.LENGTH_SHORT).show();
 				onBackPressed();
 				break;
 		}
@@ -586,29 +612,19 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
 			if(mp != null || mp.isPlaying())
-				mp.stop();
-
-			try
 			{
-				Thread.sleep(5000);
+				mp.release();
+				mp = null;
 			}
-			catch(InterruptedException e1)
-			{
-				e1.printStackTrace();
-			}
-
 			try
 			{
 				runnableView.wait();
 			}
 			catch(InterruptedException e)
 			{
-				e.printStackTrace();
+				System.out.println(e);
 			}
-
-			// Toast.makeText(getApplicationContext() ,"onKeyDown..."
-			// ,Toast.LENGTH_SHORT).show();
-			ListenWriteMain.this.finish();
+			onBackPressed();
 			return true;
 		}
 		return super.onKeyDown(keyCode ,event);
@@ -628,11 +644,11 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		MobclickAgent.onPause(this);
 	}
 
-	// @Override
-	// public void onConfigurationChanged(Configuration newConfig )
-	// {
-	// super.onConfigurationChanged(newConfig);
-	// }
+	@Override
+	public void onConfigurationChanged(Configuration newConfig )
+	{
+		super.onConfigurationChanged(newConfig);
+	}
 
 	@Override
 	protected void onDestroy()

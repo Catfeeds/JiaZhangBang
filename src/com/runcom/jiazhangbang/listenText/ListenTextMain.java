@@ -28,7 +28,6 @@ import android.media.MediaPlayer.OnErrorListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -251,7 +250,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	{
 		TreeMap < String , String > map = null;
 		play_list.clear();
-		play_list_title.clear();
+		// play_list_title.clear();
 		final int leng = play_list_id.size();
 		for(int i = 0 ; i < leng ; i ++ )
 		{
@@ -299,8 +298,9 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					myAudio = new MyAudio();
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
-					play_list_title.add(title);
-					// System.out.println(lyric_copy);
+					// play_list_title.add(title);
+					myAudio.setName(title);
+					// System.out.println(title);
 					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
 					myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
@@ -320,11 +320,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	private void initSpinner()
 	{
-		// for(int i = 0 ; i < play_list.size() ; i ++ )
-		// {
-		// System.out.println("play_list_lyric:" + play_list.get(i).getLyric() +
-		// "\tplay_list_source:" + play_list.get(i).getSource());
-		// }
+		play_list_title.clear();
+		for(int i = 0 ; i < play_list.size() ; i ++ )
+		{
+			play_list_title.add(play_list.get(i).getName());
+			// System.out.println("play_list_lyric:" +
+			// play_list.get(i).getLyric() + "\tplay_list_source:" +
+			// play_list.get(i).getSource());
+		}
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_title);
 		spinner.setAdapter(adapter);
@@ -446,7 +449,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	public float Progress()
 	{
-		if(mp.isPlaying())
+		if(mp != null && mp.isPlaying())
 		{
 			CurrentTime = mp.getCurrentPosition();
 			CountTime = mp.getDuration();
@@ -481,7 +484,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	public int Index()
 	{
-		if(mp.isPlaying())
+		if(mp != null && mp.isPlaying())
 		{
 			CurrentTime = mp.getCurrentPosition();
 			CountTime = mp.getDuration();
@@ -520,8 +523,13 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			@Override
 			public void run()
 			{
-				mp.stop();
-				finish();
+				if(mp != null || mp.isPlaying())
+				{
+					mp.release();
+					mp = null;
+				}
+				seekBarFlag = false;
+				onBackPressed();
 			}
 		};
 		timer.schedule(task ,1000 * time);
@@ -634,7 +642,6 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	public void next()
 	{
-		Log.d("LOG" ,currIndex + "");
 		if(currIndex < play_list.size() - 1)
 		{
 			++ currIndex;
@@ -655,7 +662,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				}
 				else
 				{
-					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了lelele" ,Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext() ,"当前已经是最后一首了" ,Toast.LENGTH_SHORT).show();
 					currIndex = -1;
 					next();
 				}
@@ -690,7 +697,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			}
 			catch(Exception e)
 			{
-				System.out.println("buglebugle**************************");
+				System.out.println(e);
 			}
 		}
 		else
@@ -753,23 +760,26 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		seekBarFlag = true;
 		while(seekBarFlag)
 		{
-			if(mp.getCurrentPosition() < seekBar.getMax())
+			if(mp != null)
 			{
-				seekBar.setProgress(mp.getCurrentPosition());
-				Message msg = hander.obtainMessage(CURR_TIME_VALUE ,toTime(mp.getCurrentPosition()));
-				hander.sendMessage(msg);
-				try
+				if(mp.getCurrentPosition() < seekBar.getMax())
 				{
-					Thread.sleep(500);
+					seekBar.setProgress(mp.getCurrentPosition());
+					Message msg = hander.obtainMessage(CURR_TIME_VALUE ,toTime(mp.getCurrentPosition()));
+					hander.sendMessage(msg);
+					try
+					{
+						Thread.sleep(500);
+					}
+					catch(InterruptedException e)
+					{
+						System.out.println(e);
+					}
 				}
-				catch(InterruptedException e)
+				else
 				{
-					System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&bug&&&&&&&&&");
+					seekBarFlag = false;
 				}
-			}
-			else
-			{
-				seekBarFlag = false;
 			}
 		}
 	}
@@ -812,11 +822,12 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				if(mp != null)
+				if(mp != null || mp.isPlaying())
 				{
 					mp.release();
 					mp = null;
 				}
+				seekBarFlag = false;
 				onBackPressed();
 				break;
 		}
@@ -829,8 +840,13 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			mp.stop();
-			finish();
+			if(mp != null || mp.isPlaying())
+			{
+				mp.release();
+				mp = null;
+			}
+			seekBarFlag = false;
+			onBackPressed();
 			return true;
 		}
 		return super.onKeyDown(keyCode ,event);

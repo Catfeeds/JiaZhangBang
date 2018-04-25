@@ -45,7 +45,6 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 {
 	// 语音文件
 	private String fileAllNameAmr = null;
-	private String fileAllNameMp3 = null;
 	// 音频文件保存的路径
 	private String recordPath = Util.RECORDPATH;
 	// 界面控件z
@@ -471,9 +470,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		timer.cancel();
 		// 最后合成的音频文件
 		fileAllNameAmr = recordPath + getTime() + ".amr";
-		fileAllNameMp3 = recordPath + getTime() + ".mp3";
 		String fileNameAmr = getTime();
-		// String fileNameMp3 = getTime() + ".mp3";
 		FileOutputStream fileOutputStream = null;
 		try
 		{
@@ -511,11 +508,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 				}
 			}
 
-			Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
-
 			list.add(fileNameAmr);
-			// list.add(fileNameMp3);
-
 			mAdapter.notifyDataSetChanged();
 		}
 		catch(Exception e)

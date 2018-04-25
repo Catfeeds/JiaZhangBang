@@ -86,7 +86,6 @@ public class Repeat extends Activity
 	private MediaRecorder mediaRecorder = null;// Â¼ÒôÆ÷
 	private Timer timer;
 	private String fileAllNameAmr = null;
-	private String fileAllNameMp3 = null;
 	private String recordPath = Util.RECORDPATH;
 	private ArrayList < String > myRecordList = new ArrayList < String >();// ´ýºÏ³ÉµÄÂ¼ÒôÆ¬¶Î
 	private int second = 0;
@@ -273,7 +272,7 @@ public class Repeat extends Activity
 		{
 			TreeMap < String , String > map = null;
 			play_list.clear();
-			play_list_copy.clear();
+			// play_list_copy.clear();
 			final int leng = play_list_id.size();
 			for(int i = 0 ; i < leng ; i ++ )
 			{
@@ -322,7 +321,7 @@ public class Repeat extends Activity
 						myAudio = new MyAudio();
 						String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 						String title = jsonObject_partlist.getString("title");
-						play_list_copy.add(title);
+						// play_list_copy.add(title);
 						myAudio.setName(title);
 						if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 							new LrcFileDownloader(lyric_copy , title + ".lrc").start();
@@ -342,6 +341,11 @@ public class Repeat extends Activity
 	{
 
 		initLyric();
+		play_list_copy.clear();
+		for(int i = 0 ; i < play_list.size() ; i ++ )
+		{
+			play_list_copy.add(play_list.get(i).getName());
+		}
 		ArrayAdapter < String > adapter;
 		adapter = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , play_list_copy);
 
@@ -515,7 +519,6 @@ public class Repeat extends Activity
 				}
 
 				fileAllNameAmr = recordPath + playName + ".amr";
-				fileAllNameMp3 = recordPath + playName + ".mp3";
 				FileOutputStream fileOutputStream = null;
 				try
 				{
@@ -552,7 +555,6 @@ public class Repeat extends Activity
 						}
 					}
 
-					Amr2Mp3.transformation(fileAllNameAmr ,fileAllNameMp3);
 					time.setText("Â¼ÒôÍê³É");
 				}
 				catch(Exception e)
@@ -759,6 +761,11 @@ public class Repeat extends Activity
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
+			if(mediaRecorder != null)
+			{
+				mediaRecorder.release();
+				mediaRecorder = null;
+			}
 			finish();
 			return true;
 		}
