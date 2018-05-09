@@ -12,14 +12,15 @@ import android.widget.Toast;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.mainActivity.Update;
+import com.runcom.jiazhangbang.listenText.lrcView.Welcome;
 import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.setting.Setting;
 import com.runcom.jiazhangbang.setting.SettingChoose;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
-import com.runcom.jiazhangbang.welcome.Welcome;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.MobclickAgent.EScenarioType;
+import com.umeng.commonsdk.UMConfigure;
 
 public class Chinese extends Activity
 {
@@ -32,7 +33,12 @@ public class Chinese extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
-		Update.update(Chinese.this ,true);
+		UMConfigure.init(this ,"58a3f9d6b27b0a332e001956" ,"wgcwgc75" ,UMConfigure.DEVICE_TYPE_PHONE ,"cd79ec4eb5e09d69b30139b4f03a7cb0");
+		MobclickAgent.onProfileSignIn("123456890");
+		UMConfigure.setLogEnabled(true);
+		MobclickAgent.setScenarioType(this ,EScenarioType.E_DUM_NORMAL);
+		UMConfigure.setEncryptEnabled(true);
+		// Update.update(Chinese.this ,true);
 	}
 
 	/**

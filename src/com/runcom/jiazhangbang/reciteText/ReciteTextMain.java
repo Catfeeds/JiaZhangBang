@@ -3,16 +3,18 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,8 +45,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenText.LrcRead;
-import com.runcom.jiazhangbang.listenText.LyricContent;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -80,7 +80,8 @@ public class ReciteTextMain extends Activity implements Checkable
 	private int note = 0 , temp = 0;
 	private float ans = 100;
 	private String name , lrc;
-	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
+	// private List < LyricContent > LyricList = new ArrayList < LyricContent
+	// >();
 	private ImageButton imageButton_record_stop , startRecord ,
 	        imageButton_play_record , imageButton_submit_score ,
 	        imageButton_score_list;
@@ -353,28 +354,74 @@ public class ReciteTextMain extends Activity implements Checkable
 		}
 		else
 		{
+			String lyricsPath = Util.LYRICSPATH + lrc;
+			File mFile = new File(lyricsPath);
+			FileInputStream mFileInputStream;
+			BufferedReader mBufferedReader = null;
+			String Lrc_data = "";
 			try
 			{
-				LrcRead lrcRead = new LrcRead();
-				lrcRead.Read(Util.LYRICSPATH + lrc ,Util.lyricChinese);
-				LyricList = lrcRead.GetLyricContent();
+				mFileInputStream = new FileInputStream(mFile);
+				InputStreamReader mInputStreamReader;
+				mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
+				mBufferedReader = new BufferedReader(mInputStreamReader);
+				int flag = 0;
+				dataMax = 0;
+				while((Lrc_data = mBufferedReader.readLine()) != null)
+				{
+					myTextContent = new MyTextContent();
+					if(Lrc_data.contains("\t"))
+					{
+						myTextContent.setName(++ flag + "\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
+					}
+					else
+					{
+						myTextContent.setName("\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
+					}
+					dataMax ++ ;
+					myTextContentArraylist.add(myTextContent);
+				}
+
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				System.out.println(e);
 			}
-			dataMax = LyricList.size();
+			finally
+			{
+				try
+				{
+					mBufferedReader.close();
+				}
+				catch(IOException e)
+				{
+					System.out.println(e);
+				}
+			}
+
+			// try
+			// {
+			// LrcRead lrcRead = new LrcRead();
+			// lrcRead.Read(Util.LYRICSPATH + lrc ,Util.lyricChinese);
+			// LyricList = lrcRead.GetLyricContent();
+			// }
+			// catch(Exception e)
+			// {
+			// e.printStackTrace();
+			// }
+			// dataMax = LyricList.size();
 			counts = new int [dataMax];
 			Arrays.fill(counts ,0);
-			for(int i = 0 ; i < dataMax ; i ++ )
-			{
-				myTextContent = new MyTextContent();
-				if(Util.debug)
-					myTextContent.setName((i + 1) + "\u3000\u3000" + LyricList.get(i).getLyric());
-				else
-					myTextContent.setName("\u3000\u3000" + LyricList.get(i).getLyric());
-				myTextContentArraylist.add(myTextContent);
-			}
+			// for(int i = 0 ; i < dataMax ; i ++ )
+			// {
+			// myTextContent = new MyTextContent();
+			// if(Util.debug)
+			// myTextContent.setName((i + 1) + "\u3000" +
+			// LyricList.get(i).getLyric());
+			// else
+			// myTextContent.setName("\u3000" + LyricList.get(i).getLyric());
+			// myTextContentArraylist.add(myTextContent);
+			// }
 			initListview();
 
 		}
@@ -737,7 +784,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		flag = myTextContentArraylist.size();
 		if(menuItem != null)
 		{
-			menuItem.setTitle("成绩：" + flag + "/" + flag);
+			menuItem.setTitle("行数：" + flag + "/" + flag);
 		}
 		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
@@ -763,7 +810,7 @@ public class ReciteTextMain extends Activity implements Checkable
 						}
 						if(menuItem != null)
 						{
-							menuItem.setTitle("成绩：" + flag + "/" + myTextContentArraylist.size());
+							menuItem.setTitle("行数：" + flag + "/" + myTextContentArraylist.size());
 						}
 					}
 					else
@@ -777,7 +824,7 @@ public class ReciteTextMain extends Activity implements Checkable
 					}
 					if(menuItem != null)
 					{
-						menuItem.setTitle("成绩：" + flag + "/" + myTextContentArraylist.size());
+						menuItem.setTitle("行数：" + flag + "/" + myTextContentArraylist.size());
 					}
 					boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
 					myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);

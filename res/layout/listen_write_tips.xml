@@ -5,16 +5,35 @@
     android:background="#999999"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/listen_write_tips_informations"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/listen_write_tips_linearLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_margin="10dp"
         android:background="@drawable/setting_submit_shape_blue"
         android:gravity="center_vertical|center_horizontal"
-        android:text="请检查网络连接"
-        android:textSize="37sp" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/listen_write_tips_informations_counts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="请检查网络连接"
+            android:textSize="37sp" />
+
+        <TextView
+            android:id="@+id/listen_write_tips_informations_jiange"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="请检查网络连接"
+            android:textSize="37sp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/listen_write_tips_start"

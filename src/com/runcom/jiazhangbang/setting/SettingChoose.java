@@ -22,12 +22,11 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findnewwords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextMain;
-import com.runcom.jiazhangbang.listenWrite.ListenWriteGameMain;
 import com.runcom.jiazhangbang.listenWrite.ListenWriteTips;
+import com.runcom.jiazhangbang.listenWrite.listenWriteGame.ListenWriteGameMain;
 import com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose;
 import com.runcom.jiazhangbang.repeat.Repeat;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
-import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -287,7 +286,9 @@ public class SettingChoose extends Activity
 						break;
 					case Util.RecordText:
 						Toast.makeText(SettingChoose.this ,"recordText¾´ÇëÆÚ´ý..." ,Toast.LENGTH_LONG).show();
-						System.out.println(NetUtil.getNetworkState(getApplicationContext()));
+						// startActivity(new
+						// Intent().setClass(getApplicationContext()
+						// ,RecordText.class));
 						// TODO settingChoose RecordText
 						break;
 					default:

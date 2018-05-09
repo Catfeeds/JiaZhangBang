@@ -11,5 +11,6 @@
     <color name="activity_chinese_background">#ffffff</color>
     <color name="main_activity_top_background_choose">#7DCBE7</color>
     <color name="main_activity_top_background_no_choose">#25CB73</color>
+    <color name="green">#31c17d</color>
 
 </resources>

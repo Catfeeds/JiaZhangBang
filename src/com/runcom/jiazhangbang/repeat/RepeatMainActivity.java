@@ -811,7 +811,16 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			mPlayer.stop();
+			if(mPlayer != null)
+			{
+				mPlayer.release();
+				mPlayer = null;
+			}
+			if(mRecorder != null)
+			{
+				mRecorder.release();
+				mRecorder = null;
+			}
 			finish();
 			return true;
 		}

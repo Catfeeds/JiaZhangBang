@@ -1,8 +1,10 @@
 package com.runcom.jiazhangbang.listenText;
 
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -46,6 +48,7 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.listenText.lrcView.LrcView;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.URL;
@@ -54,14 +57,10 @@ import com.umeng.analytics.MobclickAgent;
 
 public class ListenTextMain extends Activity implements Runnable , OnCompletionListener , OnErrorListener , OnSeekBarChangeListener , OnBufferingUpdateListener
 {
-	// spinner
 	private Spinner spinner;
-
-	// seekbar
 	private SeekBar seekBar;
 	private ImageButton btnPlay;
-	private TextView tv_currTime , tv_totalTime , textView;
-	// private List < String > play_list = new ArrayList < String >();
+	private TextView tv_currTime , tv_totalTime;
 	private List < String > play_list_title = new ArrayList < String >();
 	private List < String > play_list_id = new ArrayList < String >();
 	private List < MyAudio > play_list = new ArrayList < MyAudio >();
@@ -80,26 +79,17 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	// 定义线程池（同时只能有一个线程运行）
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
-	private String lyricsPath;
+	String lyricsPath;
 	private int course , grade , phase , unit;
 	// 歌词处理
-	private LrcRead mLrcRead;
-	private LyricView mLyricView;
-	private int index = 0;
-	private float progress = 0.000f;
-	private int CurrentTime = 0;
-	private int CountTime = 0;
-	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
-
-	private int newIndex = 0;
-
+	private LrcView mLyricView;
 	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.listen_text);
+		setContentView(R.layout.listen_text_main);
 
 		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
 		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenTextMain] ,course) + 1;
@@ -138,13 +128,13 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	private void initPlayView()
 	{
+		mLyricView = (LrcView) findViewById(R.id.listenText_lyricShow);
 		spinner = (Spinner) findViewById(R.id.repeat_spinner);
 		btnPlay = (ImageButton) findViewById(R.id.media_start);
 		seekBar = (SeekBar) findViewById(R.id.listenText_seekBar);
 		seekBar.setOnSeekBarChangeListener(this);
 		tv_currTime = (TextView) findViewById(R.id.listenText_textView_curr_time);
 		tv_totalTime = (TextView) findViewById(R.id.listenText_textView_total_time);
-		textView = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		mp.setOnBufferingUpdateListener(this);
 
 		initTitle();
@@ -235,7 +225,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 						else
 						{
 							Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
-							System.exit(0);
+							finish();
 						}
 				}
 
@@ -309,6 +299,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					// System.out.println(source_copy);
 					myAudio.setSource(source_copy);
 					play_list.add(myAudio);
+					try
+					{
+						Thread.sleep(2 * 1000);
+					}
+					catch(InterruptedException e)
+					{
+						System.out.println(e);
+					}
 					return result;
 				}
 
@@ -369,150 +367,55 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		int flag = Util.lyricChinese;
-		mLrcRead = new LrcRead();
-		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
+		File mFile = new File(lyricsPath);
+		FileInputStream mFileInputStream;
+		BufferedReader mBufferedReader = null;
+		String Lrc_data = "";
+		String content = "";
 		try
 		{
-			if(new File(lyricsPath).exists())
+			mFileInputStream = new FileInputStream(mFile);
+			InputStreamReader mInputStreamReader;
+			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
+			mBufferedReader = new BufferedReader(mInputStreamReader);
+			while((Lrc_data = mBufferedReader.readLine()) != null)
 			{
-				mLrcRead.Read(lyricsPath ,flag);
+				content += (Lrc_data + "\n");
 			}
-			else
-			{
-				String defaultLyricPath = Util.LYRICSPATH + "defaultLyric.lrc";
-				File defaultLyricPathFile = new File(defaultLyricPath);
-				if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
-				{
-					defaultLyricPathFile.getParentFile().mkdirs();
 
-					defaultLyricPathFile.createNewFile();
-					BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(defaultLyricPathFile , false));
-					bufferedWriter.write("[00:00.00] NO LYRICS\r\n");
-					bufferedWriter.flush();
-					bufferedWriter.close();
-				}
-				mLrcRead.Read(defaultLyricPath ,flag);
-			}
 		}
 		catch(Exception e)
 		{
-			System.out.println("#############################BUG############");
+			System.out.println(e);
 		}
-		LyricList = mLrcRead.GetLyricContent();
-		mLyricView.setSentenceEntities(LyricList);
-		mHandler.post(mRunnable);
-		myHandler.post(myRunnable);
-	}
-
-	Handler mHandler = new Handler();
-	Handler myHandler = new Handler();
-
-	Runnable mRunnable = new Runnable()
-	{
-		public void run()
+		finally
 		{
-			mLyricView.SetIndex(Index());
-			mLyricView.SetProgress(Progress());
-			mLyricView.invalidate();
-			mHandler.postDelayed(mRunnable ,1);
-		}
-	};
-
-	Runnable myRunnable = new Runnable()
-	{
-		@Override
-		public void run()
-		{
-			int indexTemp = Index();
-
-			// Log.d("LOG" ,"Index(): " + indexTemp + " newIndex: " + newIndex);
-			if(indexTemp == newIndex)
+			try
 			{
-				mLyricView.setScrolled(false);
+				mBufferedReader.close();
 			}
-			else
-				if(indexTemp > newIndex)
-				{
-					newIndex = indexTemp;
-					mLyricView.setScrolled(true);
-				}
-			String tempString = "";
-			// Log.d("LOG" ,"size(): " + LyricList.size() + " Index(): " +
-			// Index());
-			for(int i = 0 ; i < (LyricList.size() - Index()) * 1.1 ; i ++ )
-				tempString += " \n";
-			textView.setText(tempString);
-			myHandler.postDelayed(this ,1700);
-		}
-	};
-
-	public float Progress()
-	{
-		if(mp != null && mp.isPlaying())
-		{
-			CurrentTime = mp.getCurrentPosition();
-			CountTime = mp.getDuration();
-		}
-		if(CurrentTime < CountTime)
-		{
-			for(int i = 0 ; i < LyricList.size() ; i ++ )
+			catch(IOException e)
 			{
-				if(i < LyricList.size() - 1)
-				{
-					if(CurrentTime < LyricList.get(i).getLyricTime() && i == 0)
-					{
-						index = i;
-						progress = 0;
-					}
-					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
-					{
-						index = i;
-						progress = (float) ((float) (CurrentTime - LyricList.get(i).getLyricTime()) / (float) (LyricList.get(i + 1).getLyricTime() - LyricList.get(i).getLyricTime()));
-					}
-				}
-
-				if(i == LyricList.size() - 1 && CurrentTime > LyricList.get(i).getLyricTime())
-				{
-					index = i;
-					progress = 1;
-				}
+				System.out.println(e);
 			}
 		}
-		return progress;
-	}
-
-	public int Index()
-	{
-		if(mp != null && mp.isPlaying())
-		{
-			CurrentTime = mp.getCurrentPosition();
-			CountTime = mp.getDuration();
-		}
-		if(CurrentTime < CountTime)
-		{
-			for(int i = 0 ; i < LyricList.size() ; i ++ )
-			{
-				if(i < LyricList.size() - 1)
-				{
-					if(CurrentTime < LyricList.get(i).getLyricTime() && i == 0)
-					{
-						index = i;
-					}
-					if(CurrentTime > LyricList.get(i).getLyricTime() && CurrentTime < LyricList.get(i + 1).getLyricTime())
-					{
-						index = i;
-					}
-				}
-
-				if(i == LyricList.size() - 1 && CurrentTime > LyricList.get(i).getLyricTime())
-				{
-					index = i;
-				}
-			}
-		}
-
-		return index;
+		// content = "[00:00.18]北京亮起来了\n" + "[00:03.03]每当夜幕降临\n" +
+		// "[00:06.36]北京就亮起来了\n" + "[00:08.96]整个北京城变成了灯的海洋\n" +
+		// "[00:12.56]光的世界\n" + "[00:14.80]长安街华灯高照\n" + "[00:18.54]川流不息的汽车\n" +
+		// "[00:20.70]灯光闪烁\n" + "[00:22.80]像银河从天而降\n" + "[00:25.77]天安门城楼金碧辉煌\n"
+		// + "[00:30.05]光彩夺目\n" + "[00:32.19]广场四周\n" +
+		// "[00:35.28]彩灯勾画出一幢幢高大建筑物的雄伟轮廓\n" + "[00:41.59]环形路上\n" +
+		// "[00:44.29]一座座立交桥犹如道道彩虹\n" + "[00:48.16]街道上\n" +
+		// "[00:50.54]照明灯草坪灯喷泉灯礼花灯\n" + "[00:55.78]装点着美丽的北京\n" +
+		// "[00:58.50]焕然一新的王府井西单商业街上\n" + "[01:04.39]明亮的橱窗\n" +
+		// "[01:06.67]绚丽多彩的广告\n" + "[01:09.18]五光十色的霓虹灯\n" +
+		// "[01:11.46]把繁华的大街装扮成了比白天更美的不夜城\n" + "[01:17.20]古老的故宫变得年轻了\n" +
+		// "[01:22.24]一束束灯光照着她\n" + "[01:25.18]长长的城墙和美丽的角楼倒映在河面上\n" +
+		// "[01:31.16]银光闪闪\n" + "[01:32.87]十分动人\n" + "[01:34.67]夜晚的北京\n" +
+		// "[01:37.82]多么明亮\n" + "[01:39.44]多么辉煌\n" + "[01:41.35]";
+		mLyricView.setLrc(content);
+		mLyricView.setPlayer(mp);
+		mLyricView.init();
 	}
 
 	public void settingFinishTime(long time )
@@ -594,14 +497,17 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		{
 			case IDLE:
 				start();
+				// initLyric();
 				break;
 			case PAUSE:
 				mp.pause();
 				btnPlay.setImageResource(R.drawable.pause);
 				currState = START;
+				// initLyric();
 				break;
 			case START:
 				mp.start();
+				// initLyric();
 				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 		}
@@ -687,13 +593,13 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			try
 			{
 				mp.setDataSource(SongPath);
+				initLyric();
 				mp.prepare();
 				mp.start();
 				initSeekBar();
 				es.execute(this);
 				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
-				initLyric();
 			}
 			catch(Exception e)
 			{
@@ -798,7 +704,6 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	public void onBufferingUpdate(MediaPlayer mp , int percent )
 	{
 		seekBar.setSecondaryProgress(percent * mp.getDuration() / 100);
-		// Log.d("LOG" , "percent: " + percent);
 	}
 
 	public void onStartTrackingTouch(SeekBar seekBar )
@@ -812,7 +717,6 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		// getMenuInflater().inflate(R.menu.time_setting ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -822,11 +726,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				if(mp != null || mp.isPlaying())
+				if(mp != null)
 				{
+					mp.pause();
 					mp.release();
 					mp = null;
 				}
+				mLyricView.setPlayer(mp);
+				mLyricView.init();
 				seekBarFlag = false;
 				onBackPressed();
 				break;
@@ -840,11 +747,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			if(mp != null || mp.isPlaying())
+			if(mp != null)
 			{
+				mp.pause();
 				mp.release();
 				mp = null;
 			}
+			mLyricView.setPlayer(mp);
+			mLyricView.init();
 			seekBarFlag = false;
 			onBackPressed();
 			return true;
@@ -873,6 +783,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		{
 			progressDialog.dismiss();
 		}
+		if(mp != null)
+		{
+			mp.pause();
+			mp.release();
+			mp = null;
+		}
+		mLyricView.setPlayer(mp);
+		mLyricView.init();
 		super.onDestroy();
 	}
 }

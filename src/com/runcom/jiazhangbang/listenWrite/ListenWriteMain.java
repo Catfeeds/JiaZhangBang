@@ -24,7 +24,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -134,21 +133,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		{
 			runOnUiThread(new Runnable()
 			{
-				// @Override
-				// public void run()
-				// {
-				// if(WAIT_TIME > 0)
-				// Toast.makeText(getApplicationContext() ,"µ¹¼ÆÊ± " + WAIT_TIME
-				// ,1).show();
-				// WAIT_TIME -- ;
-				// if(WAIT_TIME < -11)
-				// {
-				// play();
-				// startTime = System.currentTimeMillis();
-				// timer.cancel();
-				// task.cancel();
-				// }
-				// }
 				@Override
 				public void run()
 				{
@@ -341,7 +325,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 					@Override
 					public void onClick(DialogInterface dialog , int which )
 					{
-						if(mp != null || mp.isPlaying())
+						if(mp != null)
 						{
 							mp.stop();
 							mp.release();
@@ -543,7 +527,8 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 
 		if(currentIndex < playList.size())
 		{
-			Log.d("currentIndexLog" ,"currentIndexTrue:" + currentIndexTrue + ":currentIndex:" + currentIndex);
+			// Log.d("currentIndexLog" ,"currentIndexTrue:" + currentIndexTrue +
+			// ":currentIndex:" + currentIndex);
 			if(0 == currentIndex)
 				myListenWriteMainAdapter.setItemisSelectedMap(0 ,true);
 			else
@@ -594,7 +579,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				if(mp != null || mp.isPlaying())
+				if(mp != null)
 				{
 					mp.release();
 					mp = null;
@@ -611,7 +596,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			if(mp != null || mp.isPlaying())
+			if(mp != null)
 			{
 				mp.release();
 				mp = null;

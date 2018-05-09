@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.welcome.Welcome;
+import com.runcom.jiazhangbang.listenText.lrcView.Welcome;
 
 /**
  * @author Administrator

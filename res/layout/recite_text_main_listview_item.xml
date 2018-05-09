@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="内容"
-        android:textSize="27sp" />
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
 </LinearLayout>

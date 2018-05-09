@@ -28,7 +28,7 @@
             android:src="@drawable/listen_text_down" />
     </RelativeLayout>
 
-    <com.runcom.jiazhangbang.listenText.LyricView
+    <com.runcom.jiazhangbang.listenText.lyricView.LyricView
         android:id="@+id/listenText_lyricShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,7 +49,7 @@
             android:lineSpacingExtra="30sp"
             android:text="@string/empty_string"
             android:textSize="22sp" />
-    </com.runcom.jiazhangbang.listenText.LyricView>
+    </com.runcom.jiazhangbang.listenText.lyricView.LyricView>
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"

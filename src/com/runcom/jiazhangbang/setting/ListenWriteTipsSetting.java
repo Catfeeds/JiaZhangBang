@@ -146,7 +146,6 @@ public class ListenWriteTipsSetting extends Activity
 	public void onResume()
 	{
 		super.onResume();
-		MobclickAgent.onPageStart("PlaySettingScreen");
 		MobclickAgent.onResume(this);
 	}
 
@@ -154,7 +153,6 @@ public class ListenWriteTipsSetting extends Activity
 	public void onPause()
 	{
 		super.onPause();
-		MobclickAgent.onPageEnd("PlaySettingScreen");
 		MobclickAgent.onPause(this);
 	}
 }

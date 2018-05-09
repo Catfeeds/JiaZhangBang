@@ -29,7 +29,7 @@
             android:src="@drawable/listen_text_down" />
     </RelativeLayout>
 
-    <com.runcom.jiazhangbang.listenText.LyricView
+    <com.runcom.jiazhangbang.listenText.lyricView.LyricView
         android:id="@+id/listenText_lyricShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,7 +41,8 @@
         android:ellipsize="marquee"
         android:scrollbars="vertical"
         android:singleLine="true"
-        android:verticalScrollbarPosition="defaultPosition" >
+        android:verticalScrollbarPosition="defaultPosition"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/listenText_lyricView_textView"
@@ -51,7 +52,29 @@
             android:lineSpacingExtra="30sp"
             android:textColor="#25CB73"
             android:textSize="22sp" />
-    </com.runcom.jiazhangbang.listenText.LyricView>
+    </com.runcom.jiazhangbang.listenText.lyricView.LyricView>
+
+    <ScrollView
+        android:id="@+id/repeat_lyricView_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/listen_write_textView_nameShow"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/listenText_topLinearLayout"
+        android:background="#969696" >
+
+        <TextView
+            android:id="@+id/listenText_lyricShow_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
+            android:lineSpacingExtra="10dp"
+            android:padding="5dp"
+            android:text="暂无字幕"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+    </ScrollView>
 
     <TextView
         android:id="@+id/listen_write_textView_nameShow"

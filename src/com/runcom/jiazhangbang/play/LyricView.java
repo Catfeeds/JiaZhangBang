@@ -11,7 +11,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.runcom.jiazhangbang.listenText.LyricContent;
+import com.runcom.jiazhangbang.listenText.lyricView.LyricContent;
 
 public class LyricView extends TextView
 {

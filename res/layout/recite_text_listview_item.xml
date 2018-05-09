@@ -12,7 +12,8 @@
         android:gravity="center_vertical"
         android:singleLine="true"
         android:text="请检查网络连接"
-        android:textSize="33sp" />
+        android:textColor="@color/black"
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/recite_text_listview_item_recite_mode"

@@ -159,7 +159,7 @@ public class ListenWriteTips extends Activity
 		// 每个词语阅读次数
 		frequencyValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
 
-		textView_information = (TextView) findViewById(R.id.listen_write_tips_informations);
+		textView_information = (TextView) findViewById(R.id.listen_write_tips_informations_counts);
 		textView_start = (Button) findViewById(R.id.listen_write_tips_start);
 		textView_start.setEnabled(true);
 		textView_reset = (Button) findViewById(R.id.listen_write_tips_reset);
@@ -169,7 +169,7 @@ public class ListenWriteTips extends Activity
 		int minutes = totalTime % 3600 / 60;
 		int seconds = totalTime % 3600 % 60;
 		String contents = "本次听写\n总共" + counts + "个生词\n生词朗读间隔" + intervalValue + "秒\n每个生词朗读" + frequencyValue + "遍\n大约用时" + totalTime + "秒\n即" + hours + "时" + minutes + "分" + seconds + "秒";
-
+//TODO
 		textView_information.setText(contents);
 		progressDialog.dismiss();
 		textView_start.setOnClickListener(new OnClickListener()

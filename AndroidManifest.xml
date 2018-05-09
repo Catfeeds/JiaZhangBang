@@ -40,15 +40,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <!--
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="58a3f9d6b27b0a332e001956" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="wgcwgc" />
+            android:value="wgcwgc75" />
+        -->
 
-        <activity android:name="com.runcom.jiazhangbang.welcome.Welcome" >
+        <activity android:name="com.runcom.jiazhangbang.listenText.lrcView.Welcome" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.play.Play"
@@ -73,14 +74,14 @@
             android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteTips" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChoose"
+            android:name="com.runcom.jiazhangbang.listenWrite.listenWriteGame.ListenWriteGameChoose"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.listenWrite.ListenWriteGameMain"
+            android:name="com.runcom.jiazhangbang.listenWrite.listenWriteGame.ListenWriteGameMain"
             android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.ListenWriteGameChoose" >
+            android:parentActivityName="com.runcom.jiazhangbang.listenWrite.listenWriteGame.ListenWriteGameChoose" >
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.setting.ListenWriteTipsSetting"
@@ -136,6 +137,16 @@
             android:name="com.runcom.jiazhangbang.findnewwords.FindNewWordsWeb"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.findnewwords.FindNewWords" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.recordText.RecordText"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.setting.SettingChoose" >
+        </activity>
+        <activity
+            android:name="com.runcom.jiazhangbang.listenText.ListenTextMain"
+            android:icon="@drawable/ic_come_back"
+            android:parentActivityName="com.runcom.jiazhangbang.setting.SettingChoose" >
         </activity>
     </application>
 

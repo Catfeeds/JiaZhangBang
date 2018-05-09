@@ -31,8 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenText.LrcRead;
-import com.runcom.jiazhangbang.listenText.LyricContent;
+import com.runcom.jiazhangbang.listenText.lyricView.LrcRead;
+import com.runcom.jiazhangbang.listenText.lyricView.LyricContent;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 

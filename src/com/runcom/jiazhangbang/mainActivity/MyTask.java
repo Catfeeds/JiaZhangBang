@@ -93,7 +93,9 @@ public class MyTask extends AsyncTask < String , Void , byte [] >
 	// }
 	// });
 	// }
-
+	/*
+	 * context 上下文 path 文件保存路径 fileName 文件名（包括后缀） contents 更新内容 title 更新标题
+	 */
 	public MyTask(final Context context , String path , String fileName , String contents , String title)
 	{
 		this.context = context;

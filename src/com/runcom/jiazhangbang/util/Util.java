@@ -15,7 +15,7 @@ import com.runcom.jiazhangbang.R;
 
 public class Util
 {
-	public static final Boolean debug = false;
+	public static final Boolean debug = true;
 	public static final String grade[] =
 	{ "全年级", "一年级", "二年级", "三年级", "四年级", "五年级", "六年级" };
 	public static final String unit[] =

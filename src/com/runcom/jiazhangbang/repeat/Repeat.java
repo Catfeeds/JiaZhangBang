@@ -3,12 +3,13 @@
  */
 package com.runcom.jiazhangbang.repeat;
 
-import java.io.BufferedWriter;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +31,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -54,9 +54,6 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.judge.Judge;
-import com.runcom.jiazhangbang.listenText.LrcRead;
-import com.runcom.jiazhangbang.listenText.LyricContent;
-import com.runcom.jiazhangbang.listenText.LyricView;
 import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.LrcFileDownloader;
@@ -95,7 +92,6 @@ public class Repeat extends Activity
 
 	private Spinner spinner;
 	private ImageButton startRecord , stopRecord;
-	private TextView tv_lrc;
 	private List < MyAudio > play_list = new ArrayList < MyAudio >();
 	private List < String > play_list_copy = new ArrayList < String >();
 	private List < String > play_list_id = new ArrayList < String >();
@@ -111,12 +107,8 @@ public class Repeat extends Activity
 	private Intent intent;
 	private String lyricsPath;
 	private int course , grade , phase , unit;
-
-	private LrcRead mLrcRead;
-	private LyricView mLyricView;
-	private List < LyricContent > LyricList = new ArrayList < LyricContent >();
-
 	private ProgressDialog progressDialog;
+	private TextView textView_lrcView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -159,8 +151,8 @@ public class Repeat extends Activity
 		spinner = (Spinner) findViewById(R.id.repeat_spinner);
 		startRecord = (ImageButton) findViewById(R.id.media_start);
 		stopRecord = (ImageButton) findViewById(R.id.media_stop);
-		tv_lrc = (TextView) findViewById(R.id.listenText_lyricView_textView);
 		time = (TextView) findViewById(R.id.listen_write_textView_nameShow);
+		textView_lrcView = (TextView) findViewById(R.id.listenText_lyricShow_textView);
 		initTitle();
 	}
 
@@ -249,7 +241,7 @@ public class Repeat extends Activity
 						else
 						{
 							Toast.makeText(getApplicationContext() ,"服务器异常" ,Toast.LENGTH_LONG).show();
-							System.exit(0);
+							finish();
 						}
 				}
 
@@ -329,6 +321,14 @@ public class Repeat extends Activity
 						String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
 						myAudio.setSource(source_copy);
 						play_list.add(myAudio);
+						try
+						{
+							Thread.sleep(2 * 1000);
+						}
+						catch(InterruptedException e)
+						{
+							System.out.println(e);
+						}
 						return result;
 					}
 
@@ -387,58 +387,42 @@ public class Repeat extends Activity
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		int flag = Util.lyricChinese;
-
-		mLrcRead = new LrcRead();
-		mLyricView = (LyricView) findViewById(R.id.listenText_lyricShow);
+		File mFile = new File(lyricsPath);
+		FileInputStream mFileInputStream;
+		BufferedReader mBufferedReader = null;
+		String Lrc_data = "";
+		String content = "";
 		try
 		{
-			if(new File(lyricsPath).exists())
+			mFileInputStream = new FileInputStream(mFile);
+			InputStreamReader mInputStreamReader;
+			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
+			mBufferedReader = new BufferedReader(mInputStreamReader);
+			while((Lrc_data = mBufferedReader.readLine()) != null)
 			{
-				mLrcRead.Read(lyricsPath ,flag);
+				content += (Lrc_data.substring(Lrc_data.indexOf("]") + 1) + "\n");
 			}
-			else
-			{
-				String defaultLyricPath = Util.LYRICSPATH + "defaultLyric.lrc";
-				File defaultLyricPathFile = new File(defaultLyricPath);
-				if( !defaultLyricPathFile.exists() || !defaultLyricPathFile.getParentFile().exists())
-				{
-					defaultLyricPathFile.getParentFile().mkdirs();
 
-					defaultLyricPathFile.createNewFile();
-					BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(defaultLyricPathFile , false));
-					bufferedWriter.write("[00:00.00] NO LYRICS\r\n");
-					bufferedWriter.flush();
-					bufferedWriter.close();
-				}
-				mLrcRead.Read(defaultLyricPath ,flag);
-			}
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			System.out.println(e);
 		}
-		LyricList = mLrcRead.GetLyricContent();
-		mLyricView.setSentenceEntities(LyricList);
-		mLyricView.setBackgroundColor(Color.parseColor("#969696"));
-		myHandler.post(myRunnable);
-	}
-
-	Handler myHandler = new Handler();
-
-	Runnable myRunnable = new Runnable()
-	{
-
-		@Override
-		public void run()
+		finally
 		{
-			String tempString = "";
-			for(int i = 0 ; i < LyricList.size() * 1.5 ; i ++ )
-				tempString += " \n";
-			tv_lrc.setText(tempString);
-			myHandler.postDelayed(myRunnable ,1700);
+			try
+			{
+				mBufferedReader.close();
+			}
+			catch(IOException e)
+			{
+				System.out.println(e);
+			}
 		}
-	};
+
+		textView_lrcView.setText(content);
+
+	}
 
 	public void onDetailSetting(View v )
 	{
@@ -490,102 +474,16 @@ public class Repeat extends Activity
 		timer.cancel();
 
 		final EditText editText = new EditText(Repeat.this);
-		AlertDialog.Builder inputDialog = new AlertDialog.Builder(Repeat.this);
+		final AlertDialog.Builder inputDialog = new AlertDialog.Builder(Repeat.this);
 		inputDialog.setTitle("要保存录音吗？").setView(editText);
 		inputDialog.setPositiveButton("保存" ,new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog , int which )
 			{
-				// 最后合成的音频文件
-				String playName = editText.getText().toString().trim();
-				if(playName.isEmpty() || Judge.isNotName(playName))
-				{
-					playName = getTime();
-					if(playName.isEmpty())
-					{
-						Toast.makeText(getApplicationContext() ,"已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
-					}
-					else
-					{
-						Toast.makeText(getApplicationContext() ,"输入名字不符合要求\n已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
-					}
-				}
-
-				if(isExit(playName))
-				{
-					playName += "_" + getTime();
-					Toast.makeText(getApplicationContext() ,"文件已存在\n已自动命名为：" + playName ,Toast.LENGTH_SHORT).show();
-				}
-
-				fileAllNameAmr = recordPath + playName + ".amr";
-				FileOutputStream fileOutputStream = null;
-				try
-				{
-					fileOutputStream = new FileOutputStream(fileAllNameAmr);
-				}
-				catch(FileNotFoundException e)
-				{
-				}
-				FileInputStream fileInputStream = null;
-				try
-				{
-					for(int i = 0 ; i < myRecordList.size() ; i ++ )
-					{
-						File file = new File(myRecordList.get(i));
-						// 把因为暂停所录出的多段录音进行读取
-						fileInputStream = new FileInputStream(file);
-						byte [] mByte = new byte [fileInputStream.available()];
-						int length = mByte.length;
-						// 第一个录音文件的前六位是不需要删除的
-						if(i == 0)
-						{
-							while(fileInputStream.read(mByte) != -1)
-							{
-								fileOutputStream.write(mByte ,0 ,length);
-							}
-						}
-						// 之后的文件，去掉前六位
-						else
-						{
-							while(fileInputStream.read(mByte) != -1)
-							{
-								fileOutputStream.write(mByte ,6 ,length - 6);
-							}
-						}
-					}
-
-					time.setText("录音完成");
-				}
-				catch(Exception e)
-				{
-					Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
-					time.setText("录音合成出错，请重试！");
-					System.out.println(e);
-				}
-				finally
-				{
-					try
-					{
-						fileOutputStream.flush();
-						fileInputStream.close();
-					}
-					catch(Exception e)
-					{
-						System.out.println(e);
-					}
-				}
-
-				for(int i = 0 ; i < myRecordList.size() ; i ++ )
-				{
-					File file = new File(myRecordList.get(i));
-					if(file.exists())
-					{
-						file.delete();
-					}
-				}
 			}
 		});
+
 		inputDialog.setNegativeButton("放弃" ,new DialogInterface.OnClickListener()
 		{
 
@@ -603,11 +501,99 @@ public class Repeat extends Activity
 				}
 			}
 		});
-		inputDialog.show();
 
 		minute = 0;
 		hour = 0;
 		second = 0;
+
+		final AlertDialog dialog = inputDialog.create();
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.show();
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view )
+			{
+				String playName = editText.getText().toString().trim();
+				if(playName.isEmpty() || Judge.isNotName(playName))
+				{
+					Toast.makeText(getApplicationContext() ,"输入名字不符合要求，请重新命名" ,Toast.LENGTH_SHORT).show();
+				}
+				else
+					if(isExit(playName))
+					{
+						Toast.makeText(getApplicationContext() ,"文件名重复，请重新命名" ,Toast.LENGTH_SHORT).show();
+					}
+					else
+					{
+						fileAllNameAmr = recordPath + playName + ".amr";
+						FileOutputStream fileOutputStream = null;
+						try
+						{
+							fileOutputStream = new FileOutputStream(fileAllNameAmr);
+						}
+						catch(FileNotFoundException e)
+						{
+						}
+						FileInputStream fileInputStream = null;
+						try
+						{
+							for(int i = 0 ; i < myRecordList.size() ; i ++ )
+							{
+								File file = new File(myRecordList.get(i));
+								fileInputStream = new FileInputStream(file);
+								byte [] mByte = new byte [fileInputStream.available()];
+								int length = mByte.length;
+								if(i == 0)
+								{
+									while(fileInputStream.read(mByte) != -1)
+									{
+										fileOutputStream.write(mByte ,0 ,length);
+									}
+								}
+								else
+								{
+									while(fileInputStream.read(mByte) != -1)
+									{
+										fileOutputStream.write(mByte ,6 ,length - 6);
+									}
+								}
+							}
+							Toast.makeText(getApplicationContext() ,"录音完成" ,Toast.LENGTH_SHORT).show();
+							time.setText("录音完成");
+						}
+						catch(Exception e)
+						{
+							Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+							time.setText("录音合成出错，请重试！");
+							System.out.println(e);
+						}
+						finally
+						{
+							try
+							{
+								fileOutputStream.flush();
+								fileInputStream.close();
+							}
+							catch(Exception e)
+							{
+								System.out.println(e);
+							}
+						}
+
+						for(int i = 0 ; i < myRecordList.size() ; i ++ )
+						{
+							File file = new File(myRecordList.get(i));
+							if(file.exists())
+							{
+								file.delete();
+							}
+						}
+						dialog.dismiss();
+					}
+			}
+		});
+
 	}
 
 	private Boolean isExit(String name )
@@ -749,6 +735,11 @@ public class Repeat extends Activity
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
+				if(mediaRecorder != null)
+				{
+					mediaRecorder.release();
+					mediaRecorder = null;
+				}
 				onBackPressed();
 				break;
 		}
