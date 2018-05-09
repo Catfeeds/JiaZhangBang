@@ -7,41 +7,41 @@
 
     <LinearLayout
         android:id="@+id/listen_write_tips_linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="177dp"
+        android:layout_height="177dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:background="@drawable/setting_submit_shape_blue"
+        android:layout_margin="10dp"
+        android:background="@drawable/listen_write_tips_time_shape"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/listen_write_tips_informations_counts"
-            android:layout_width="match_parent"
+            android:layout_width="157dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_margin="10dp"
+            android:layout_margin="2dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="请检查网络连接"
-            android:textSize="37sp" />
+            android:text="0分00秒"
+            android:textColor="@color/listen_write_tips_words"
+            android:textSize="27sp" />
 
         <TextView
             android:id="@+id/listen_write_tips_informations_jiange"
-            android:layout_width="match_parent"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:layout_margin="10dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="请检查网络连接"
-            android:textSize="37sp" />
+            android:text="大约用时"
+            android:textColor="@color/listen_write_tips_words"
+            android:textSize="17sp" />
     </LinearLayout>
 
     <Button
         android:id="@+id/listen_write_tips_start"
-        android:layout_width="120dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginTop="57dp"
-        android:background="@drawable/setting_submit_shape_blue"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/listen_write_tips_shape"
         android:gravity="center_vertical|center_horizontal"
         android:singleLine="true"
         android:text="开始"
@@ -52,12 +52,194 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_marginBottom="57dp"
+        android:layout_marginBottom="87dp"
         android:layout_marginTop="57dp"
         android:background="@drawable/setting_submit_shape_blue"
         android:gravity="center_vertical|center_horizontal"
         android:singleLine="true"
         android:text="重置"
-        android:textSize="27sp" />
+        android:textSize="27sp"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="60.0dip"
+            android:paddingLeft="0.0dip"
+            android:paddingRight="0.0dip"
+            android:paddingTop="10.0dip" >
+
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="1.0dp"
+                android:shrinkColumns="0"
+                android:stretchColumns="0" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:visibility="gone" />
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:orientation="horizontal"
+                    android:paddingBottom="26.0dip"
+                    android:paddingTop="16.0dip"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_words_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="37dp"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:paddingLeft="17dip"
+                        android:text="生词个数"
+                        android:textColor="#ff333333"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_words_count_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginLeft="27dp"
+                        android:text="0"
+                        android:textColor="@color/listen_write_tips_words"
+                        android:textSize="27sp" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:visibility="gone" />
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:paddingBottom="16.0dip"
+                    android:paddingTop="16.0dip"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_interval_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="37dp"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:paddingLeft="17.0dip"
+                        android:text="间隔秒数"
+                        android:textColor="#ff333333"
+                        android:textSize="16.0sp" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_interval_reduce_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="—"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_interval_count_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="1"
+                        android:textColor="@color/listen_write_tips_words"
+                        android:textSize="27sp" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_interval_plus_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="+"
+                        android:textSize="27sp" />
+                </TableRow>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:background="@color/white"
+                    android:visibility="gone" />
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="2.0dip"
+                    android:layout_marginRight="2.0dip"
+                    android:paddingBottom="16.0dip"
+                    android:paddingTop="16.0dip"
+                    android:visibility="visible" >
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_frequency_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="37dp"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:paddingLeft="17.0dip"
+                        android:text="重复次数"
+                        android:textColor="#ff333333"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_frequency_reduce_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="—"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_frequency_count_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="1"
+                        android:textColor="@color/listen_write_tips_words"
+                        android:textSize="27sp" />
+
+                    <TextView
+                        android:id="@+id/listen_write_tips_frequency_plus_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:clickable="true"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20.0dip"
+                        android:text="+"
+                        android:textSize="27sp" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

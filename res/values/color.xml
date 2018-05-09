@@ -12,5 +12,7 @@
     <color name="main_activity_top_background_choose">#7DCBE7</color>
     <color name="main_activity_top_background_no_choose">#25CB73</color>
     <color name="green">#31c17d</color>
+    <color name="listen_write_tips_words">#24FF87</color>
+    <color name="red">#FF0000</color>
 
 </resources>

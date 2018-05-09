@@ -38,7 +38,10 @@ public class ListenWriteTips extends Activity
 	private int course , grade , phase , unit;
 	private int intervalValue , frequencyValue;
 	private int counts;
-	private TextView textView_information ;
+	private TextView textView_time_information , textView_words_count;
+	private TextView textView_interval_reduce , textView_interval_plus ,
+	        textView_interval_count , textView_frequency_reduce ,
+	        textView_frequency_plus , textView_frequency_count;
 	private Button textView_start , textView_reset;
 	private final int WORDSTIME = 2;
 	private ProgressDialog progressDialog;
@@ -152,25 +155,107 @@ public class ListenWriteTips extends Activity
 		}
 	}
 
-	private void initView()
+	private void setContents()
 	{
-		// 两个词语间隔秒数
-		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
-		// 每个词语阅读次数
-		frequencyValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
-
-		textView_information = (TextView) findViewById(R.id.listen_write_tips_informations_counts);
-		textView_start = (Button) findViewById(R.id.listen_write_tips_start);
-		textView_start.setEnabled(true);
-		textView_reset = (Button) findViewById(R.id.listen_write_tips_reset);
-		textView_reset.setEnabled(true);
 		int totalTime = (WORDSTIME + intervalValue) * counts * frequencyValue;
 		int hours = totalTime / 3600;
 		int minutes = totalTime % 3600 / 60;
 		int seconds = totalTime % 3600 % 60;
-		String contents = "本次听写\n总共" + counts + "个生词\n生词朗读间隔" + intervalValue + "秒\n每个生词朗读" + frequencyValue + "遍\n大约用时" + totalTime + "秒\n即" + hours + "时" + minutes + "分" + seconds + "秒";
-//TODO
-		textView_information.setText(contents);
+		String contents = hours + "时" + minutes + "分" + seconds + "秒";
+		textView_time_information.setText(contents);
+	}
+
+	private void initView()
+	{
+		textView_time_information = (TextView) findViewById(R.id.listen_write_tips_informations_counts);
+		textView_start = (Button) findViewById(R.id.listen_write_tips_start);
+		textView_start.setEnabled(true);
+		textView_reset = (Button) findViewById(R.id.listen_write_tips_reset);
+		textView_reset.setEnabled(true);
+		textView_words_count = (TextView) findViewById(R.id.listen_write_tips_words_count_textView);
+		textView_words_count.setText(counts + "");
+		// 两个词语间隔秒数
+		intervalValue = MySharedPreferences.getValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
+		// 每个词语阅读次数
+		frequencyValue = MySharedPreferences.getValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
+
+		textView_interval_count = (TextView) findViewById(R.id.listen_write_tips_interval_count_textView);
+		textView_interval_count.setText(intervalValue + "");
+
+		textView_interval_reduce = (TextView) findViewById(R.id.listen_write_tips_interval_reduce_textView);
+		textView_interval_reduce.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				intervalValue -- ;
+				if(intervalValue <= 1)
+				{
+					intervalValue = 1;
+				}
+				textView_interval_count.setText(intervalValue + "");
+				MySharedPreferences.putValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteInterval" ,intervalValue);
+				setContents();
+			}
+		});
+		textView_interval_plus = (TextView) findViewById(R.id.listen_write_tips_interval_plus_textView);
+		textView_interval_plus.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				intervalValue ++ ;
+				if(intervalValue >= 9)
+				{
+					intervalValue = 9;
+				}
+				textView_interval_count.setText(intervalValue + "");
+				MySharedPreferences.putValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteInterval" ,intervalValue);
+				setContents();
+			}
+		});
+		textView_frequency_count = (TextView) findViewById(R.id.listen_write_tips_frequency_count_textView);
+		textView_frequency_count.setText(frequencyValue + "");
+
+		textView_frequency_reduce = (TextView) findViewById(R.id.listen_write_tips_frequency_reduce_textView);
+		textView_frequency_reduce.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				frequencyValue -- ;
+				if(frequencyValue <= 1)
+				{
+					frequencyValue = 1;
+				}
+				textView_frequency_count.setText(frequencyValue + "");
+				MySharedPreferences.putValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteFrequency" ,frequencyValue);
+				setContents();
+			}
+		});
+		textView_frequency_plus = (TextView) findViewById(R.id.listen_write_tips_frequency_plus_textView);
+		textView_frequency_plus.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v )
+			{
+				frequencyValue ++ ;
+				if(frequencyValue >= 9)
+				{
+					frequencyValue = 9;
+				}
+				textView_frequency_count.setText(frequencyValue + "");
+				MySharedPreferences.putValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteFrequency" ,frequencyValue);
+				setContents();
+			}
+		});
+
+		setContents();
+
 		progressDialog.dismiss();
 		textView_start.setOnClickListener(new OnClickListener()
 		{
