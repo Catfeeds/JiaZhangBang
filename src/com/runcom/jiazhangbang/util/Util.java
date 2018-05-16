@@ -69,7 +69,7 @@ public class Util
 		{
 			System.out.println(e);
 		}
-
+		app = "jzzs";
 		String dev = android.provider.Settings.Secure.getString(context.getContentResolver() ,android.provider.Settings.Secure.ANDROID_ID);
 		String lang = Locale.getDefault().getLanguage();
 		if(lang.contains("zh"))

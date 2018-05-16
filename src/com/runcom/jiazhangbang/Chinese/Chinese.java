@@ -1,7 +1,10 @@
 package com.runcom.jiazhangbang.chinese;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,6 +30,7 @@ public class Chinese extends Activity
 	private Intent intent = new Intent();
 	private int grade;
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
@@ -39,6 +43,33 @@ public class Chinese extends Activity
 		MobclickAgent.setScenarioType(this ,EScenarioType.E_DUM_NORMAL);
 		UMConfigure.setEncryptEnabled(true);
 		// Update.update(Chinese.this ,true);
+
+		// Window window = this.getWindow();
+		// window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+		//
+		// ViewGroup decorViewGroup = (ViewGroup) window.getDecorView();
+		// View statusBarView = new View(window.getContext());
+		// int statusBarHeight = getStatusBarHeight(window.getContext());
+		// FrameLayout.LayoutParams params = new
+		// FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT ,
+		// statusBarHeight);
+		// params.gravity = Gravity.TOP;
+		// statusBarView.setLayoutParams(params);
+		// statusBarView.setBackgroundColor(R.color.white);
+		// decorViewGroup.addView(statusBarView);
+	}
+
+	@SuppressWarnings("unused")
+	private static int getStatusBarHeight(Context context )
+	{
+		int statusBarHeight = 0;
+		Resources res = context.getResources();
+		int resourceId = res.getIdentifier("status_bar_height" ,"dimen" ,"android");
+		if(resourceId > 0)
+		{
+			statusBarHeight = res.getDimensionPixelSize(resourceId);
+		}
+		return statusBarHeight;
 	}
 
 	/**
@@ -184,6 +215,16 @@ public class Chinese extends Activity
 		// notification();
 	}
 
+	/**
+	 * setting
+	 */
+	public void setting(View v )
+	{
+		Intent intent = new Intent();
+		intent.setClass(getApplicationContext() ,Setting.class);
+		startActivity(intent);
+	}
+
 	@SuppressWarnings("unused")
 	private void notification()
 	{
@@ -197,7 +238,7 @@ public class Chinese extends Activity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu )
 	{
-		getMenuInflater().inflate(R.menu.setting_menu ,menu);
+		// getMenuInflater().inflate(R.menu.setting_menu ,menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

@@ -75,7 +75,7 @@
             android:background="#969696"
             android:contentDescription="上一曲"
             android:onClick="previous"
-            android:src="@drawable/play_previous" />
+            android:src="@drawable/listen_text_previous_text" />
 
         <ImageButton
             android:id="@+id/media_start"
@@ -92,7 +92,7 @@
             android:background="#969696"
             android:contentDescription="下一曲"
             android:onClick="next"
-            android:src="@drawable/play_next" />
+            android:src="@drawable/listen_text_next_text" />
     </LinearLayout>
 
 </RelativeLayout>

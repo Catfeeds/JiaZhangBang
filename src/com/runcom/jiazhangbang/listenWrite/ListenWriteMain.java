@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -98,7 +99,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		// 两个词语间隔秒数
 		intervalValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
 		// 每个词语阅读次数
-		frequencyValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
+		frequencyValue = MySharedPreferences.getValue(this ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1) + 1;
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -448,7 +449,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		}
 	}
 
-	// 开始播放
+	// 开始播放 TODO
 	private void start()
 	{
 		if(currentIndex != 0 && currentIndex != playList.size())
@@ -465,17 +466,28 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		if(playList.size() > 0 && currentIndex < playList.size())
 		{
 			String SongPath = playList.get(currentIndex);
-			mp.reset();
+			if(mp != null)
+			{
+				mp.reset();
+			}
 			try
 			{
-				mp.setDataSource(SongPath);
-				mp.prepare();
-				mp.start();
 				play_currentState = PAUSE;
+				mp.setDataSource(SongPath);
+				mp.prepareAsync();
+				mp.setOnPreparedListener(new OnPreparedListener()
+				{
+
+					@Override
+					public void onPrepared(MediaPlayer mp )
+					{
+						mp.start();
+					}
+				});
 			}
 			catch(Exception e)
 			{
-				Toast.makeText(getApplicationContext() ,"音频出错 已自动跳过" ,Toast.LENGTH_SHORT).show();
+				Toast.makeText(this ,"音频出错 已自动跳过" ,Toast.LENGTH_SHORT).show();
 				currentIndex += frequencyValue;
 				notifyDataAdapter();
 				start();
@@ -483,12 +495,10 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		}
 		else
 		{
-			Toast.makeText(this ,"播放完毕" ,Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private Handler handlerView = new Handler();
-	private Handler handlerPlay = new Handler();
 
 	@SuppressWarnings("unused")
 	private Runnable runnablePlay = new Runnable()
@@ -502,22 +512,25 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 				mp.reset();
 				try
 				{
+					play_currentState = PAUSE;
 					mp.setDataSource(SongPath);
 					mp.prepare();
 					mp.start();
-					play_currentState = PAUSE;
 				}
 				catch(Exception e)
 				{
 					System.out.println(e);
+					// Toast.makeText(this ,"音频出错 已自动跳过"
+					// ,Toast.LENGTH_SHORT).show();
+					System.out.println("音频出错 已自动跳过");
+					currentIndex += frequencyValue;
+					notifyDataAdapter();
+					start();
 				}
 			}
 			else
 			{
-				Toast.makeText(getApplicationContext() ,"播放完毕" ,Toast.LENGTH_SHORT).show();
 			}
-
-			handlerPlay.postDelayed(this ,intervalValue * 1000);
 		}
 	};
 
@@ -579,12 +592,27 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
+				if(progressDialog != null)
+				{
+					progressDialog.dismiss();
+				}
+
+//				try
+//				{
+//					runnableView.wait();
+//				}
+//				catch(InterruptedException e)
+//				{
+//					System.out.println(e);
+//				}
+
 				if(mp != null)
 				{
 					mp.release();
 					mp = null;
 				}
-				onBackPressed();
+				// onBackPressed();
+				finish();
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -596,11 +624,6 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			if(mp != null)
-			{
-				mp.release();
-				mp = null;
-			}
 			try
 			{
 				runnableView.wait();
@@ -608,6 +631,12 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 			catch(InterruptedException e)
 			{
 				System.out.println(e);
+			}
+
+			if(mp != null)
+			{
+				mp.release();
+				mp = null;
 			}
 			onBackPressed();
 			return true;
@@ -641,6 +670,20 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		if(progressDialog != null)
 		{
 			progressDialog.dismiss();
+		}
+		try
+		{
+			runnableView.wait();
+		}
+		catch(InterruptedException e)
+		{
+			System.out.println(e);
+		}
+
+		if(mp != null)
+		{
+			mp.release();
+			mp = null;
 		}
 		super.onDestroy();
 	}

@@ -2,20 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#636363"
     android:orientation="vertical" >
 
     <RelativeLayout
         android:id="@+id/listenText_topLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:background="#696969"
+        android:background="#636363"
         android:gravity="top" >
 
         <Spinner
             android:id="@+id/repeat_spinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#696969"
+            android:background="#636363"
             android:gravity="top"
             android:spinnerMode="dialog" />
 
@@ -37,7 +38,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/listenText_topLinearLayout"
         android:layout_gravity="center_horizontal"
-        android:background="#969696"
+        android:background="#636363"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -54,16 +55,18 @@
         android:layout_above="@+id/listenText_linearLayout_control"
         android:layout_alignLeft="@+id/listenText_linearLayout_control"
         android:layout_alignStart="@+id/listenText_linearLayout_control"
-        android:background="#696969"
+        android:background="#636363"
         android:gravity="center" >
 
         <TextView
             android:id="@+id/listenText_textView_curr_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:padding="5dp" />
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:padding="5dp"
+            android:text="00:00"
+            android:textColor="@color/white" />
 
         <SeekBar
             android:id="@+id/listenText_seekBar"
@@ -76,9 +79,11 @@
             android:id="@+id/listenText_textView_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:padding="5dp" />
+            android:layout_marginLeft="1dp"
+            android:layout_marginStart="1dp"
+            android:padding="5dp"
+            android:text="00:00"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,13 +91,13 @@
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:layout_alignParentBottom="true"
-        android:background="#696969"
+        android:background="#636363"
         android:gravity="center" >
 
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="previousText"
             android:src="@drawable/listen_text_previous_text" />
 
@@ -100,21 +105,21 @@
             android:id="@+id/media_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="playText"
             android:src="@drawable/pause" />
 
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="nextText"
             android:src="@drawable/listen_text_next_text" />
 
         <ImageButton
             android:layout_width="57dp"
             android:layout_height="wrap_content"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="detailSetting"
             android:src="@drawable/detail" />
     </LinearLayout>

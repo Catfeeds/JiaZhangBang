@@ -19,91 +19,231 @@
 
         <TableRow>
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_listen_text"
-                android:onClick="listenText" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="listenText"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_listen_text" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_listen_text_copy"
+                    android:onClick="listenText" />
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="listenText"
+                    android:text="@string/activity_chinese_listen_text"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_write_text"
-                android:onClick="listenWrite" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="listenWrite"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_listen_write" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_write_text_copy"
+                    android:onClick="listenWrite" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="listenWrite"
+                    android:text="@string/activity_chinese_listen_write"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow>
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_recite_text"
-                android:onClick="reciteText" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="reciteText"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_recite_text" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_recite_text_copy"
+                    android:onClick="reciteText" />
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="reciteText"
+                    android:text="@string/activity_chinese_recite_text"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_read_text"
-                android:onClick="repeat" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="repeat"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_repeat" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_read_text_copy"
+                    android:onClick="repeat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="repeat"
+                    android:text="@string/activity_chinese_repeat"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow>
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+            <LinearLayout
+                android:layout_width="@dimen/activity_chinese_tablerow_button_width"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_width"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_find_new_words"
-                android:onClick="findNewWords" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="findNewWords"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_findnewwords" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_find_new_words_copy"
+                    android:onClick="findNewWords" />
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="findNewWords"
+                    android:text="@string/activity_chinese_findnewwords"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/activity_chinese_tablerow_button_width"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_width"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_play"
-                android:onClick="playGame" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="playGame"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_comingsoon" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_play_copy"
+                    android:onClick="playGame" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="playGame"
+                    android:text="@string/activity_chinese_playgames"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
         </TableRow>
 
         <TableRow>
 
-            <Button
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/activity_chinese_tablerow_button_heigh"
+            <LinearLayout
+                android:layout_width="@dimen/activity_chinese_tablerow_button_width"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_width"
                 android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
-                android:background="@drawable/chinese_record_text"
-                android:onClick="recordText" >
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="recordText"
+                android:orientation="vertical" >
 
-                <!-- android:text="@string/activity_chinese_comingsoon" -->
-            </Button>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_record_text_copy"
+                    android:onClick="recordText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="recordText"
+                    android:text="@string/activity_chinese_comingsoon"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="@dimen/activity_chinese_tablerow_button_width"
+                android:layout_height="@dimen/activity_chinese_tablerow_button_width"
+                android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                android:background="@drawable/activity_chinese_background_shape"
+                android:gravity="center_vertical|center_horizontal"
+                android:onClick="setting"
+                android:orientation="vertical"
+                android:visibility="visible" >
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:background="@drawable/chinese_setting_copy"
+                    android:onClick="setting" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_chinese_tablerow_button_margin"
+                    android:gravity="bottom|center_horizontal"
+                    android:onClick="setting"
+                    android:text="@string/activity_chinese_setting"
+                    android:textSize="@dimen/activity_chinese_tablerow_button_text_size" />
+            </LinearLayout>
         </TableRow>
     </TableLayout>
 

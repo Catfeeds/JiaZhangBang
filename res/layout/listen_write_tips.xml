@@ -93,8 +93,8 @@
                     android:layout_marginLeft="2.0dip"
                     android:layout_marginRight="2.0dip"
                     android:orientation="horizontal"
-                    android:paddingBottom="26.0dip"
-                    android:paddingTop="16.0dip"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="26dp"
                     android:visibility="visible" >
 
                     <TextView
@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="center_vertical|center_horizontal"
-                        android:layout_marginLeft="27dp"
+                        android:layout_marginLeft="37dp"
                         android:text="0"
                         android:textColor="@color/listen_write_tips_words"
                         android:textSize="27sp" />

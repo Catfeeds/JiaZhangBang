@@ -8,14 +8,14 @@
         android:id="@+id/listenText_topLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="57dp"
-        android:background="#696969"
+        android:background="#636363"
         android:gravity="top" >
 
         <Spinner
             android:id="@+id/repeat_spinner"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#696969"
+            android:background="#636363"
             android:gravity="top"
             android:spinnerMode="dialog" />
 
@@ -37,7 +37,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/listenText_topLinearLayout"
-        android:background="#969696"
+        android:background="#636363"
         android:ellipsize="marquee"
         android:scrollbars="vertical"
         android:singleLine="true"
@@ -50,7 +50,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
             android:lineSpacingExtra="30sp"
-            android:textColor="#25CB73"
+            android:textColor="@color/white"
             android:textSize="22sp" />
     </com.runcom.jiazhangbang.listenText.lyricView.LyricView>
 
@@ -62,7 +62,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/listenText_topLinearLayout"
-        android:background="#969696" >
+        android:background="#636363" >
 
         <TextView
             android:id="@+id/listenText_lyricShow_textView"
@@ -71,7 +71,7 @@
             android:gravity="center_horizontal|center_vertical"
             android:lineSpacingExtra="10dp"
             android:padding="5dp"
-            android:text="暂无字幕"
+            android:text="\n\n\n\n暂无字幕"
             android:textColor="@color/white"
             android:textSize="22sp" />
     </ScrollView>
@@ -83,10 +83,10 @@
         android:layout_above="@+id/listenText_linearLayout_seekbar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:background="#696969"
+        android:background="@color/white"
         android:gravity="center_horizontal"
         android:text=""
-        android:textSize="17sp" />
+        android:textSize="1sp" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"
@@ -123,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="77dp"
         android:layout_alignParentBottom="true"
-        android:background="#696969"
+        android:background="#636363"
         android:gravity="center" >
 
         <ImageButton
@@ -131,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="#696969"
+            android:background="#636363"
             android:src="@drawable/stop" />
 
         <ImageButton
@@ -139,7 +139,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="repeatSwitching"
             android:src="@drawable/record_pause" />
 
@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="#696969"
+            android:background="#636363"
             android:onClick="onDetailSetting"
             android:src="@drawable/detail" />
     </LinearLayout>

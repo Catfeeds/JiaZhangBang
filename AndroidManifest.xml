@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.runcom.jiazhangbang"
     android:versionCode="1"
-    android:versionName="1.5" >
+    android:versionName="1.6" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -27,6 +27,7 @@
 
     <application
         android:allowBackup="true"
+        android:fitsSystemWindows="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -46,7 +47,7 @@
             android:value="58a3f9d6b27b0a332e001956" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="wgcwgc75" />
+            android:value="wgcwgc75" />
         -->
 
         <activity android:name="com.runcom.jiazhangbang.listenText.lrcView.Welcome" >
@@ -140,11 +141,6 @@
         </activity>
         <activity
             android:name="com.runcom.jiazhangbang.recordText.RecordText"
-            android:icon="@drawable/ic_come_back"
-            android:parentActivityName="com.runcom.jiazhangbang.setting.SettingChoose" >
-        </activity>
-        <activity
-            android:name="com.runcom.jiazhangbang.listenText.ListenTextMain"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.setting.SettingChoose" >
         </activity>

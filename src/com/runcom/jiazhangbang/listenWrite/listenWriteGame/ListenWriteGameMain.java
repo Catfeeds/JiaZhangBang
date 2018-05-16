@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -48,7 +47,7 @@ public class ListenWriteGameMain extends Activity
 	private ListenWriteGameItemBean gameItemBean;
 	private GridView gridView;
 	private ListenWriteGameMainGridViewAdapter listenWriteGameMainGridViewAdapter;
-	private MediaPlayer mediaPlayer;
+	// private MediaPlayer mediaPlayer;
 	private int currentPosition = -1 , lastPosition = -1;
 	private Boolean flag;
 	private TextView textView_historyScore , textView_currentScore;
@@ -212,7 +211,7 @@ public class ListenWriteGameMain extends Activity
 		minute = 0;
 		second = 0;
 		recordTime();
-		mediaPlayer = new MediaPlayer();
+		// mediaPlayer = new MediaPlayer();
 		gridView.setOnItemClickListener(new OnItemClickListener()
 		{
 
@@ -220,17 +219,17 @@ public class ListenWriteGameMain extends Activity
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
 				clickCount ++ ;
-				mediaPlayer.reset();
-				try
-				{
-					mediaPlayer.setDataSource(tempGameItemBeanList.get(position).getVoice());
-					mediaPlayer.prepare();
-					mediaPlayer.start();
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				// mediaPlayer.reset();
+				// try
+				// {
+				// mediaPlayer.setDataSource(tempGameItemBeanList.get(position).getVoice());
+				// mediaPlayer.prepare();
+				// mediaPlayer.start();
+				// }
+				// catch(Exception e)
+				// {
+				// System.out.println(e);
+				// }
 				flag = listenWriteGameMainGridViewAdapter.getisSelectedAt(position);
 				if( !flag)
 				{
@@ -438,17 +437,24 @@ public class ListenWriteGameMain extends Activity
 					minute = 0;
 					second = 0;
 				}
-//			case R.id.listen_write_game_main_textView_historyScore:
-//				if(Util.debug)
-//				{
-//					hour = 11;
-//					minute = 11;
-//					second = 11;
-//					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScoreHour ,hour);
-//					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScoreMinute ,minute);
-//					MySharedPreferences.putValue(getApplicationContext() ,sharedPreferencesKey ,sharedPreferencesHistoryScoreSecond ,second);
-//					textView_historyScore.setText(String.format("%1$02d:%2$02d:%3$02d" ,hour ,minute ,second));
-//				}
+				// case R.id.listen_write_game_main_textView_historyScore:
+				// if(Util.debug)
+				// {
+				// hour = 11;
+				// minute = 11;
+				// second = 11;
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,sharedPreferencesHistoryScoreHour
+				// ,hour);
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,sharedPreferencesHistoryScoreMinute
+				// ,minute);
+				// MySharedPreferences.putValue(getApplicationContext()
+				// ,sharedPreferencesKey ,sharedPreferencesHistoryScoreSecond
+				// ,second);
+				// textView_historyScore.setText(String.format("%1$02d:%2$02d:%3$02d"
+				// ,hour ,minute ,second));
+				// }
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -157,7 +157,7 @@ public class ListenWriteTips extends Activity
 
 	private void setContents()
 	{
-		int totalTime = (WORDSTIME + intervalValue) * counts * frequencyValue;
+		int totalTime = (WORDSTIME + intervalValue) * counts * (frequencyValue + 1);
 		int hours = totalTime / 3600;
 		int minutes = totalTime % 3600 / 60;
 		int seconds = totalTime % 3600 % 60;
@@ -175,7 +175,7 @@ public class ListenWriteTips extends Activity
 		textView_words_count = (TextView) findViewById(R.id.listen_write_tips_words_count_textView);
 		textView_words_count.setText(counts + "");
 		// 两个词语间隔秒数
-		intervalValue = MySharedPreferences.getValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteInterval" ,1);
+		intervalValue = MySharedPreferences.getValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteInterval" ,3);
 		// 每个词语阅读次数
 		frequencyValue = MySharedPreferences.getValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteFrequency" ,1);
 
@@ -227,9 +227,9 @@ public class ListenWriteTips extends Activity
 			public void onClick(View v )
 			{
 				frequencyValue -- ;
-				if(frequencyValue <= 1)
+				if(frequencyValue <= 0)
 				{
-					frequencyValue = 1;
+					frequencyValue = 0;
 				}
 				textView_frequency_count.setText(frequencyValue + "");
 				MySharedPreferences.putValue(getApplicationContext() ,"ListenWriteSetting" ,"ListenWriteFrequency" ,frequencyValue);

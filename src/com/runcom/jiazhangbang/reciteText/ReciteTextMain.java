@@ -68,7 +68,6 @@ import com.umeng.analytics.MobclickAgent;
 public class ReciteTextMain extends Activity implements Checkable
 {
 	private int flag = 0;
-	TextView autoJudge_textView , submitScore_textView , historyScore_textView;
 	private Intent intent;
 	private ListView listView;
 	private MyListViewMainAdapter myListViewMainAdapter;
@@ -86,7 +85,7 @@ public class ReciteTextMain extends Activity implements Checkable
 	        imageButton_play_record , imageButton_submit_score ,
 	        imageButton_score_list;
 	private TextView textView_record_pause , textView_play_record ,
-	        textView_listView_tips , time;
+	        textView_listView_tips , time , textView_submit , textView_grade;
 	private ProgressDialog progressDialog;
 	private MenuItem menuItem;
 	private int second = 0;
@@ -109,8 +108,9 @@ public class ReciteTextMain extends Activity implements Checkable
 	private String recordPath = Util.RECORDPATH;
 	private Timer timer;
 	private Boolean isRecord = true;
-	private String playName;
+	String playName;
 	private MediaPlayer mediaPlayer = null;// 播放器
+	private final String finalPlayName = "wgc";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -143,16 +143,17 @@ public class ReciteTextMain extends Activity implements Checkable
 
 	public void reciteSwitching(View v )
 	{
-		if(play_currentState != IDLE_play)
+		// if(play_currentState != IDLE_play)
 		{
-			if(Util.debug)
-				Toast.makeText(getApplicationContext() ,"播放未完成" ,Toast.LENGTH_SHORT).show();
-			time.setText("播放未完成");
-			mediaPlayer.release();
-			mediaPlayer = null;
+			// if(Util.debug)
+			// Toast.makeText(getApplicationContext() ,"播放未完成"
+			// ,Toast.LENGTH_SHORT).show();
+			// time.setText("播放未完成");
+			// mediaPlayer = null;
 		}
-		else
+		// else
 		{
+			mediaPlayer = null;
 			isRecord = true;
 			textView_listView_tips.setVisibility(View.VISIBLE);
 			listView.setVisibility(View.GONE);
@@ -162,6 +163,7 @@ public class ReciteTextMain extends Activity implements Checkable
 					record_currentState = PAUSE_record;
 					startRecord.setImageResource(R.drawable.play);
 					textView_record_pause.setText("暂停录音");
+					textView_listView_tips.setText("录制中...");
 					startRecord();
 					recordTime();
 					break;
@@ -170,6 +172,7 @@ public class ReciteTextMain extends Activity implements Checkable
 					startRecord.setImageResource(R.drawable.record_pause);
 					textView_record_pause.setText("开始录音");
 					mediaRecorder.stop();
+					textView_listView_tips.setText("暂停录制...");
 					mediaRecorder.release();
 					timer.cancel();
 					myRecordList.add(fileAllNameAmr);
@@ -178,6 +181,7 @@ public class ReciteTextMain extends Activity implements Checkable
 					record_currentState = PAUSE_record;
 					startRecord.setImageResource(R.drawable.play);
 					textView_record_pause.setText("暂停录音");
+					textView_listView_tips.setText("录制中...");
 					startRecord();
 					recordTime();
 					break;
@@ -218,6 +222,8 @@ public class ReciteTextMain extends Activity implements Checkable
 
 		imageButton_play_record = (ImageButton) findViewById(R.id.recite_text_main_play);
 		textView_play_record = (TextView) findViewById(R.id.recite_text_main_play_textView);
+		imageButton_play_record.setVisibility(View.INVISIBLE);
+		textView_play_record.setVisibility(View.INVISIBLE);// TODO
 		imageButton_play_record.setOnClickListener(new OnClickListener()
 		{
 
@@ -266,6 +272,9 @@ public class ReciteTextMain extends Activity implements Checkable
 		});
 
 		imageButton_submit_score = (ImageButton) findViewById(R.id.recite_text_main_submit);
+		textView_submit = (TextView) findViewById(R.id.recite_text_main_submit_textView);
+		textView_submit.setVisibility(View.INVISIBLE);
+		imageButton_submit_score.setVisibility(View.INVISIBLE);// TODO
 		imageButton_submit_score.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -315,6 +324,9 @@ public class ReciteTextMain extends Activity implements Checkable
 		});
 
 		imageButton_score_list = (ImageButton) findViewById(R.id.recite_text_main_detail);
+		imageButton_score_list.setVisibility(View.INVISIBLE);// TODO
+		textView_grade = (TextView) findViewById(R.id.recite_text_main_detail_textView);
+		textView_grade.setVisibility(View.INVISIBLE);
 		imageButton_score_list.setOnClickListener(new OnClickListener()
 		{
 
@@ -372,11 +384,11 @@ public class ReciteTextMain extends Activity implements Checkable
 					myTextContent = new MyTextContent();
 					if(Lrc_data.contains("\t"))
 					{
-						myTextContent.setName(++ flag + "\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
+						myTextContent.setName(++ flag + "\t\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
 					}
 					else
 					{
-						myTextContent.setName("\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
+						myTextContent.setName("\t\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
 					}
 					dataMax ++ ;
 					myTextContentArraylist.add(myTextContent);
@@ -399,114 +411,11 @@ public class ReciteTextMain extends Activity implements Checkable
 				}
 			}
 
-			// try
-			// {
-			// LrcRead lrcRead = new LrcRead();
-			// lrcRead.Read(Util.LYRICSPATH + lrc ,Util.lyricChinese);
-			// LyricList = lrcRead.GetLyricContent();
-			// }
-			// catch(Exception e)
-			// {
-			// e.printStackTrace();
-			// }
-			// dataMax = LyricList.size();
 			counts = new int [dataMax];
 			Arrays.fill(counts ,0);
-			// for(int i = 0 ; i < dataMax ; i ++ )
-			// {
-			// myTextContent = new MyTextContent();
-			// if(Util.debug)
-			// myTextContent.setName((i + 1) + "\u3000" +
-			// LyricList.get(i).getLyric());
-			// else
-			// myTextContent.setName("\u3000" + LyricList.get(i).getLyric());
-			// myTextContentArraylist.add(myTextContent);
-			// }
 			initListview();
 
 		}
-
-		// autoJudge_textView = (TextView)
-		// findViewById(R.id.recite_text_main_textview_autojudge);
-		// autoJudge_textView.setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v )
-		// {
-		// int right = 0;
-		// String paragraph = "";
-		// for(int i = 0 ; i < dataMax ; i ++ )
-		// if(0 == counts[i])
-		// right ++ ;
-		// else
-		// paragraph += (i + 1) + "、";
-		// ans = (float) (right * 1.0 / dataMax) * 100;
-		// ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));
-		// if(paragraph.isEmpty())
-		// Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans +
-		// " 分" + "\n恭喜你 继续保持哟！" ,Toast.LENGTH_SHORT).show();
-		// else
-		// Toast.makeText(getApplicationContext() ,dataMax + "系统自动判分  " + ans +
-		// " 分" + "\n错误段落为：\n" + paragraph.substring(0 ,paragraph.length() - 1)
-		// + "." ,Toast.LENGTH_SHORT).show();
-		// }
-		// });
-
-		// submitScore_textView = (TextView)
-		// findViewById(R.id.recite_text_main_textview_submitscore);
-		// submitScore_textView.setOnClickListener(new OnClickListener()
-		// {
-		// @Override
-		// public void onClick(View v )
-		// {
-		// int right = 0;
-		// for(int i = 0 ; i < dataMax ; i ++ )
-		// if(0 == counts[i])
-		// right ++ ;
-		// ans = (float) (right * 1.0 / dataMax) * 100;
-		// ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));
-		// Toast.makeText(getApplicationContext() ,"您提交了 " + ans + " 分"
-		// ,Toast.LENGTH_SHORT).show();
-		// if(temp > 10)
-		// temp = 0;
-		// scores[temp] = "第" + (note + 1) + "次：          " + ans;
-		// ++ temp;
-		// ++ note;
-		// }
-		// });
-
-		historyScore_textView = (TextView) findViewById(R.id.recite_text_main_textview_history_score);
-		historyScore_textView.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v )
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this , R.style.NoBackGroundDialog);
-				builder.setIcon(R.drawable.ic_launcher);
-				getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-				builder.setTitle("历史成绩");
-				builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
-				{
-
-					@Override
-					public void onClick(DialogInterface dialog , int which )
-					{
-						dialog.dismiss();
-					}
-				});
-
-				builder.setItems(scores ,new DialogInterface.OnClickListener()
-				{
-					@Override
-					public void onClick(DialogInterface dialog , int which )
-					{
-						Toast.makeText(getApplication() ,scores[which] ,Toast.LENGTH_SHORT).show();
-					}
-				});
-				builder.show();
-			}
-		});
 
 	}
 
@@ -543,7 +452,8 @@ public class ReciteTextMain extends Activity implements Checkable
 		try
 		{
 			// 播放所选中的录音
-			mediaPlayer.setDataSource(recordPath + playName + ".amr");
+			mediaPlayer.setDataSource(recordPath + finalPlayName + ".amr");
+			System.out.println();
 			mediaPlayer.prepare();
 			mediaPlayer.start();
 		}
@@ -564,6 +474,10 @@ public class ReciteTextMain extends Activity implements Checkable
 	@SuppressWarnings("deprecation")
 	private void startRecord()
 	{
+		if(menuItem != null)
+		{
+			menuItem.setTitle("");
+		}
 		myRecordList.clear();
 		File file = new File(recordPath);
 		if( !file.exists())
@@ -641,7 +555,18 @@ public class ReciteTextMain extends Activity implements Checkable
 	// 完成录音
 	private void stopRecord()
 	{
+		if(menuItem != null)
+		{
+			menuItem.setTitle("正确行数：" + flag + "/" + flag);
+		}
+		imageButton_play_record.setVisibility(View.VISIBLE);
+		textView_play_record.setVisibility(View.VISIBLE);// TODO
+		imageButton_submit_score.setVisibility(View.VISIBLE);
+		textView_submit.setVisibility(View.VISIBLE);
+		imageButton_score_list.setVisibility(View.VISIBLE);
+		textView_grade.setVisibility(View.VISIBLE);
 		isRecord = false;
+		play_currentState = IDLE_play;
 		textView_listView_tips.setVisibility(View.GONE);
 		listView.setVisibility(View.VISIBLE);
 		record_currentState = IDLE_record;
@@ -653,26 +578,13 @@ public class ReciteTextMain extends Activity implements Checkable
 		textView_record_pause.setText("开始录音");
 		timer.cancel();
 
-		// final EditText editText = new EditText(ReciteTextMain.this);
-		// AlertDialog.Builder inputDialog = new
-		// AlertDialog.Builder(ReciteTextMain.this);
-		// inputDialog.setTitle("要保存录音吗？").setView(editText);
-		// inputDialog.setPositiveButton("保存" ,new
-		// DialogInterface.OnClickListener()
-		// {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog , int which )
-		// {
-		// 最后合成的音频文件
-		// playName = editText.getText().toString().trim();
-		// if(playName.isEmpty() || Judge.isNotName(playName))
-		// {
-		playName = getTime();
-		// Toast.makeText(getApplicationContext() ,"输入名字不合法,自动命名为：" + playName
-		// ,Toast.LENGTH_SHORT).show();
-		// }
-		fileAllNameAmr = recordPath + playName + ".amr";
+		// playName = getTime();
+		// fileAllNameAmr = recordPath + playName + ".amr";
+		fileAllNameAmr = recordPath + finalPlayName + ".amr";
+		if(new File(fileAllNameAmr).exists())
+		{
+			new File(fileAllNameAmr).delete();
+		}
 		FileOutputStream fileOutputStream = null;
 		try
 		{
@@ -737,27 +649,6 @@ public class ReciteTextMain extends Activity implements Checkable
 				file.delete();
 			}
 		}
-		// }
-		// });
-		// inputDialog.setNegativeButton("放弃" ,new
-		// DialogInterface.OnClickListener()
-		// {
-		//
-		// @Override
-		// public void onClick(DialogInterface dialog , int which )
-		// {
-		// time.setText("");
-		// for(int i = 0 ; i < myRecordList.size() ; i ++ )
-		// {
-		// File file = new File(myRecordList.get(i));
-		// if(file.exists())
-		// {
-		// file.delete();
-		// }
-		// }
-		// }
-		// });
-		// inputDialog.show();
 
 		minute = 0;
 		hour = 0;
@@ -784,7 +675,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		flag = myTextContentArraylist.size();
 		if(menuItem != null)
 		{
-			menuItem.setTitle("行数：" + flag + "/" + flag);
+			menuItem.setTitle("正确行数：" + flag + "/" + flag);
 		}
 		progressDialog.dismiss();
 		listView.setOnItemClickListener(new OnItemClickListener()
@@ -810,7 +701,7 @@ public class ReciteTextMain extends Activity implements Checkable
 						}
 						if(menuItem != null)
 						{
-							menuItem.setTitle("行数：" + flag + "/" + myTextContentArraylist.size());
+							menuItem.setTitle("正确行数：" + flag + "/" + myTextContentArraylist.size());
 						}
 					}
 					else
@@ -824,7 +715,7 @@ public class ReciteTextMain extends Activity implements Checkable
 					}
 					if(menuItem != null)
 					{
-						menuItem.setTitle("行数：" + flag + "/" + myTextContentArraylist.size());
+						menuItem.setTitle("正确行数：" + flag + "/" + myTextContentArraylist.size());
 					}
 					boolean isSelect = myListViewMainAdapter.getisSelectedAt(position);
 					myListViewMainAdapter.setItemisSelectedMap(position , !isSelect);

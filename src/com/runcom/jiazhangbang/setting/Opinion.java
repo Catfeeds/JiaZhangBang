@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
@@ -20,12 +21,13 @@ public class Opinion extends Activity
 {
 	private EditText editText_opinion , editText_phoneNumber;
 	private Button button_submit;
+	private TextView textView_tips;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.opinion);
+		setContentView(R.layout.setting_opinion);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -44,6 +46,7 @@ public class Opinion extends Activity
 		editText_opinion = (EditText) findViewById(R.id.setting_opinion_opinion_editText);
 		editText_phoneNumber = (EditText) findViewById(R.id.setting_opinion_phone_number_editText);
 		button_submit = (Button) findViewById(R.id.setting_opinion_submit_button);
+		textView_tips = (TextView) findViewById(R.id.setting_opinion_opinion_tips);
 
 		button_submit.setOnClickListener(new OnClickListener()
 		{
@@ -55,27 +58,39 @@ public class Opinion extends Activity
 				String phoneNumberContent = editText_phoneNumber.getText().toString().trim();
 				if(opinionContent.isEmpty())
 				{
-					Toast.makeText(getApplicationContext() ,"反馈内容不能为空哦，请再多描述一下吧~" ,Toast.LENGTH_SHORT).show();
+					textView_tips.setText("反馈内容不能为空哦，请再多描述一下吧");
+					// Toast.makeText(getApplicationContext()
+					// ,"反馈内容不能为空哦，请再多描述一下吧~" ,Toast.LENGTH_SHORT).show();
 				}
 				else
 					if(opinionContent.length() < 5)
 					{
-						Toast.makeText(getApplicationContext() ,"字数不能低于5个字哦，请再多描述一下吧~" ,Toast.LENGTH_SHORT).show();
+						textView_tips.setText("字数不能低于5个字哦，请再多描述一下吧");
+						// Toast.makeText(getApplicationContext()
+						// ,"字数不能低于5个字哦，请再多描述一下吧~" ,Toast.LENGTH_SHORT).show();
 					}
 					else
 						if(phoneNumberContent.isEmpty())
 						{
-							Toast.makeText(getApplicationContext() ,"手机号码不能为空哦~" ,Toast.LENGTH_SHORT).show();
-						}
-						else if(!Judge.isMobilePhoneNumber(phoneNumberContent))
-						{
-							Toast.makeText(getApplicationContext() ,"请输入真实的手机号码，以便客服及时回复您的反馈" ,Toast.LENGTH_SHORT).show();
+							textView_tips.setText("手机号码不能为空哦");
+							// Toast.makeText(getApplicationContext()
+							// ,"手机号码不能为空哦~" ,Toast.LENGTH_SHORT).show();
 						}
 						else
-						{
-							button_submit.setEnabled(false);//TODO 意见建议 提交服务器
-							Toast.makeText(getApplicationContext() ,"感谢您的意见和建议，我们会做的更好的~" ,Toast.LENGTH_SHORT).show();
-						}
+							if( !Judge.isMobilePhoneNumber(phoneNumberContent))
+							{
+								textView_tips.setText("请输入真实的手机号码，以便客服及时回复您");
+								// Toast.makeText(getApplicationContext()
+								// ,"请输入真实的手机号码，以便客服及时回复您的反馈"
+								// ,Toast.LENGTH_SHORT).show();
+							}
+							else
+							{
+								button_submit.setEnabled(false);// TODO
+								textView_tips.setText("感谢您的意见和建议，我们会做的更好的");
+								Toast.makeText(getApplicationContext() ,"感谢您的意见和建议，我们会做的更好的~" ,Toast.LENGTH_SHORT).show();
+								finish();
+							}
 			}
 		});
 	}

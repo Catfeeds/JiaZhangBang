@@ -2,8 +2,8 @@
 <resources>
 
     <!-- app_main -->
-<!--     <string name="app_name">Jiazhangbang</string> -->
-    <string name="app_name">jzzs</string>
+    <!-- <string name="app_name">Jiazhangbang</string> -->
+    <string name="app_name">家长帮</string>
     <string name="hello_world"></string>
     <string name="action_settings">Settings</string>
     <string name="empty_string"></string>
@@ -46,10 +46,12 @@
     <!-- chinese_main -->
     <string name="activity_chinese_listen_text">听课文</string>
     <string name="activity_chinese_listen_write">听写</string>
-    <string name="activity_chinese_recite_text">背课文</string>
-    <string name="activity_chinese_repeat">跟读</string>
+    <string name="activity_chinese_recite_text">背诵</string>
+    <string name="activity_chinese_repeat">朗读</string>
     <string name="activity_chinese_findnewwords">查生词</string>
-    <string name="activity_chinese_comingsoon">敬请期待</string>
+    <string name="activity_chinese_playgames">玩游戏</string>
+    <string name="activity_chinese_comingsoon">跟读</string>
+    <string name="activity_chinese_setting">设置</string>
 
     <!-- listen_write_main -->
     <string name="listen_write_main_pause">暂停</string>

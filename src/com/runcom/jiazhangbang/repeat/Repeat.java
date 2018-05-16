@@ -388,38 +388,44 @@ public class Repeat extends Activity
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
 		File mFile = new File(lyricsPath);
-		FileInputStream mFileInputStream;
-		BufferedReader mBufferedReader = null;
-		String Lrc_data = "";
 		String content = "";
-		try
+		if( !mFile.exists())
 		{
-			mFileInputStream = new FileInputStream(mFile);
-			InputStreamReader mInputStreamReader;
-			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
-			mBufferedReader = new BufferedReader(mInputStreamReader);
-			while((Lrc_data = mBufferedReader.readLine()) != null)
-			{
-				content += (Lrc_data.substring(Lrc_data.indexOf("]") + 1) + "\n");
-			}
-
+			content = "\n\n\n\nÔÝÎÞ×ÖÄ»";
 		}
-		catch(Exception e)
+		else
 		{
-			System.out.println(e);
-		}
-		finally
-		{
+			FileInputStream mFileInputStream;
+			BufferedReader mBufferedReader = null;
+			String Lrc_data = "";
 			try
 			{
-				mBufferedReader.close();
+				mFileInputStream = new FileInputStream(mFile);
+				InputStreamReader mInputStreamReader;
+				mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
+				mBufferedReader = new BufferedReader(mInputStreamReader);
+				while((Lrc_data = mBufferedReader.readLine()) != null)
+				{
+					content += (Lrc_data.substring(Lrc_data.indexOf("]") + 1) + "\n");
+				}
+
 			}
-			catch(IOException e)
+			catch(Exception e)
 			{
 				System.out.println(e);
 			}
+			finally
+			{
+				try
+				{
+					mBufferedReader.close();
+				}
+				catch(IOException e)
+				{
+					System.out.println(e);
+				}
+			}
 		}
-
 		textView_lrcView.setText(content);
 
 	}

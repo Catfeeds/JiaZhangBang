@@ -96,8 +96,8 @@ public class SettingChoose extends Activity
 		courseDataList.add("”¢”Ô");
 
 		adapter_course = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , courseDataList);
+		
 		spinner_course.setAdapter(adapter_course);
-
 		spinner_course.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
 
