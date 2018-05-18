@@ -3,13 +3,10 @@
  */
 package com.runcom.jiazhangbang.repeat;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +53,6 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.judge.Judge;
 import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
-import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
@@ -315,9 +311,11 @@ public class Repeat extends Activity
 						String title = jsonObject_partlist.getString("title");
 						// play_list_copy.add(title);
 						myAudio.setName(title);
-						if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
-							new LrcFileDownloader(lyric_copy , title + ".lrc").start();
-						myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
+						// if( !new File(Util.LYRICSPATH + title +
+						// ".lrc").exists())
+						// new LrcFileDownloader(lyric_copy , title +
+						// ".lrc").start();
+						myAudio.setLyric(lyric_copy);
 						String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
 						myAudio.setSource(source_copy);
 						play_list.add(myAudio);
@@ -387,45 +385,53 @@ public class Repeat extends Activity
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		File mFile = new File(lyricsPath);
 		String content = "";
-		if( !mFile.exists())
+		content = Util.getLrcContents(lyricsPath);
+		String contents[] = content.split("\n");
+		content = "";
+		for(int i = 0 , leng = contents.length ; i < leng ; i ++ )
 		{
-			content = "\n\n\n\nÔÝÎÞ×ÖÄ»";
+			content += (contents[i].substring(contents[i].indexOf("]") + 1) + "\n");
 		}
-		else
-		{
-			FileInputStream mFileInputStream;
-			BufferedReader mBufferedReader = null;
-			String Lrc_data = "";
-			try
-			{
-				mFileInputStream = new FileInputStream(mFile);
-				InputStreamReader mInputStreamReader;
-				mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
-				mBufferedReader = new BufferedReader(mInputStreamReader);
-				while((Lrc_data = mBufferedReader.readLine()) != null)
-				{
-					content += (Lrc_data.substring(Lrc_data.indexOf("]") + 1) + "\n");
-				}
-
-			}
-			catch(Exception e)
-			{
-				System.out.println(e);
-			}
-			finally
-			{
-				try
-				{
-					mBufferedReader.close();
-				}
-				catch(IOException e)
-				{
-					System.out.println(e);
-				}
-			}
-		}
+		// File mFile = new File(lyricsPath);
+		// if( !mFile.exists())
+		// {
+		// content = "\n\n\nÔÝÎÞ×ÖÄ»";
+		// }
+		// else
+		// {
+		// FileInputStream mFileInputStream;
+		// BufferedReader mBufferedReader = null;
+		// String Lrc_data = "";
+		// try
+		// {
+		// mFileInputStream = new FileInputStream(mFile);
+		// InputStreamReader mInputStreamReader;
+		// mInputStreamReader = new InputStreamReader(mFileInputStream ,
+		// "utf-8");
+		// mBufferedReader = new BufferedReader(mInputStreamReader);
+		// while((Lrc_data = mBufferedReader.readLine()) != null)
+		// {
+		// content += (Lrc_data.substring(Lrc_data.indexOf("]") + 1) + "\n");
+		// }
+		//
+		// }
+		// catch(Exception e)
+		// {
+		// System.out.println(e);
+		// }
+		// finally
+		// {
+		// try
+		// {
+		// mBufferedReader.close();
+		// }
+		// catch(IOException e)
+		// {
+		// System.out.println(e);
+		// }
+		// }
+		// }
 		textView_lrcView.setText(content);
 
 	}
@@ -434,7 +440,7 @@ public class Repeat extends Activity
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,grade);
-		intent.setClass(Repeat.this ,RepeatMainActivity.class);
+		intent.setClass(Repeat.this ,RepeatList.class);
 		startActivity(intent);
 	}
 

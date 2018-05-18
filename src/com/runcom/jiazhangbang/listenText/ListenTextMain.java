@@ -1,10 +1,5 @@
 package com.runcom.jiazhangbang.listenText;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -50,7 +45,6 @@ import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.lrcView.LrcView;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
-import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -291,12 +285,12 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					// play_list_title.add(title);
 					myAudio.setName(title);
 					// System.out.println(title);
-					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
-						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
-					myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
-					// System.out.println(Util.LYRICSPATH + title + ".lrc");
+					// if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+					// new LrcFileDownloader(lyric_copy , title +
+					// ".lrc").start();
+					// myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
+					myAudio.setLyric(lyric_copy);
 					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
-					// System.out.println(source_copy);
 					myAudio.setSource(source_copy);
 					play_list.add(myAudio);
 					try
@@ -364,55 +358,52 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		};
 	};
 
+	public static void readHtmlFile(final String sourcePath )
+	{
+
+	}
+
+	// TODO
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
-		File mFile = new File(lyricsPath);
-		FileInputStream mFileInputStream;
-		BufferedReader mBufferedReader = null;
-		String Lrc_data = "";
 		String content = "";
-		try
-		{
-			mFileInputStream = new FileInputStream(mFile);
-			InputStreamReader mInputStreamReader;
-			mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
-			mBufferedReader = new BufferedReader(mInputStreamReader);
-			while((Lrc_data = mBufferedReader.readLine()) != null)
-			{
-				content += (Lrc_data + "\n");
-			}
+		// System.out.println("lyricsPath:" + lyricsPath);
+		content = Util.getLrcContents(lyricsPath);
+		// System.out.println("content:" + content);
 
-		}
-		catch(Exception e)
-		{
-			System.out.println(e);
-		}
-		finally
-		{
-			try
-			{
-				mBufferedReader.close();
-			}
-			catch(IOException e)
-			{
-				System.out.println(e);
-			}
-		}
-		// content = "[00:00.18]北京亮起来了\n" + "[00:03.03]每当夜幕降临\n" +
-		// "[00:06.36]北京就亮起来了\n" + "[00:08.96]整个北京城变成了灯的海洋\n" +
-		// "[00:12.56]光的世界\n" + "[00:14.80]长安街华灯高照\n" + "[00:18.54]川流不息的汽车\n" +
-		// "[00:20.70]灯光闪烁\n" + "[00:22.80]像银河从天而降\n" + "[00:25.77]天安门城楼金碧辉煌\n"
-		// + "[00:30.05]光彩夺目\n" + "[00:32.19]广场四周\n" +
-		// "[00:35.28]彩灯勾画出一幢幢高大建筑物的雄伟轮廓\n" + "[00:41.59]环形路上\n" +
-		// "[00:44.29]一座座立交桥犹如道道彩虹\n" + "[00:48.16]街道上\n" +
-		// "[00:50.54]照明灯草坪灯喷泉灯礼花灯\n" + "[00:55.78]装点着美丽的北京\n" +
-		// "[00:58.50]焕然一新的王府井西单商业街上\n" + "[01:04.39]明亮的橱窗\n" +
-		// "[01:06.67]绚丽多彩的广告\n" + "[01:09.18]五光十色的霓虹灯\n" +
-		// "[01:11.46]把繁华的大街装扮成了比白天更美的不夜城\n" + "[01:17.20]古老的故宫变得年轻了\n" +
-		// "[01:22.24]一束束灯光照着她\n" + "[01:25.18]长长的城墙和美丽的角楼倒映在河面上\n" +
-		// "[01:31.16]银光闪闪\n" + "[01:32.87]十分动人\n" + "[01:34.67]夜晚的北京\n" +
-		// "[01:37.82]多么明亮\n" + "[01:39.44]多么辉煌\n" + "[01:41.35]";
+		// File mFile = new File(lyricsPath);
+		// FileInputStream mFileInputStream;
+		// BufferedReader mBufferedReader = null;
+		// String Lrc_data = "";
+		// try
+		// {
+		// mFileInputStream = new FileInputStream(mFile);
+		// InputStreamReader mInputStreamReader;
+		// mInputStreamReader = new InputStreamReader(mFileInputStream ,
+		// "utf-8");
+		// mBufferedReader = new BufferedReader(mInputStreamReader);
+		// while((Lrc_data = mBufferedReader.readLine()) != null)
+		// {
+		// content += (Lrc_data + "\n");
+		// }
+		//
+		// }
+		// catch(Exception e)
+		// {
+		// System.out.println(e);
+		// }
+		// finally
+		// {
+		// try
+		// {
+		// mBufferedReader.close();
+		// }
+		// catch(IOException e)
+		// {
+		// System.out.println(e);
+		// }
+		// }
 		mLyricView.setLrc(content);
 		mLyricView.setPlayer(mp);
 		mLyricView.init();
@@ -668,7 +659,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		{
 			if(mp != null)
 			{
-				if(mp.getCurrentPosition() < seekBar.getMax())
+				if(mp.getCurrentPosition() < seekBar.getMax() && mp.isPlaying())
 				{
 					seekBar.setProgress(mp.getCurrentPosition());
 					Message msg = hander.obtainMessage(CURR_TIME_VALUE ,toTime(mp.getCurrentPosition()));
@@ -685,6 +676,8 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				else
 				{
 					seekBarFlag = false;
+					mp.release();
+					mp = null;
 				}
 			}
 		}

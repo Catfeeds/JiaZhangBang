@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,11 @@ public class Chinese extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
+		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
+		{
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
 		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
 		UMConfigure.init(this ,"58a3f9d6b27b0a332e001956" ,"wgcwgc75" ,UMConfigure.DEVICE_TYPE_PHONE ,"cd79ec4eb5e09d69b30139b4f03a7cb0");
 		MobclickAgent.onProfileSignIn("123456890");

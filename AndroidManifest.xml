@@ -130,7 +130,7 @@
             android:parentActivityName="com.runcom.jiazhangbang.chinese.Chinese" >
         </activity>
         <activity
-            android:name="com.runcom.jiazhangbang.repeat.RepeatMainActivity"
+            android:name="com.runcom.jiazhangbang.repeat.RepeatList"
             android:icon="@drawable/ic_come_back"
             android:parentActivityName="com.runcom.jiazhangbang.repeat.Repeat" >
         </activity>

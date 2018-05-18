@@ -41,7 +41,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
-public class RepeatMainActivity extends Activity implements OnClickListener , OnItemClickListener
+public class RepeatList extends Activity implements OnClickListener , OnItemClickListener
 {
 	// 语音文件
 	private String fileAllNameAmr = null;
@@ -338,7 +338,7 @@ public class RepeatMainActivity extends Activity implements OnClickListener , On
 		final File file = new File(playFileName);
 		if(file.exists())
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(RepeatMainActivity.this);
+			AlertDialog.Builder builder = new AlertDialog.Builder(RepeatList.this);
 			builder.setTitle("确定要删除吗？");
 			builder.setNegativeButton("取消" ,new DialogInterface.OnClickListener()
 			{

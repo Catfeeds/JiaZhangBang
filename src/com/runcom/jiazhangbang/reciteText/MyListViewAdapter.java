@@ -84,7 +84,7 @@ public class MyListViewAdapter extends BaseAdapter
 			convertView = inflater.inflate(R.layout.recite_text_listview_item ,null);
 			holder = new Holder();
 			holder.name = (TextView) convertView.findViewById(R.id.recite_text_listview_item_name);
-			holder.mode = (TextView) convertView.findViewById(R.id.recite_text_listview_item_recite_mode);
+//			holder.mode = (TextView) convertView.findViewById(R.id.recite_text_listview_item_recite_mode);
 
 			convertView.setTag(holder);
 		}
@@ -100,7 +100,7 @@ public class MyListViewAdapter extends BaseAdapter
 		else
 		{
 			holder.name.setText(textList.get(position).getName());
-			holder.mode.setText(textList.get(position).getMode());
+//			holder.mode.setText(textList.get(position).getMode());
 		}
 
 		// convertView.setOnClickListener(new View.OnClickListener()

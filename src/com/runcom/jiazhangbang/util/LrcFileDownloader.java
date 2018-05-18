@@ -58,7 +58,7 @@ public class LrcFileDownloader extends Thread
 				}
 				if( !saveFilePath.exists())
 				{
-					// 建立内存到硬盘的连接
+					// 建立内存到硬盘的连接 
 					fos = new FileOutputStream(saveFilePath);
 					// Log.d("LOG" ,"2: " + saveFilePath.toString());
 					// 老三样 写文件

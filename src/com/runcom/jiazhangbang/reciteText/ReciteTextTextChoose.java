@@ -3,7 +3,6 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -39,7 +38,6 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
-import com.runcom.jiazhangbang.util.LrcFileDownloader;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
@@ -57,7 +55,6 @@ public class ReciteTextTextChoose extends Activity
 	private MyText myText = new MyText();
 	private ArrayList < MyText > textID = new ArrayList < MyText >();
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
-	private ArrayList < String > lrcList = new ArrayList < String >();
 	private MyListViewAdapter adapter;
 	private ProgressDialog progressDialog;
 
@@ -199,7 +196,6 @@ public class ReciteTextTextChoose extends Activity
 		TreeMap < String , String > map = null;
 		final int leng = textID.size();
 		textList.clear();
-		lrcList.clear();
 		for(int i = 0 ; i < leng ; i ++ )
 		{
 			final int ii = i;
@@ -244,16 +240,14 @@ public class ReciteTextTextChoose extends Activity
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
-					lrcList.add(title + ".lrc");
 
 					myText = new MyText();
-					myText.setId(jsonObject_partlist.getString("id"));
 					myText.setName(title);
-					myText.setMode(jsonObject_partlist.getString("desc"));
-					myText.setLyric(title + ".lrc");
+					myText.setLyric(lyric_copy);
 					textList.add(myText);
-					if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
-						new LrcFileDownloader(lyric_copy , title + ".lrc").start();
+					// if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
+					// new LrcFileDownloader(lyric_copy , title +
+					// ".lrc").start();
 					return result;
 				}
 			});
@@ -278,11 +272,7 @@ public class ReciteTextTextChoose extends Activity
 				// textList.get(arg2).getName().toString()
 				// ,Toast.LENGTH_SHORT).show();
 				Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-				open_intent.putExtra("selected" ,grade);
-				open_intent.putExtra("phase" ,phase);
-				open_intent.putExtra("unit" ,arg2 + 1);
 				open_intent.putExtra("name" ,textList.get(arg2).getName());
-				open_intent.putExtra("id" ,textList.get(arg2).getId());
 				open_intent.putExtra("lrc" ,textList.get(arg2).getLyric());
 				startActivity(open_intent);
 			}
@@ -351,11 +341,7 @@ public class ReciteTextTextChoose extends Activity
 						// textList.get(position).getName().toString()
 						// ,Toast.LENGTH_SHORT).show();
 						Intent open_intent = new Intent(getApplicationContext() , ReciteTextMain.class);
-						open_intent.putExtra("selected" ,grade);
-						open_intent.putExtra("phase" ,phase);
-						open_intent.putExtra("unit" ,position + 1);
 						open_intent.putExtra("name" ,textList.get(position).getName());
-						open_intent.putExtra("id" ,textList.get(position).getId());
 						open_intent.putExtra("lrc" ,textList.get(position).getLyric());
 						startActivity(open_intent);
 						break;
@@ -366,7 +352,7 @@ public class ReciteTextTextChoose extends Activity
 						Intent share_intent = new Intent(Intent.ACTION_SEND);
 						share_intent.setType("text/*");
 						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-						String url = Util.LYRICSPATH + textList.get(position).getLyric();
+						String url = textList.get(position).getLyric();
 						share_intent.putExtra(Intent.EXTRA_TEXT ,url);
 						share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(Intent.createChooser(share_intent ,"·ÖÏí"));

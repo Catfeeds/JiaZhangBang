@@ -1,5 +1,9 @@
 package com.runcom.jiazhangbang.listenText.lrcView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -95,6 +99,43 @@ public class Welcome extends Activity
 
 		});
 
+	}
+
+	public static String readHtmlFile(String sourcePath )
+	{
+		String line = "";
+		String content = "";
+		BufferedReader reader = null;
+		try
+		{
+			reader = new BufferedReader(new InputStreamReader(new URL(sourcePath).openStream()));
+			while((line = reader.readLine()) != null)
+			{
+				content += (line + "\n");
+				System.out.println(line);
+			}
+		}
+		catch(Exception e)
+		{
+			content = "ÔÝÎÞ×ÖÄ»";
+			System.out.println(e);
+		}
+		finally
+		{
+			try
+			{
+				if(reader != null)
+				{
+					reader.close();
+				}
+			}
+			catch(Exception e)
+			{
+				content = "ÔÝÎÞ×ÖÄ»";
+				System.out.println(e);
+			}
+		}
+		return content;
 	}
 
 	private boolean judge(String name , String mobilePhoneNumber )

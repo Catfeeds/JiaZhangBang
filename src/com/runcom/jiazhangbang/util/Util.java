@@ -1,6 +1,9 @@
 package com.runcom.jiazhangbang.util;
 
 //superTextView BRVAH ARouter smartRefreshlayout takePhoto rxpermission okGo
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -209,4 +212,43 @@ public class Util
 		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
 		return (int) (spValue * fontScale + 0.5f);
 	}
+
+	public static String getLrcContents(String sourcePath )
+	{
+		String line = "";
+		String content = "";
+		BufferedReader reader = null;
+		try
+		{
+			reader = new BufferedReader(new InputStreamReader(new URL(sourcePath).openStream()));
+			while((line = reader.readLine()) != null)
+			{
+				content += (line + "\n");
+				// System.out.println("---------------------------line:" +
+				// line);
+			}
+		}
+		catch(Exception e)
+		{
+			content = "ÔÝÎÞ×ÖÄ»";
+			System.out.println(e);
+		}
+		finally
+		{
+			try
+			{
+				if(reader != null)
+				{
+					reader.close();
+				}
+			}
+			catch(Exception e)
+			{
+				content = "ÔÝÎÞ×ÖÄ»";
+				System.out.println(e);
+			}
+		}
+		return content;
+	}
+
 }

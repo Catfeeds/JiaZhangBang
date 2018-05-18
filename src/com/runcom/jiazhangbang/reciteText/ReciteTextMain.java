@@ -3,13 +3,10 @@
  */
 package com.runcom.jiazhangbang.reciteText;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -366,50 +363,46 @@ public class ReciteTextMain extends Activity implements Checkable
 		}
 		else
 		{
-			String lyricsPath = Util.LYRICSPATH + lrc;
-			File mFile = new File(lyricsPath);
-			FileInputStream mFileInputStream;
-			BufferedReader mBufferedReader = null;
+			String content = Util.getLrcContents(lrc);
+			// System.out.println(content);
+			String contents[] = content.split("\n");
 			String Lrc_data = "";
-			try
+			for(int i = 0 , leng = contents.length ; i < leng ; i ++ )
 			{
-				mFileInputStream = new FileInputStream(mFile);
-				InputStreamReader mInputStreamReader;
-				mInputStreamReader = new InputStreamReader(mFileInputStream , "utf-8");
-				mBufferedReader = new BufferedReader(mInputStreamReader);
-				int flag = 0;
-				dataMax = 0;
-				while((Lrc_data = mBufferedReader.readLine()) != null)
+				myTextContent = new MyTextContent();
+				Lrc_data = contents[i];
+				// System.out.println("Lrc_data:" + Lrc_data);
+				if(Lrc_data.contains("\t"))
 				{
-					myTextContent = new MyTextContent();
-					if(Lrc_data.contains("\t"))
-					{
-						myTextContent.setName(++ flag + "\t\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
-					}
-					else
-					{
-						myTextContent.setName("\t\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
-					}
-					dataMax ++ ;
-					myTextContentArraylist.add(myTextContent);
+					myTextContent.setName(++ flag + "\t\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
 				}
-
-			}
-			catch(Exception e)
-			{
-				System.out.println(e);
-			}
-			finally
-			{
-				try
+				else
 				{
-					mBufferedReader.close();
+					myTextContent.setName("\t\u3000\u3000" + Lrc_data.substring(Lrc_data.indexOf("]") + 1));
 				}
-				catch(IOException e)
-				{
-					System.out.println(e);
-				}
+				dataMax ++ ;
+				myTextContentArraylist.add(myTextContent);
 			}
+			/*
+			 * String lyricsPath = Util.LYRICSPATH + lrc; File mFile = new
+			 * File(lyricsPath); FileInputStream mFileInputStream;
+			 * BufferedReader mBufferedReader = null; try { mFileInputStream =
+			 * new FileInputStream(mFile); InputStreamReader mInputStreamReader;
+			 * mInputStreamReader = new InputStreamReader(mFileInputStream ,
+			 * "utf-8"); mBufferedReader = new
+			 * BufferedReader(mInputStreamReader); int flag = 0; dataMax = 0;
+			 * while((Lrc_data = mBufferedReader.readLine()) != null) {
+			 * myTextContent = new MyTextContent(); if(Lrc_data.contains("\t"))
+			 * { myTextContent.setName(++ flag + "\t\u3000" +
+			 * Lrc_data.substring(Lrc_data.indexOf("]") + 1)); } else {
+			 * myTextContent.setName("\t\u3000\u3000" +
+			 * Lrc_data.substring(Lrc_data.indexOf("]") + 1)); } dataMax ++ ;
+			 * myTextContentArraylist.add(myTextContent); }
+			 * 
+			 * } catch(Exception e) { System.out.println(e); } finally { try {
+			 * mBufferedReader.close(); } catch(IOException e) {
+			 * System.out.println(e); } }
+			 */
 
 			counts = new int [dataMax];
 			Arrays.fill(counts ,0);
