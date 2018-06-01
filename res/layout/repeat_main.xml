@@ -83,10 +83,10 @@
         android:layout_above="@+id/listenText_linearLayout_seekbar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:background="@color/white"
+        android:background="#636363"
         android:gravity="center_horizontal"
         android:text=""
-        android:textSize="1sp" />
+        android:textSize="17sp" />
 
     <LinearLayout
         android:id="@+id/listenText_linearLayout_seekbar"

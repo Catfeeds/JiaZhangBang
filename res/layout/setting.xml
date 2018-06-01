@@ -36,16 +36,17 @@
                     android:layout_marginRight="2.0dip"
                     android:paddingBottom="16.0dip"
                     android:paddingTop="16.0dip"
-                    android:visibility="gone" >
+                    android:visibility="visible" >
 
                     <TextView
                         android:id="@+id/setting_modify_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
-                        android:text="修改"
+                        android:text="推荐好友"
                         android:textColor="#ff333333"
                         android:textSize="16.0sp" />
 
@@ -54,6 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
                         android:src="@drawable/setting_detail" />
@@ -63,7 +65,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#000000"
-                    android:visibility="gone" />
+                    android:clickable="true"
+                    android:visibility="visible" />
 
                 <TableRow
                     android:id="@+id/setting_speech_recognition_tableRow"
@@ -78,6 +81,7 @@
                         android:id="@+id/setting_speech_recognition_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
@@ -90,6 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="27dp"
                         android:layout_gravity="right"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
                         android:src="@drawable/listen_text_next_text" />
@@ -99,6 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#000000"
+                    android:clickable="true"
                     android:visibility="gone" />
 
                 <TableRow
@@ -113,6 +119,7 @@
                         android:id="@+id/setting_clearCache_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
@@ -125,6 +132,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
                         android:text="0KB" />
@@ -133,7 +141,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#000000" />
+                    android:background="#000000"
+                    android:clickable="true" />
 
                 <TableRow
                     android:id="@+id/setting_opinion_tableRow"
@@ -147,6 +156,7 @@
                         android:id="@+id/setting_opinion_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
@@ -161,13 +171,14 @@
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/listen_text_next_text" />
+                        android:src="@drawable/setting_detail" />
                 </TableRow>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
-                    android:background="#000000" />
+                    android:background="#000000"
+                    android:clickable="true" />
 
                 <TableRow
                     android:id="@+id/setting_checkUpdate_tableRow"
@@ -181,6 +192,7 @@
                         android:id="@+id/setting_checkUpdate_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
@@ -193,6 +205,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
                         android:text="暂无更新" />
@@ -201,7 +214,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
-                    android:background="#000000" />
+                    android:background="#000000"
+                    android:clickable="true" />
 
                 <TableRow
                     android:id="@+id/setting_aboutUs_tableRow"
@@ -215,6 +229,7 @@
                         android:id="@+id/setting_aboutUs_textView"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:includeFontPadding="false"
                         android:paddingLeft="17.0dip"
@@ -229,13 +244,14 @@
                         android:layout_gravity="right"
                         android:gravity="center_vertical"
                         android:paddingRight="20.0dip"
-                        android:src="@drawable/listen_text_next_text" />
+                        android:src="@drawable/setting_detail" />
                 </TableRow>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
-                    android:background="#000000" />
+                    android:background="#000000"
+                    android:clickable="true" />
             </TableLayout>
         </LinearLayout>
     </ScrollView>
@@ -247,6 +263,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
+        android:clickable="true"
         android:gravity="center_vertical|center_horizontal"
         android:lineSpacingExtra="15sp"
         android:text="版权所有：浙江兰创通信有限公司"

@@ -39,9 +39,11 @@ import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.ShareUtils;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 /**
  * @author Administrator
@@ -64,14 +66,14 @@ public class ReciteTextTextChoose extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.recite_text_listview);
 
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,course) + 1;
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,grade) + 1;
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,phase) + 1;
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,unit);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[Util.ReciteTextTextChoose] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -240,10 +242,11 @@ public class ReciteTextTextChoose extends Activity
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
-
+					String voice = jsonObject_partlist.getString("voice");
 					myText = new MyText();
 					myText.setName(title);
 					myText.setLyric(lyric_copy);
+					myText.setLink(voice);
 					textList.add(myText);
 					// if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 					// new LrcFileDownloader(lyric_copy , title +
@@ -346,21 +349,31 @@ public class ReciteTextTextChoose extends Activity
 						startActivity(open_intent);
 						break;
 					case 1:
+						//TODO 音频分享微信有问题 https://developer.umeng.com/docs/66632/detail/66799
 						// Toast.makeText(getApplicationContext() ,"正在分享" +
 						// textList.get(position).getName().toString() + "..."
 						// ,Toast.LENGTH_SHORT).show();
-						Intent share_intent = new Intent(Intent.ACTION_SEND);
-						share_intent.setType("text/*");
-						share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
-						String url = textList.get(position).getLyric();
-						share_intent.putExtra(Intent.EXTRA_TEXT ,url);
-						share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(Intent.createChooser(share_intent ,"分享"));
+						new ShareUtils(ReciteTextTextChoose.this).shareMultipleMusic(textList.get(position).getName() ," " ,Util.RESOURCESERVER + textList.get(position).getLink() ,R.drawable.ic_launcher);
+						// Intent share_intent = new Intent(Intent.ACTION_SEND);
+						// share_intent.setType("text/*");
+						// share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
+						// String url = textList.get(position).getLyric();
+						// share_intent.putExtra(Intent.EXTRA_TEXT ,url);
+						// share_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						// startActivity(Intent.createChooser(share_intent
+						// ,"分享"));
 						break;
 				}
 				return false;
 			}
 		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode , int resultCode , Intent data )
+	{
+		super.onActivityResult(requestCode ,resultCode ,data);
+		UMShareAPI.get(this).onActivityResult(requestCode ,resultCode ,data);
 	}
 
 	@Override

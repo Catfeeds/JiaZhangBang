@@ -1,36 +1,37 @@
 package com.runcom.jiazhangbang.chinese;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.listenText.lrcView.Welcome;
-import com.runcom.jiazhangbang.notification.MyNotification;
 import com.runcom.jiazhangbang.setting.Setting;
 import com.runcom.jiazhangbang.setting.SettingChoose;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.analytics.MobclickAgent.EScenarioType;
-import com.umeng.commonsdk.UMConfigure;
+import com.umeng.socialize.UMShareAPI;
 
+@SuppressLint("Override")
 public class Chinese extends Activity
 {
 	private Intent intent = new Intent();
-	private int grade;
 
 	@SuppressLint("ResourceAsColor")
 	@Override
@@ -38,45 +39,7 @@ public class Chinese extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
-		if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD)
-		{
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-		SpeechUtility.createUtility(this ,SpeechConstant.APPID + "=590aeb53");
-		UMConfigure.init(this ,"58a3f9d6b27b0a332e001956" ,"wgcwgc75" ,UMConfigure.DEVICE_TYPE_PHONE ,"cd79ec4eb5e09d69b30139b4f03a7cb0");
-		MobclickAgent.onProfileSignIn("123456890");
-		UMConfigure.setLogEnabled(true);
-		MobclickAgent.setScenarioType(this ,EScenarioType.E_DUM_NORMAL);
-		UMConfigure.setEncryptEnabled(true);
-		// Update.update(Chinese.this ,true);
 
-		// Window window = this.getWindow();
-		// window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-		//
-		// ViewGroup decorViewGroup = (ViewGroup) window.getDecorView();
-		// View statusBarView = new View(window.getContext());
-		// int statusBarHeight = getStatusBarHeight(window.getContext());
-		// FrameLayout.LayoutParams params = new
-		// FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT ,
-		// statusBarHeight);
-		// params.gravity = Gravity.TOP;
-		// statusBarView.setLayoutParams(params);
-		// statusBarView.setBackgroundColor(R.color.white);
-		// decorViewGroup.addView(statusBarView);
-	}
-
-	@SuppressWarnings("unused")
-	private static int getStatusBarHeight(Context context )
-	{
-		int statusBarHeight = 0;
-		Resources res = context.getResources();
-		int resourceId = res.getIdentifier("status_bar_height" ,"dimen" ,"android");
-		if(resourceId > 0)
-		{
-			statusBarHeight = res.getDimensionPixelSize(resourceId);
-		}
-		return statusBarHeight;
 	}
 
 	/**
@@ -188,8 +151,6 @@ public class Chinese extends Activity
 	{
 		intent.putExtra("class" ,Util.PlayGame);
 		intent.setClass(getApplicationContext() ,SettingChoose.class);
-		// intent.setClass(getApplicationContext()
-		// ,ListenWriteGameChoose.class);
 		if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
 		{
 			Toast.makeText(getApplicationContext() ,"请检查网络连接" ,Toast.LENGTH_SHORT).show();
@@ -219,7 +180,6 @@ public class Chinese extends Activity
 		{
 			startActivity(intent);
 		}
-		// notification();
 	}
 
 	/**
@@ -230,16 +190,6 @@ public class Chinese extends Activity
 		Intent intent = new Intent();
 		intent.setClass(getApplicationContext() ,Setting.class);
 		startActivity(intent);
-	}
-
-	@SuppressWarnings("unused")
-	private void notification()
-	{
-		MyNotification.myNotification(getApplicationContext());
-		intent.putExtra("selected" ,grade);
-		intent.setClass(getApplicationContext() ,Welcome.class);
-		startActivity(intent);
-		// TODO myNotification
 	}
 
 	@Override
@@ -255,17 +205,163 @@ public class Chinese extends Activity
 		switch(item.getItemId())
 		{
 			case R.id.main_menu_setting_menu:
-				Intent intent = new Intent();
-				intent.setClass(getApplicationContext() ,Setting.class);
-				startActivity(intent);
+				new Thread(new Runnable()
+				{
+
+					@Override
+					public void run()
+					{
+						if(Build.VERSION.SDK_INT >= 23)
+						{
+							checkPermission();
+						}
+						else
+						{
+							intentSetting();
+						}
+						// directRequestPermisssion(Manifest.permission.WRITE_EXTERNAL_STORAGE
+						// ,0);
+						// checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE
+						// ,0);
+					}
+				}).start();
 				break;
 			case android.R.id.home:
-				onBackPressed();
+				Toast.makeText(getApplicationContext() ,"home" ,Toast.LENGTH_LONG).show();
 				break;
 			default:
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void intentSetting()
+	{
+		Intent intent = new Intent();
+		intent.setClass(getApplicationContext() ,Setting.class);
+		startActivity(intent);
+	}
+
+	private void checkPermission()
+	{
+		// TODO Auto-generated method stub
+		if(ContextCompat.checkSelfPermission(this ,Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+		{
+			ActivityCompat.requestPermissions(this ,new String []
+			{ Manifest.permission.WRITE_EXTERNAL_STORAGE } ,007);
+		}
+		else
+		{
+			intentSetting();
+		}
+	}
+
+	// @Override
+	// public void onRequestPermissionsResult(int requestCode , String []
+	// permissions , int [] grantResults )
+	// {
+	// if(ContextCompat.checkSelfPermission(this
+	// ,Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+	// PackageManager.PERMISSION_GRANTED)
+	// {
+	// intentSetting();
+	// }
+	// else
+	// {
+	// Toast.makeText(this ,"未获得读取本地权限" ,Toast.LENGTH_SHORT).show();
+	// }
+	// }
+
+	protected void checkPermission(String permission , int resultCode )
+	{
+		if(ContextCompat.checkSelfPermission(this ,permission) != PackageManager.PERMISSION_GRANTED)
+		{
+			// 没有权限
+			Log.i("info" ,"1,需要申请权限。");
+			if(ActivityCompat.shouldShowRequestPermissionRationale(this ,permission))
+			{
+				// TODO 用户未拒绝过 该权限 shouldShowRequestPermissionRationale返回false
+				// 用户拒绝过一次则一直返回true
+				// 注意小米手机 则一直返回时 false
+				Log.i("info" ,"3,用户已经拒绝过一次该权限，需要提示用户为什么需要该权限。\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
+				// 解释为什么 需要该权限的 对话框
+				showMissingPermissionDialog();
+			}
+			else
+			{
+				// 申请授权。
+				ActivityCompat.requestPermissions(this ,new String []
+				{ permission } ,resultCode);
+				Log.i("info" ,"2,用户拒绝过该权限，或者用户从未操作过该权限，开始申请权限。-\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
+			}
+		}
+		else
+		{
+			// 权限 已经被准许 you can do something
+			permissionHasGranted();
+			Log.i("info" ,"7,已经被用户授权过了=可以做想做的事情了==打开联系人界面");
+		}
+	}
+
+	protected void permissionHasGranted()
+	{
+		Toast.makeText(getApplicationContext() ,"权限已经被准许了,你可以做你想做的事情" ,Toast.LENGTH_SHORT).show();
+	}
+
+	int clicki = 0;
+
+	/**
+	 * 提示用户的 dialog
+	 */
+	protected void showMissingPermissionDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("提示");
+		builder.setMessage("当前应用缺少联系人权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。");
+		// 拒绝, 退出应用
+		builder.setNegativeButton("关闭" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Log.i("info" ,"8--权限被拒绝,此时不会再回调onRequestPermissionsResult方法");
+			}
+		});
+		builder.setPositiveButton("设置" ,new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+				Log.i("info" ,"4,需要用户手动设置，开启当前app设置界面");
+				startAppSettings();
+			}
+		});
+		builder.setCancelable(false);
+		builder.show();
+	}
+
+	/**
+	 * 打开 App设置界面
+	 */
+	private void startAppSettings()
+	{
+		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+		intent.setData(Uri.parse("package:" + getPackageName()));
+		startActivity(intent);
+	}
+
+	/**
+	 * 直接 请求 权限
+	 * 
+	 * @param permission
+	 *            权限
+	 * @param resultCode
+	 *            结果码
+	 */
+	protected void directRequestPermisssion(String permission , int resultCode )
+	{
+		ActivityCompat.requestPermissions(this ,new String []
+		{ permission } ,resultCode);
 	}
 
 	// 两秒内按返回键两次退出程序
@@ -279,6 +375,9 @@ public class Chinese extends Activity
 		{
 			if((System.currentTimeMillis() - exitTime) > 2000)
 			{
+				// new ShareUtils(this).shareMultipleLink(Util.update
+				// ,getResources().getString(R.string.app_name) ," " ,null
+				// ,R.drawable.ic_launcher);
 				Toast.makeText(getApplicationContext() ,"再按一次退出程序" ,Toast.LENGTH_SHORT).show();
 				exitTime = System.currentTimeMillis();
 			}
@@ -286,7 +385,6 @@ public class Chinese extends Activity
 			{
 				MobclickAgent.onKillProcess(this);
 				finish();
-				System.exit(0);
 			}
 			return true;
 		}
@@ -297,6 +395,13 @@ public class Chinese extends Activity
 			return true;
 		}
 		return super.onKeyDown(keyCode ,event);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode , int resultCode , Intent data )
+	{
+		super.onActivityResult(requestCode ,resultCode ,data);
+		UMShareAPI.get(this).onActivityResult(requestCode ,resultCode ,data);
 	}
 
 	@Override

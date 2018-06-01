@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -73,7 +74,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	// 定义线程池（同时只能有一个线程运行）
 	private ExecutorService es = Executors.newSingleThreadExecutor();
 
-	String lyricsPath;
+	private String lyricsPath;
 	private int course , grade , phase , unit;
 	// 歌词处理
 	private LrcView mLyricView;
@@ -85,14 +86,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_text_main);
 
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenTextMain] ,course) + 1;
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenTextMain] ,grade) + 1;
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[Util.ListenTextMain] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[Util.ListenTextMain] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[Util.ListenTextMain] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,0);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[Util.ListenTextMain] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -282,9 +283,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					myAudio = new MyAudio();
 					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
-					// play_list_title.add(title);
 					myAudio.setName(title);
-					// System.out.println(title);
 					// if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
 					// new LrcFileDownloader(lyric_copy , title +
 					// ".lrc").start();
@@ -358,19 +357,22 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		};
 	};
 
-	public static void readHtmlFile(final String sourcePath )
-	{
-
-	}
-
 	// TODO
 	private void initLyric()
 	{
 		lyricsPath = play_list.get(currIndex).getLyric();
 		String content = "";
-		// System.out.println("lyricsPath:" + lyricsPath);
-		content = Util.getLrcContents(lyricsPath);
-		// System.out.println("content:" + content);
+
+		FutureTask < String > faeature = new FutureTask < String >(new GetLrcContents(lyricsPath));
+		new Thread(faeature).start();
+		try
+		{
+			content = faeature.get();
+		}
+		catch(Exception e)
+		{
+			System.out.println("com.runcom.jiazhangbag.listenText.ListenTextMain.initLyric():0:" + e);
+		}
 
 		// File mFile = new File(lyricsPath);
 		// FileInputStream mFileInputStream;
@@ -391,7 +393,8 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		// }
 		// catch(Exception e)
 		// {
-		// System.out.println(e);
+		// System.out.println("com.runcom.jiazhangbag.listenText.ListenTextMain.initLyric():1:"
+		// + e);
 		// }
 		// finally
 		// {
@@ -399,11 +402,12 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		// {
 		// mBufferedReader.close();
 		// }
-		// catch(IOException e)
+		// catch(Exception e)
 		// {
 		// System.out.println(e);
 		// }
 		// }
+		System.out.println("content:" + content);
 		mLyricView.setLrc(content);
 		mLyricView.setPlayer(mp);
 		mLyricView.init();
@@ -565,7 +569,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				}
 	}
 
-	// 开始播放
+	// TODO 开始播放
 	public void start()
 	{
 		if(play_list.size() > 0 && currIndex < play_list.size())
@@ -580,12 +584,32 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			// play_list.get(currIndex).getSource() + ":" +
 			// play_list.get(currIndex).getLyric();
 			// System.out.println(string);
-			mp.reset();
+			// if(mp.isPlaying())
+			// {
+			// mp.stop();
+			// mp.release();
+			// mp = null;
+			// mp = new MediaPlayer();
+			// }
+
+			if(mp != null)
+			{
+				mp.reset();
+			}
 			try
 			{
 				mp.setDataSource(SongPath);
-				initLyric();
+				// mp.setOnPreparedListener(new OnPreparedListener()
+				// {
+				// @Override
+				// public void onPrepared(MediaPlayer mp )
+				// {
+				// mp.start();
+				// }
+				// });
+				// mp.prepareAsync();
 				mp.prepare();
+				initLyric();
 				mp.start();
 				initSeekBar();
 				es.execute(this);
@@ -594,7 +618,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			}
 			catch(Exception e)
 			{
-				System.out.println(e);
+				System.out.println("ListenTextMain.start():" + e);
 			}
 		}
 		else
@@ -609,6 +633,8 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		if(currIndex < play_list.size() - 1 && currIndex >= 0)
 		{
 			// System.out.println("————————————————————next——————————————");
+			// mp.start();
+			// mp.setLooping(true);
 			next();
 		}
 		else

@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
-import com.runcom.jiazhangbang.setting.ListenWriteTipsSetting;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.URL;
@@ -42,7 +41,7 @@ public class ListenWriteTips extends Activity
 	private TextView textView_interval_reduce , textView_interval_plus ,
 	        textView_interval_count , textView_frequency_reduce ,
 	        textView_frequency_plus , textView_frequency_count;
-	private Button textView_start , textView_reset;
+	private Button textView_start;
 	private final int WORDSTIME = 2;
 	private ProgressDialog progressDialog;
 
@@ -52,18 +51,18 @@ public class ListenWriteTips extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.listen_write_tips);
 
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[0] ,0);
-		course = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.courseSharedPreferencesKeyString[Util.ListenWriteTips] ,course) + 1;
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[0] ,0);
-		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.gradeSharedPreferencesKeyString[Util.ListenWriteTips] ,grade) + 1;
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[0] ,0);
-		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.phaseSharedPreferencesKeyString[Util.ListenWriteTips] ,phase) + 1;
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[0] ,0);
+		course = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.courseSharedPreferencesKeyString[Util.ListenWriteTips] ,course) + 1;
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[0] ,0);
+		grade = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.gradeSharedPreferencesKeyString[Util.ListenWriteTips] ,grade) + 1;
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[0] ,0);
+		phase = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.phaseSharedPreferencesKeyString[Util.ListenWriteTips] ,phase) + 1;
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[0] ,0);
 		if(unit > 0)
 		{
 			unit -- ;
 		}
-		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.sharedPreferencesKeySettingChoose ,Util.unitSharedPreferencesKeyString[Util.ListenWriteTips] ,unit);
+		unit = MySharedPreferences.getValue(getApplicationContext() ,Util.settingChooseSharedPreferencesKey ,Util.unitSharedPreferencesKeyString[Util.ListenWriteTips] ,unit);
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -117,7 +116,6 @@ public class ListenWriteTips extends Activity
 					if( !Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 					{
 						textView_start.setEnabled(false);
-						textView_reset.setEnabled(false);
 						Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
 						finish();
 					}
@@ -170,8 +168,6 @@ public class ListenWriteTips extends Activity
 		textView_time_information = (TextView) findViewById(R.id.listen_write_tips_informations_counts);
 		textView_start = (Button) findViewById(R.id.listen_write_tips_start);
 		textView_start.setEnabled(true);
-		textView_reset = (Button) findViewById(R.id.listen_write_tips_reset);
-		textView_reset.setEnabled(true);
 		textView_words_count = (TextView) findViewById(R.id.listen_write_tips_words_count_textView);
 		textView_words_count.setText(counts + "");
 		// 两个词语间隔秒数
@@ -278,25 +274,6 @@ public class ListenWriteTips extends Activity
 			}
 		});
 
-		textView_reset.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(View v )
-			{
-				intent = new Intent();
-				intent.putExtra("selected" ,grade);
-				intent.putExtra("units" ,unit);
-				intent.setClass(getApplicationContext() ,ListenWriteTipsSetting.class);
-				if(NetUtil.getNetworkState(getApplicationContext()) == NetUtil.NETWORK_NONE)
-				{
-					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsInternetConnectExceptionString ,Toast.LENGTH_SHORT).show();
-					startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
-				}
-				else
-					startActivity(intent);
-			}
-		});
 	}
 
 	@Override

@@ -42,8 +42,8 @@ public class Util
 	public static final int FindNewWords = 5;
 	public static final int PlayGame = 6;
 	public static final int RecordText = 7;
-
-	public static final String sharedPreferencesKeySettingChoose = "SettingChooseKey";
+	public static final String loginSharedPrefrencesKey = "LoginSharedPreferencesKey";
+	public static final String settingChooseSharedPreferencesKey = "SettingChooseKey";
 
 	public static final String [] courseSharedPreferencesKeyString =
 	{ "SettingChooseCourse", "SettingChooseCourseListenText", "SettingChooseCourseListenWrite", "SettingChooseCourseReciteText", "SettingChooseCourseRepeat", "SettingChooseCourseFindNewWords", "SettingChooseCoursePlayGame", "SettingChooseCourseRecord" };
@@ -213,7 +213,8 @@ public class Util
 		return (int) (spValue * fontScale + 0.5f);
 	}
 
-	public static String getLrcContents(String sourcePath )
+	@SuppressWarnings("unused")
+    private static String getLrcContents(String sourcePath )
 	{
 		String line = "";
 		String content = "";

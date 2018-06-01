@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.FutureTask;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -42,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
+import com.runcom.jiazhangbang.listenText.GetLrcContents;
 import com.runcom.jiazhangbang.util.NetUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -75,7 +77,7 @@ public class ReciteTextMain extends Activity implements Checkable
 	private String [] scores = new String [10];
 	private int note = 0 , temp = 0;
 	private float ans = 100;
-	private String name , lrc;
+	private String name , lyricsPath;
 	// private List < LyricContent > LyricList = new ArrayList < LyricContent
 	// >();
 	private ImageButton imageButton_record_stop , startRecord ,
@@ -117,7 +119,7 @@ public class ReciteTextMain extends Activity implements Checkable
 
 		intent = getIntent();
 		name = intent.getStringExtra("name");
-		lrc = intent.getStringExtra("lrc");
+		lyricsPath = intent.getStringExtra("lrc");
 
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayHomeAsUpEnabled(false);
@@ -363,7 +365,18 @@ public class ReciteTextMain extends Activity implements Checkable
 		}
 		else
 		{
-			String content = Util.getLrcContents(lrc);
+			String content = "";
+			// content = Util.getLrcContents(lrc);
+			FutureTask < String > faeature = new FutureTask < String >(new GetLrcContents(lyricsPath));
+			new Thread(faeature).start();
+			try
+			{
+				content = faeature.get();
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
 			// System.out.println(content);
 			String contents[] = content.split("\n");
 			String Lrc_data = "";

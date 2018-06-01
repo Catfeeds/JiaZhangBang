@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 public class RepeatList extends Activity implements OnClickListener , OnItemClickListener
 {
@@ -290,7 +291,8 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	// 分享录音文件
 	private void shareRecord()
 	{
-		// 分享所选中的录音文件
+
+		// TODO 分享所选中的录音文件
 		File file = new File(playFileName);
 		if(file.exists())
 		{
@@ -311,7 +313,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 				{
 					intent.setType("application/octet-stream"); // 其他的均使用流当做二进制数据来发送
 				}
-			startActivity(intent); // 调用系统的mail客户端进行发送
+			startActivity(intent);
 			time.setText("");
 		}
 		else
@@ -744,6 +746,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			timer.cancel();
 		}
 		super.onDestroy();
+		UMShareAPI.get(this).release();
 	}
 
 	// 来电暂停

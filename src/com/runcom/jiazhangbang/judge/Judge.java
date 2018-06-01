@@ -63,6 +63,23 @@ public class Judge
 		return false;
 	}
 
+	// 判断中文、英文、数字
+	public static boolean isNotNickname(String nickname )
+	{
+		char [] charArray = nickname.toCharArray();
+		for(int i = 0 , leng = nickname.length() ; i < leng ; i ++ )
+		{
+			if((charArray[i] >= 0x4e00 && charArray[i] <= 0x9fbb) || (charArray[i] >= 'a' && charArray[i] <= 'z') || (charArray[i] >= 'A' && charArray[i] <= 'Z') || (charArray[i] >= '0' && charArray[i] <= '9'))
+			{
+			}
+			else
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// 判断ip地址
 	public static boolean isIP(String ip )
 	{

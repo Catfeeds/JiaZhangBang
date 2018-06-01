@@ -41,7 +41,7 @@ public class SettingChoose extends Activity
 	        adapter_phase , adapter_unit;
 	private int courseSpinnerValue , gradeSpinnerValue , phaseSpinnerValue ,
 	        unitSpinnerValue;
-	private final String sharedPreferencesKey = Util.sharedPreferencesKeySettingChoose;
+	private final String sharedPreferencesKey = Util.settingChooseSharedPreferencesKey;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -96,7 +96,7 @@ public class SettingChoose extends Activity
 		courseDataList.add("Ó¢Óï");
 
 		adapter_course = new ArrayAdapter < String >(getApplicationContext() , R.layout.spinner_item , R.id.spinnerItem_textView , courseDataList);
-		
+
 		spinner_course.setAdapter(adapter_course);
 		spinner_course.setOnItemSelectedListener(new OnItemSelectedListener()
 		{
@@ -288,7 +288,7 @@ public class SettingChoose extends Activity
 						Toast.makeText(SettingChoose.this ,"recordText¾´ÇëÆÚ´ý..." ,Toast.LENGTH_LONG).show();
 						// startActivity(new
 						// Intent().setClass(getApplicationContext()
-						// ,RecordText.class));
+						// ,Login.class));
 						// TODO settingChoose RecordText
 						break;
 					default:

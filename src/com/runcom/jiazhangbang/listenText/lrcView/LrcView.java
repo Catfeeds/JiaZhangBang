@@ -117,6 +117,7 @@ public class LrcView extends View
 		{
 			return;
 		}
+
 		currentMillis = player.getCurrentPosition();
 		drawLrc2(canvas ,currentMillis);
 		long start = list.get(currentPosition).getStart();
