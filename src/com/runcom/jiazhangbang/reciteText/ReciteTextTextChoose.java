@@ -127,7 +127,7 @@ public class ReciteTextTextChoose extends Activity
 				{
 					if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 					{
-						System.out.println("执行");
+						// System.out.println("执行");
 						initTextLrc();
 					}
 					else
@@ -139,6 +139,7 @@ public class ReciteTextTextChoose extends Activity
 						else
 						{
 							Toast.makeText(getApplicationContext() ,Util.okHttpUtilsServerExceptionString ,Toast.LENGTH_LONG).show();
+							finish();
 						}
 				}
 
@@ -195,6 +196,7 @@ public class ReciteTextTextChoose extends Activity
 
 	private void initTextLrc()
 	{
+		final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 		TreeMap < String , String > map = null;
 		final int leng = textID.size();
 		textList.clear();
@@ -240,7 +242,7 @@ public class ReciteTextTextChoose extends Activity
 					}
 					JSONObject jsonObject_attr = new JSONObject(jsonObject.getString("attr"));
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
-					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+					String lyric_copy = resourceServer + jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
 					String voice = jsonObject_partlist.getString("voice");
 					myText = new MyText();
@@ -349,11 +351,13 @@ public class ReciteTextTextChoose extends Activity
 						startActivity(open_intent);
 						break;
 					case 1:
-						//TODO 音频分享微信有问题 https://developer.umeng.com/docs/66632/detail/66799
+						// TODO 音频分享微信有问题
+						// https://developer.umeng.com/docs/66632/detail/66799
 						// Toast.makeText(getApplicationContext() ,"正在分享" +
 						// textList.get(position).getName().toString() + "..."
 						// ,Toast.LENGTH_SHORT).show();
-						new ShareUtils(ReciteTextTextChoose.this).shareMultipleMusic(textList.get(position).getName() ," " ,Util.RESOURCESERVER + textList.get(position).getLink() ,R.drawable.ic_launcher);
+						String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+						new ShareUtils(ReciteTextTextChoose.this).shareMultipleMusic(textList.get(position).getName() ," " ,resourceServer + textList.get(position).getLink() ,R.drawable.ic_launcher);
 						// Intent share_intent = new Intent(Intent.ACTION_SEND);
 						// share_intent.setType("text/*");
 						// share_intent.putExtra(Intent.EXTRA_SUBJECT ,"Share");
@@ -368,7 +372,7 @@ public class ReciteTextTextChoose extends Activity
 			}
 		});
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode , int resultCode , Intent data )
 	{

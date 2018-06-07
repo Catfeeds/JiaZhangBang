@@ -113,11 +113,10 @@ public class LrcView extends View
 
 		// drawLrc1(canvas);
 		int currentMillis = 0;
-		if(player == null)
+		if(null == player)
 		{
 			return;
 		}
-
 		currentMillis = player.getCurrentPosition();
 		drawLrc2(canvas ,currentMillis);
 		long start = list.get(currentPosition).getStart();
@@ -183,7 +182,13 @@ public class LrcView extends View
 		{
 			int currentMillis = 0;
 			if(player != null)
+			{
 				currentMillis = player.getCurrentPosition();
+			}
+			else
+			{
+				return;
+			}
 			if(currentMillis < list.get(0).getStart())
 			{
 				currentPosition = 0;
@@ -206,6 +211,7 @@ public class LrcView extends View
 		catch(Exception e)
 		{
 			// e.printStackTrace();
+			System.out.println("com.runcom.jiazhangbang.listenText.lrcView.LrcView.getCurrentPosition():" + e);
 			postInvalidateDelayed(100);
 		}
 	}

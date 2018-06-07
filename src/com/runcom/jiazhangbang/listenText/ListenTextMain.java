@@ -281,7 +281,10 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
 					myAudio = new MyAudio();
-					String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+					String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+					String lyric_copy = resourceServer + jsonObject_partlist.getString("subtitle");
+					// String lyric_copy = Util.RESOURCESERVER +
+					// jsonObject_partlist.getString("subtitle");
 					String title = jsonObject_partlist.getString("title");
 					myAudio.setName(title);
 					// if( !new File(Util.LYRICSPATH + title + ".lrc").exists())
@@ -289,12 +292,14 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 					// ".lrc").start();
 					// myAudio.setLyric(Util.LYRICSPATH + title + ".lrc");
 					myAudio.setLyric(lyric_copy);
-					String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
+					String source_copy = resourceServer + jsonObject_partlist.getString("voice");
+					// String source_copy = Util.RESOURCESERVER +
+					// jsonObject_partlist.getString("voice");
 					myAudio.setSource(source_copy);
 					play_list.add(myAudio);
 					try
 					{
-						Thread.sleep(2 * 1000);
+						Thread.sleep(3 * 1000);
 					}
 					catch(InterruptedException e)
 					{
@@ -402,12 +407,11 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		// {
 		// mBufferedReader.close();
 		// }
-		// catch(Exception e)
+		// catch(IOException e)
 		// {
 		// System.out.println(e);
 		// }
 		// }
-		System.out.println("content:" + content);
 		mLyricView.setLrc(content);
 		mLyricView.setPlayer(mp);
 		mLyricView.init();
@@ -488,21 +492,19 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 
 	public void play()
 	{
+		// TODO
 		switch(currState)
 		{
 			case IDLE:
 				start();
-				// initLyric();
 				break;
 			case PAUSE:
 				mp.pause();
 				btnPlay.setImageResource(R.drawable.pause);
 				currState = START;
-				// initLyric();
 				break;
 			case START:
 				mp.start();
-				// initLyric();
 				btnPlay.setImageResource(R.drawable.play);
 				currState = PAUSE;
 		}
@@ -583,19 +585,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			// String string = "start()" + currIndex + ":" + play_list.size() +
 			// play_list.get(currIndex).getSource() + ":" +
 			// play_list.get(currIndex).getLyric();
-			// System.out.println(string);
-			// if(mp.isPlaying())
-			// {
-			// mp.stop();
-			// mp.release();
-			// mp = null;
-			// mp = new MediaPlayer();
-			// }
-
-			if(mp != null)
-			{
-				mp.reset();
-			}
+			mp.reset();
 			try
 			{
 				mp.setDataSource(SongPath);
@@ -608,8 +598,8 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				// }
 				// });
 				// mp.prepareAsync();
-				mp.prepare();
 				initLyric();
+				mp.prepare();
 				mp.start();
 				initSeekBar();
 				es.execute(this);
@@ -618,7 +608,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 			}
 			catch(Exception e)
 			{
-				System.out.println("ListenTextMain.start():" + e);
+				System.out.println("com.runcom.jiazhangbang.listenText.ListenTextMain.start():" + e);
 			}
 		}
 		else
@@ -632,13 +622,12 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 	{
 		if(currIndex < play_list.size() - 1 && currIndex >= 0)
 		{
-			// System.out.println("！！！！！！！！！！！！！！！！！！！！next！！！！！！！！！！！！！！");
-			// mp.start();
-			// mp.setLooping(true);
 			next();
 		}
 		else
 		{
+			currIndex = -1;
+			next();
 			tv_currTime.setText("00:00");
 			Toast.makeText(this ,"殴慧頼穎" ,Toast.LENGTH_SHORT).show();
 		}
@@ -685,7 +674,7 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 		{
 			if(mp != null)
 			{
-				if(mp.getCurrentPosition() < seekBar.getMax() && mp.isPlaying())
+				if(mp.getCurrentPosition() < seekBar.getMax())
 				{
 					seekBar.setProgress(mp.getCurrentPosition());
 					Message msg = hander.obtainMessage(CURR_TIME_VALUE ,toTime(mp.getCurrentPosition()));
@@ -702,8 +691,6 @@ public class ListenTextMain extends Activity implements Runnable , OnCompletionL
 				else
 				{
 					seekBarFlag = false;
-					mp.release();
-					mp = null;
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.runcom.jiazhangbang.repeat;
+package com.runcom.jiazhangbang.read;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +22,7 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -56,6 +57,7 @@ import com.runcom.jiazhangbang.listenText.GetLrcContents;
 import com.runcom.jiazhangbang.listenText.MyAudio;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -76,7 +78,7 @@ import com.umeng.analytics.MobclickAgent;
  * 
  */
 
-public class Repeat extends Activity
+public class Read extends Activity
 {
 	private MediaRecorder mediaRecorder = null;// Â¼ÒôÆ÷
 	private Timer timer;
@@ -142,6 +144,7 @@ public class Repeat extends Activity
 		progressDialog.show();
 
 		initPlayView();
+		new PermissionUtil(this , Manifest.permission.RECORD_AUDIO);
 	}
 
 	private void initPlayView()
@@ -260,6 +263,7 @@ public class Repeat extends Activity
 		}
 		else
 		{
+			final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 			TreeMap < String , String > map = null;
 			play_list.clear();
 			// play_list_copy.clear();
@@ -309,7 +313,7 @@ public class Repeat extends Activity
 						JSONObject jsonObject_partlist = new JSONObject(jsonObject_attr.getString("partlist"));
 
 						myAudio = new MyAudio();
-						String lyric_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("subtitle");
+						String lyric_copy = resourceServer + jsonObject_partlist.getString("subtitle");
 						String title = jsonObject_partlist.getString("title");
 						// play_list_copy.add(title);
 						myAudio.setName(title);
@@ -318,7 +322,7 @@ public class Repeat extends Activity
 						// new LrcFileDownloader(lyric_copy , title +
 						// ".lrc").start();
 						myAudio.setLyric(lyric_copy);
-						String source_copy = Util.RESOURCESERVER + jsonObject_partlist.getString("voice");
+						String source_copy = resourceServer + jsonObject_partlist.getString("voice");
 						myAudio.setSource(source_copy);
 						play_list.add(myAudio);
 						try
@@ -452,7 +456,7 @@ public class Repeat extends Activity
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,grade);
-		intent.setClass(Repeat.this ,RepeatList.class);
+		intent.setClass(Read.this ,ReadList.class);
 		startActivity(intent);
 	}
 
@@ -497,8 +501,8 @@ public class Repeat extends Activity
 		startRecord.setImageResource(R.drawable.record_pause);
 		timer.cancel();
 
-		final EditText editText = new EditText(Repeat.this);
-		final AlertDialog.Builder inputDialog = new AlertDialog.Builder(Repeat.this);
+		final EditText editText = new EditText(Read.this);
+		final AlertDialog.Builder inputDialog = new AlertDialog.Builder(Read.this);
 		inputDialog.setTitle("Òª±£´æÂ¼ÒôÂð£¿").setView(editText);
 		inputDialog.setPositiveButton("±£´æ" ,new DialogInterface.OnClickListener()
 		{

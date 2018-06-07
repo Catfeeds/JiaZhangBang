@@ -17,15 +17,15 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.findnewwords.FindNewWords;
 import com.runcom.jiazhangbang.listenText.ListenTextMain;
 import com.runcom.jiazhangbang.listenWrite.ListenWriteTips;
 import com.runcom.jiazhangbang.listenWrite.listenWriteGame.ListenWriteGameMain;
+import com.runcom.jiazhangbang.read.Read;
 import com.runcom.jiazhangbang.reciteText.ReciteTextTextChoose;
-import com.runcom.jiazhangbang.repeat.Repeat;
+import com.runcom.jiazhangbang.recordText.RecordTextChoose;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -57,6 +57,7 @@ public class SettingChoose extends Activity
 		actionbar.setDisplayShowCustomEnabled(true);
 		String content = "·µ»Ø";
 		actionbar.setTitle(content);
+
 		chooseId = getIntent().getIntExtra("class" ,Util.ListenTextMain);
 		initLayout();
 		initData();
@@ -86,6 +87,7 @@ public class SettingChoose extends Activity
 		spinner_grade.setSelection(gradeSpinnerValue ,true);
 		spinner_phase.setSelection(phaseSpinnerValue ,true);
 		spinner_unit.setSelection(unitSpinnerValue ,true);
+
 	}
 
 	private void initData()
@@ -276,7 +278,7 @@ public class SettingChoose extends Activity
 						startActivity(new Intent().setClass(getApplicationContext() ,ReciteTextTextChoose.class));
 						break;
 					case Util.Repeat:
-						startActivity(new Intent().setClass(getApplicationContext() ,Repeat.class));
+						startActivity(new Intent().setClass(getApplicationContext() ,Read.class));
 						break;
 					case Util.FindNewWords:
 						startActivity(new Intent().setClass(getApplicationContext() ,FindNewWords.class));
@@ -285,10 +287,7 @@ public class SettingChoose extends Activity
 						startActivity(new Intent().setClass(getApplicationContext() ,ListenWriteGameMain.class));
 						break;
 					case Util.RecordText:
-						Toast.makeText(SettingChoose.this ,"recordText¾´ÇëÆÚ´ý..." ,Toast.LENGTH_LONG).show();
-						// startActivity(new
-						// Intent().setClass(getApplicationContext()
-						// ,Login.class));
+						startActivity(new Intent().setClass(getApplicationContext() ,RecordTextChoose.class));
 						// TODO settingChoose RecordText
 						break;
 					default:

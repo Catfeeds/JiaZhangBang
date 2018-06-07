@@ -1,4 +1,4 @@
-package com.runcom.jiazhangbang.repeat;
+package com.runcom.jiazhangbang.read;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,15 +42,15 @@ import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
-public class RepeatList extends Activity implements OnClickListener , OnItemClickListener
+public class ReadList extends Activity implements OnClickListener , OnItemClickListener
 {
 	// 语音文件
 	private String fileAllNameAmr = null;
-	// 音频文件保存的路径
+	// 音频文件保存的路�?
 	private String recordPath = Util.RECORDPATH;
 	// 界面控件z
-	private Button startRecord;// 开始录音
-	private ImageButton startPlay;// 开始播放
+	private Button startRecord;// �?始录�?
+	private ImageButton startPlay;// �?始播�?
 	private Button stopRecord;// 完成录音
 	private Button stopPlay;// 停止播放
 	private TextView time , textView_tips;// 计时显示
@@ -61,21 +61,21 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	private Button pausePlay;// 暂停播放
 
 	// 语音操作对象
-	private MediaPlayer mPlayer = null;// 播放器
-	private MediaRecorder mRecorder = null;// 录音器
-	private boolean isPause = false;// 当前录音是否处于暂停状态
-	private boolean isPausePlay = false;// 当前播放器是否处于暂停状态
+	private MediaPlayer mPlayer = null;// 播放�?
+	private MediaRecorder mRecorder = null;// 录音�?
+	private boolean isPause = false;// 当前录音是否处于暂停状�??
+	private boolean isPausePlay = false;// 当前播放器是否处于暂停状�?
 	private ArrayList < String > mList = new ArrayList < String >();// 待合成的录音片段
 	private ArrayList < String > list = new ArrayList < String >();// 已合成的录音片段
 	private String deleteStr = null; // 列表中要删除的文件名
 	private Timer timer;
-	private String playFileName = null;// 选中的播放文件
+	private String playFileName = null;// 选中的播放文�?
 	// 相关变量
 	private int second = 0;
 	private int minute = 0;
 	private int hour = 0;
 	private int currentPosition = 0;
-	private long limitTime = 0;// 录音文件最短时间1秒
+	private long limitTime = 0;// 录音文件�?短时�?1�?
 
 	@Override
 	public void onCreate(Bundle savedInstanceState )
@@ -94,7 +94,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		initView();
 	}
 
-	// 初始化界面
+	// 初始化界�?
 	private void initView()
 	{
 		delete = (Button) findViewById(R.id.delete);
@@ -130,7 +130,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		mListView.setOnItemClickListener(this);
 	}
 
-	// 初始化录音列表
+	// 初始化录音列�?
 	@SuppressLint("DefaultLocale")
 	private void initList()
 	{
@@ -147,14 +147,14 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			}
 		}
 
-		// 判断SD卡是否存在
+		// 判断SD卡是否存�?
 		if( !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
 			Toast.makeText(this ,"SD卡状态异常，" ,Toast.LENGTH_LONG).show();
 		}
 		else
 		{
-			// 根据后缀名进行判断、获取文件夹中的音频文件
+			// 根据后缀名进行判断�?�获取文件夹中的音频文件
 			File file = new File(recordPath);
 			File files[] = file.listFiles();
 			int length = files.length;
@@ -182,14 +182,14 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	{
 		switch(v.getId())
 		{
-			case R.id.startRecord:// 开始录音
-				// 判断SD卡是否存在
+			case R.id.startRecord:// �?始录�?
+				// 判断SD卡是否存�?
 				if( !Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 				{
-					Toast.makeText(this ,"SD卡状态异常，请检查后重试！" ,Toast.LENGTH_LONG).show();
+					Toast.makeText(this ,"SD卡状态异常，请检查后重试�?" ,Toast.LENGTH_LONG).show();
 					break;
 				}
-				// 开始录音
+				// �?始录�?
 				startRecord();
 				// 录音计时
 				recordTime();
@@ -209,8 +209,8 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 					}
 					catch(InterruptedException e)
 					{
-						// 当一个线程处于等待，睡眠，或者占用，也就是说阻塞状态，而这时线程被中断就会抛出这类错误
-						// 上百次测试还未发现这个异常，但是需要捕获
+						// 当一个线程处于等待，睡眠，或者占用，也就是说阻塞状�?�，而这时线程被中断就会抛出这类错误
+						// 上百次测试还未发现这个异常，但是�?要捕�?
 						e.printStackTrace();
 					}
 				}
@@ -229,7 +229,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 				if(mPlayer != null)
 				{
 					// 释放资源
-					// 对MediaPlayer多次使用而不释放资源就会出现MediaPlayer create faild 的异常
+					// 对MediaPlayer多次使用而不释放资源就会出现MediaPlayer create faild 的异�?
 					mPlayer.release();
 					mPlayer = null;
 				}
@@ -271,8 +271,8 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		}
 	}
 
-	// 判断点击事件的时间间隔
-	// 点击速度过快，比如在同一秒中点击三次，只会产生一个录音文件，因为命名一样。
+	// 判断点击事件的时间间�?
+	// 点击速度过快，比如在同一秒中点击三次，只会产生一个录音文件，因为命名�?样�??
 	@SuppressWarnings("unused")
 	private boolean limitTime()
 	{
@@ -292,7 +292,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	private void shareRecord()
 	{
 
-		// TODO 分享所选中的录音文件
+		// TODO 分享�?选中的录音文�?
 		File file = new File(playFileName);
 		if(file.exists())
 		{
@@ -311,14 +311,14 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 				}
 				else
 				{
-					intent.setType("application/octet-stream"); // 其他的均使用流当做二进制数据来发送
+					intent.setType("application/octet-stream"); // 其他的均使用流当做二进制数据来发�?
 				}
 			startActivity(intent);
 			time.setText("");
 		}
 		else
 		{
-			Toast.makeText(getApplicationContext() ,"录音文件不存在，请重试" ,Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext() ,"录音文件不存在，请重�?" ,Toast.LENGTH_SHORT).show();
 		}
 		startPlay.setEnabled(false);
 		playFileName = null;
@@ -336,12 +336,12 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	// 删除录音文件
 	private void deleteRecord()
 	{
-		// 删除所选中的录音文件
+		// 删除�?选中的录音文�?
 		final File file = new File(playFileName);
 		if(file.exists())
 		{
-			AlertDialog.Builder builder = new AlertDialog.Builder(RepeatList.this);
-			builder.setTitle("确定要删除吗？");
+			AlertDialog.Builder builder = new AlertDialog.Builder(ReadList.this);
+			builder.setTitle("确定要删除吗�?");
 			builder.setNegativeButton("取消" ,new DialogInterface.OnClickListener()
 			{
 				@Override
@@ -398,14 +398,14 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			mPlayer = null;
 		}
 		mPlayer = new MediaPlayer();
-		// 播放完毕的监听
+		// 播放完毕的监�?
 		mPlayer.setOnCompletionListener(new OnCompletionListener()
 		{
 
 			@Override
 			public void onCompletion(MediaPlayer mp )
 			{
-				// 播放完毕改变状态，释放资源
+				// 播放完毕改变状�?�，释放资源
 				mPlayer.release();
 				mPlayer = null;
 				startRecord.setEnabled(true);
@@ -419,14 +419,14 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		});
 		try
 		{
-			// 播放所选中的录音
+			// 播放�?选中的录�?
 			mPlayer.setDataSource(playFileName);
 			mPlayer.prepare();
 			mPlayer.start();
 		}
 		catch(Exception e)
 		{
-			// 删除所选中的录音文件
+			// 删除�?选中的录音文�?
 			File file = new File(playFileName);
 			if(file.exists())
 			{
@@ -440,7 +440,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 				mAdapter.notifyDataSetChanged();
 			}
 			// 若出现异常被捕获后，同样要释放掉资源
-			// 否则程序会不稳定，不适合正式项目上使用
+			// 否则程序会不稳定，不适合正式项目上使�?
 			if(mPlayer != null)
 			{
 				mPlayer.release();
@@ -467,10 +467,10 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		mRecorder = null;
 		isPause = false;
 		startRecord.setEnabled(true);
-		startRecord.setText("开始录音");
+		startRecord.setText("�?始录�?");
 		stopRecord.setEnabled(false);
 		timer.cancel();
-		// 最后合成的音频文件
+		// �?后合成的音频文件
 		fileAllNameAmr = recordPath + getTime() + ".amr";
 		String fileNameAmr = getTime();
 		FileOutputStream fileOutputStream = null;
@@ -488,7 +488,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			for(int i = 0 ; i < mList.size() ; i ++ )
 			{
 				File file = new File(mList.get(i));
-				// 把因为暂停所录出的多段录音进行读取
+				// 把因为暂停所录出的多段录音进行读�?
 				fileInputStream = new FileInputStream(file);
 				byte [] mByte = new byte [fileInputStream.available()];
 				int length = mByte.length;
@@ -500,7 +500,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 						fileOutputStream.write(mByte ,0 ,length);
 					}
 				}
-				// 之后的文件，去掉前六位
+				// 之后的文件，去掉前六�?
 				else
 				{
 					while(fileInputStream.read(mByte) != -1)
@@ -515,9 +515,9 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		}
 		catch(Exception e)
 		{
-			// 这里捕获流的IO异常，万一系统错误需要提示用户
+			// 这里捕获流的IO异常，万�?系统错误�?要提示用�?
 			e.printStackTrace();
-			Toast.makeText(this ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			Toast.makeText(this ,"录音合成出错，请重试�?" ,Toast.LENGTH_LONG).show();
 		}
 		finally
 		{
@@ -530,12 +530,12 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			{
 				e.printStackTrace();
 			}
-			// 录音结束 、时间归零
+			// 录音结束 、时间归�?
 			minute = 0;
 			hour = 0;
 			second = 0;
 		}
-		// 不管合成是否成功、删除录音片段
+		// 不管合成是否成功、删除录音片�?
 		for(int i = 0 ; i < mList.size() ; i ++ )
 		{
 			File file = new File(mList.get(i));
@@ -552,8 +552,8 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 	{
 		if(System.currentTimeMillis() - limitTime < 1100)
 		{
-			// 录音文件不得低于一秒钟
-			Toast.makeText(this ,"录音时间长度不得低于1秒钟！" ,Toast.LENGTH_SHORT).show();
+			// 录音文件不得低于�?秒钟
+			Toast.makeText(this ,"录音时间长度不得低于1秒钟�?" ,Toast.LENGTH_SHORT).show();
 			return;
 		}
 		stopRecord.setEnabled(true);
@@ -561,19 +561,19 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		mRecorder.release();
 		timer.cancel();
 		isPause = true;
-		// 将录音片段加入列表
+		// 将录音片段加入列�?
 		mList.add(fileAllNameAmr);
 		startRecord.setEnabled(true);
 		startRecord.setText("继续录音");
 		stopRecord.setText("完成录音");
 	}
 
-	// 开始录音
+	// �?始录�?
 	@SuppressWarnings("deprecation")
 	private void startRecord()
 	{
 		stopRecord.setText("暂停录音");
-		startRecord.setText("录音中...");
+		startRecord.setText("录音�?...");
 		startRecord.setEnabled(false);
 		startPlay.setEnabled(false);
 		stopRecord.setEnabled(true);
@@ -581,7 +581,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		share.setEnabled(false);
 		if( !isPause)
 		{
-			// 新录音清空列表
+			// 新录音清空列�?
 			mList.clear();
 		}
 		File file = new File(recordPath);
@@ -603,7 +603,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		}
 		catch(Exception e)
 		{
-			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件。 否则会出现各种异常。
+			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件�? 否则会出现各种异常�??
 			Toast.makeText(this ,"录音器启动失败，请返回重试！" ,Toast.LENGTH_LONG).show();
 			startPlay.setEnabled(false);
 			stopPlay.setEnabled(false);
@@ -623,7 +623,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 
 	}
 
-	// 计时器异步更新界面
+	// 计时器异步更新界�?
 	@SuppressLint("HandlerLeak")
 	Handler handler = new Handler()
 	{
@@ -673,11 +673,11 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		return time;
 	}
 
-	// 录音列表被点击事件
+	// 录音列表被点击事�?
 	@Override
 	public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 	{
-		// 屏蔽点击事件的一种方式
+		// 屏蔽点击事件的一种方�?
 		if(mRecorder == null)
 		{
 			startPlay.setEnabled(true);
@@ -693,7 +693,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 			}
 		}
 		// startPlay.setText("播放");
-		// 列表文件的选中效果
+		// 列表文件的�?�中效果
 		view.setBackgroundColor(getResources().getColor(R.color.yes));
 		if(currentPosition >= 0 && mAdapter.getisSelectedAt(currentPosition) && currentPosition < list.size())
 		{
@@ -713,7 +713,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		time.setText(list.get(position) + ".amr");
 	}
 
-	// Activity被销毁的时候 释放资源
+	// Activity被销毁的时�?? 释放资源
 	@Override
 	protected void onDestroy()
 	{
@@ -808,7 +808,7 @@ public class RepeatList extends Activity implements OnClickListener , OnItemClic
 		return super.onOptionsItemSelected(item);
 	}
 
-	// 重写按返回键退出播放
+	// 重写按返回键�?出播�?
 	@Override
 	public boolean onKeyDown(int keyCode , KeyEvent event )
 	{

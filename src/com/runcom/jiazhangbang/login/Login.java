@@ -13,9 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,6 +31,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.chinese.Chinese;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -76,24 +75,18 @@ public class Login extends Activity implements View.OnClickListener
 		MobclickAgent.setScenarioType(this ,EScenarioType.E_DUM_NORMAL);
 		UMConfigure.setEncryptEnabled(true);
 
-		if(Build.VERSION.SDK_INT >= 23)
-		{
-			String [] mPermissionList = new String []
-			{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE, Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP, Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS, Manifest.permission.WRITE_APN_SETTINGS };
-			ActivityCompat.requestPermissions(this ,mPermissionList ,123);
-		}
-
 		ActionBar actionbar = getActionBar();
 		actionbar.setDisplayShowHomeEnabled(true);
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		String content = "";
+		String content = "µÇÂ¼";
 		actionbar.setTitle(content);
 
 		initData();
 		initViews();
 		setupEvents();
+		new PermissionUtil(this , Manifest.permission.READ_PHONE_STATE);
 	}
 
 	// @Override
@@ -518,7 +511,6 @@ public class Login extends Activity implements View.OnClickListener
 	protected void onActivityResult(int requestCode , int resultCode , Intent data )
 	{
 		super.onActivityResult(requestCode ,resultCode ,data);
-		System.out.println("requestCode:" + requestCode + "\tresultCode:" + resultCode + "\tdata:" + data.toString());
 		UMShareAPI.get(this).onActivityResult(requestCode ,resultCode ,data);
 	}
 
@@ -697,7 +689,6 @@ public class Login extends Activity implements View.OnClickListener
 		finish();
 
 	}
-
 
 	private void showToast(final String msg )
 	{

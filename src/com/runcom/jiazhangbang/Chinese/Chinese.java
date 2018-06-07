@@ -8,12 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,14 +22,26 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.setting.Setting;
 import com.runcom.jiazhangbang.setting.SettingChoose;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
-@SuppressLint("Override")
 public class Chinese extends Activity
 {
 	private Intent intent = new Intent();
+
+	// private String [] mPermissionList = new String []
+	// { Manifest.permission.ACCESS_NETWORK_STATE,
+	// Manifest.permission.ACCESS_WIFI_STATE,
+	// Manifest.permission.CHANGE_NETWORK_STATE, Manifest.permission.INTERNET,
+	// Manifest.permission.MODIFY_AUDIO_SETTINGS,
+	// Manifest.permission.MOUNT_FORMAT_FILESYSTEMS,
+	// Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+	// Manifest.permission.READ_EXTERNAL_STORAGE,
+	// Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO,
+	// Manifest.permission.VIBRATE, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+	// Manifest.permission.WRITE_SETTINGS };
 
 	@SuppressLint("ResourceAsColor")
 	@Override
@@ -39,7 +49,16 @@ public class Chinese extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chinese);
-
+		new PermissionUtil(this , Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		// if(Build.VERSION.SDK_INT >= 23)
+		// {
+		// Toast.makeText(getApplicationContext() ,"0"
+		// ,Toast.LENGTH_SHORT).show();
+		//
+		// ActivityCompat.requestPermissions(this ,mPermissionList ,0);
+		// checkPermission(mPermissionList ,0);
+		// }
+		Util.SetResUrlHead(getApplicationContext());
 	}
 
 	/**
@@ -205,26 +224,9 @@ public class Chinese extends Activity
 		switch(item.getItemId())
 		{
 			case R.id.main_menu_setting_menu:
-				new Thread(new Runnable()
-				{
-
-					@Override
-					public void run()
-					{
-						if(Build.VERSION.SDK_INT >= 23)
-						{
-							checkPermission();
-						}
-						else
-						{
-							intentSetting();
-						}
-						// directRequestPermisssion(Manifest.permission.WRITE_EXTERNAL_STORAGE
-						// ,0);
-						// checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE
-						// ,0);
-					}
-				}).start();
+				Intent intent = new Intent();
+				intent.setClass(getApplicationContext() ,Setting.class);
+				startActivity(intent);
 				break;
 			case android.R.id.home:
 				Toast.makeText(getApplicationContext() ,"home" ,Toast.LENGTH_LONG).show();
@@ -235,27 +237,6 @@ public class Chinese extends Activity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void intentSetting()
-	{
-		Intent intent = new Intent();
-		intent.setClass(getApplicationContext() ,Setting.class);
-		startActivity(intent);
-	}
-
-	private void checkPermission()
-	{
-		// TODO Auto-generated method stub
-		if(ContextCompat.checkSelfPermission(this ,Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-		{
-			ActivityCompat.requestPermissions(this ,new String []
-			{ Manifest.permission.WRITE_EXTERNAL_STORAGE } ,007);
-		}
-		else
-		{
-			intentSetting();
-		}
-	}
-
 	// @Override
 	// public void onRequestPermissionsResult(int requestCode , String []
 	// permissions , int [] grantResults )
@@ -264,7 +245,6 @@ public class Chinese extends Activity
 	// ,Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
 	// PackageManager.PERMISSION_GRANTED)
 	// {
-	// intentSetting();
 	// }
 	// else
 	// {
@@ -272,59 +252,54 @@ public class Chinese extends Activity
 	// }
 	// }
 
-	protected void checkPermission(String permission , int resultCode )
+	/**
+	 * 检测权限是否被获取
+	 * 
+	 * @param permission
+	 * @param resultCode
+	 */
+	@SuppressWarnings("unused")
+	private void checkPermission(String [] permission , int resultCode )
 	{
-		if(ContextCompat.checkSelfPermission(this ,permission) != PackageManager.PERMISSION_GRANTED)
+		for(int i = 0 , leng = permission.length ; i < leng ; i ++ )
 		{
-			// 没有权限
-			Log.i("info" ,"1,需要申请权限。");
-			if(ActivityCompat.shouldShowRequestPermissionRationale(this ,permission))
+			if(ContextCompat.checkSelfPermission(this ,permission[i]) != PackageManager.PERMISSION_GRANTED)
 			{
-				// TODO 用户未拒绝过 该权限 shouldShowRequestPermissionRationale返回false
-				// 用户拒绝过一次则一直返回true
-				// 注意小米手机 则一直返回时 false
-				Log.i("info" ,"3,用户已经拒绝过一次该权限，需要提示用户为什么需要该权限。\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
-				// 解释为什么 需要该权限的 对话框
-				showMissingPermissionDialog();
+				if(ActivityCompat.shouldShowRequestPermissionRationale(this ,permission[i]))
+				{
+					// TODO 用户拒绝过该权限
+					showMissingPermissionDialog(permission[i]);
+				}
+				else
+				{
+					ActivityCompat.requestPermissions(this ,new String []
+					{ permission[i] } ,resultCode);
+				}
 			}
 			else
 			{
-				// 申请授权。
-				ActivityCompat.requestPermissions(this ,new String []
-				{ permission } ,resultCode);
-				Log.i("info" ,"2,用户拒绝过该权限，或者用户从未操作过该权限，开始申请权限。-\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
+				Toast.makeText(getApplicationContext() ,permission[i] + "已被授权" ,Toast.LENGTH_SHORT).show();
+				System.out.println(permission[i] + "已被授权");
 			}
 		}
-		else
-		{
-			// 权限 已经被准许 you can do something
-			permissionHasGranted();
-			Log.i("info" ,"7,已经被用户授权过了=可以做想做的事情了==打开联系人界面");
-		}
 	}
-
-	protected void permissionHasGranted()
-	{
-		Toast.makeText(getApplicationContext() ,"权限已经被准许了,你可以做你想做的事情" ,Toast.LENGTH_SHORT).show();
-	}
-
-	int clicki = 0;
 
 	/**
-	 * 提示用户的 dialog
+	 * 提示用户设置权限
+	 * 
+	 * @param permission
 	 */
-	protected void showMissingPermissionDialog()
+	private void showMissingPermissionDialog(String permission )
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("提示");
-		builder.setMessage("当前应用缺少联系人权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。");
-		// 拒绝, 退出应用
+		builder.setMessage("当前应用缺少权限" + permission + "。\n\n请点击\"设置\"-\"权限\"-打开所需权限。");
 		builder.setNegativeButton("关闭" ,new DialogInterface.OnClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialog , int which )
 			{
-				Log.i("info" ,"8--权限被拒绝,此时不会再回调onRequestPermissionsResult方法");
+				Toast.makeText(getApplicationContext() ,"取消授权可能导致部分功能无法使用" ,Toast.LENGTH_SHORT).show();
 			}
 		});
 		builder.setPositiveButton("设置" ,new DialogInterface.OnClickListener()
@@ -332,36 +307,13 @@ public class Chinese extends Activity
 			@Override
 			public void onClick(DialogInterface dialog , int which )
 			{
-				Log.i("info" ,"4,需要用户手动设置，开启当前app设置界面");
-				startAppSettings();
+				Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+				intent.setData(Uri.parse("package:" + getPackageName()));
+				startActivity(intent);
 			}
 		});
 		builder.setCancelable(false);
 		builder.show();
-	}
-
-	/**
-	 * 打开 App设置界面
-	 */
-	private void startAppSettings()
-	{
-		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-		intent.setData(Uri.parse("package:" + getPackageName()));
-		startActivity(intent);
-	}
-
-	/**
-	 * 直接 请求 权限
-	 * 
-	 * @param permission
-	 *            权限
-	 * @param resultCode
-	 *            结果码
-	 */
-	protected void directRequestPermisssion(String permission , int resultCode )
-	{
-		ActivityCompat.requestPermissions(this ,new String []
-		{ permission } ,resultCode);
 	}
 
 	// 两秒内按返回键两次退出程序
@@ -375,9 +327,6 @@ public class Chinese extends Activity
 		{
 			if((System.currentTimeMillis() - exitTime) > 2000)
 			{
-				// new ShareUtils(this).shareMultipleLink(Util.update
-				// ,getResources().getString(R.string.app_name) ," " ,null
-				// ,R.drawable.ic_launcher);
 				Toast.makeText(getApplicationContext() ,"再按一次退出程序" ,Toast.LENGTH_SHORT).show();
 				exitTime = System.currentTimeMillis();
 			}

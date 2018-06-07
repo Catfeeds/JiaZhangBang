@@ -1,12 +1,10 @@
 package com.runcom.jiazhangbang.util;
 
 //superTextView BRVAH ARouter smartRefreshlayout takePhoto rxpermission okGo
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.FutureTask;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -26,6 +24,7 @@ public class Util
 	public static final String SECRETKEY = "8848@jzb";
 	public static final String REALSERVER = "http://jzb.nutnet.cn:8800/interface/";
 	public static final String RESOURCESERVER = "http://res.nutnet.cn:8800/";
+
 	public static final String update = "http://down.nutnet.cn:8800/android/jzb_newest.apk";
 	public static String build = "57";
 	public static final String market = "2";
@@ -57,6 +56,15 @@ public class Util
 	public static final String [] unitSharedPreferencesKeyString =
 	{ "SettingChooseUnit", "SettingChooseUnitListenText", "SettingChooseUnitListenWrite", "SettingChooseUnitReciteText", "SettingChooseUnitRepeat", "SettingChooseUnitFindNewWords", "SettingChooseUnitPlayGame", "SettingChooseUnitRecord" };
 
+
+	public static final String utilResUrlHeadSharedPreferencesKey = "UtilResUrlHeadSharedPreferencesKeyString";
+	public static final String utilResUrlHeadSharedPreferencesKeyString = "UtilResUrlHead";
+	public static void SetResUrlHead(Context context )
+	{
+		FutureTask < String > faeature = new FutureTask < String >(new GetResUrlHead(context));
+		new Thread(faeature).start();
+	}
+
 	public static TreeMap < String , String > getMap(Context context )
 	{
 		String app = "";
@@ -78,7 +86,7 @@ public class Util
 		if(lang.contains("zh"))
 			lang = "zh-Hans-CN";// 中文是zh-Hans或zh-Hans-CN，英文是en或en-US
 		else
-			lang = "en";
+			lang = "en-US";
 		String ver = packageInfo.versionName;
 
 		Map < String , String > map = new TreeMap < String , String >();
@@ -211,45 +219,6 @@ public class Util
 	{
 		final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
 		return (int) (spValue * fontScale + 0.5f);
-	}
-
-	@SuppressWarnings("unused")
-    private static String getLrcContents(String sourcePath )
-	{
-		String line = "";
-		String content = "";
-		BufferedReader reader = null;
-		try
-		{
-			reader = new BufferedReader(new InputStreamReader(new URL(sourcePath).openStream()));
-			while((line = reader.readLine()) != null)
-			{
-				content += (line + "\n");
-				// System.out.println("---------------------------line:" +
-				// line);
-			}
-		}
-		catch(Exception e)
-		{
-			content = "暂无字幕";
-			System.out.println(e);
-		}
-		finally
-		{
-			try
-			{
-				if(reader != null)
-				{
-					reader.close();
-				}
-			}
-			catch(Exception e)
-			{
-				content = "暂无字幕";
-				System.out.println(e);
-			}
-		}
-		return content;
 	}
 
 }

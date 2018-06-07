@@ -365,12 +365,13 @@ public class ListenWriteGameMain extends Activity
 				voiceContent = new String [leng];
 				pinyinContent = new String [leng];
 				gameItemBeanList = new ArrayList < ListenWriteGameItemBean >();
+				String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 				for(int i = 0 ; i < leng ; i ++ )
 				{
 					gameItemBean = new ListenWriteGameItemBean();
 					phlistJsonObject = new JSONObject(jsonArray.getString(i));
 					phraseContent[i] = phlistJsonObject.getString("phrase");
-					voiceContent[i] = Util.RESOURCESERVER + phlistJsonObject.getString("voice");
+					voiceContent[i] = resourceServer + phlistJsonObject.getString("voice");
 					pinyinContent[i] = phlistJsonObject.getString("pinyin");
 					gameItemBean.setPhrase(phraseContent[i]);
 					gameItemBean.setVoice(voiceContent[i]);

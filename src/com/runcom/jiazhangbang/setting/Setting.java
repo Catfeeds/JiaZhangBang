@@ -5,17 +5,9 @@ import java.text.DecimalFormat;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,99 +58,6 @@ public class Setting extends Activity
 		// ,0);
 		// checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE ,0);
 		initView();
-	}
-
-	protected void checkPermission(String permission , int resultCode )
-	{
-		if(ContextCompat.checkSelfPermission(this ,permission) != PackageManager.PERMISSION_GRANTED)
-		{// 没有权限。
-			Log.i("info" ,"1,需要申请权限。");
-			if(ActivityCompat.shouldShowRequestPermissionRationale(this ,permission))
-			{
-				// TODO 用户未拒绝过 该权限 shouldShowRequestPermissionRationale返回false
-				// 用户拒绝过一次则一直返回true
-				// TODO 注意小米手机 则一直返回时 false
-				Log.i("info" ,"3,用户已经拒绝过一次该权限，需要提示用户为什么需要该权限。\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
-				// TODO 解释为什么 需要该权限的 对话框
-				showMissingPermissionDialog();
-			}
-			else
-			{
-				// 申请授权。
-				ActivityCompat.requestPermissions(this ,new String []
-				{ permission } ,resultCode);
-				Log.i("info" ,"2,用户拒绝过该权限，或者用户从未操作过该权限，开始申请权限。-\n" + "此时shouldShowRequestPermissionRationale返回：" + ActivityCompat.shouldShowRequestPermissionRationale(this ,permission));
-			}
-		}
-		else
-		{
-			// TODO 权限 已经被准许 you can do something
-			permissionHasGranted();
-			Log.i("info" ,"7,已经被用户授权过了=可以做想做的事情了==打开联系人界面");
-		}
-	}
-
-	protected void permissionHasGranted()
-	{
-		// txt_info.setText("权限已经被准许了,你可以做你想做的事情");
-		Toast.makeText(getApplicationContext() ,"权限已经被准许了,你可以做你想做的事情" ,Toast.LENGTH_SHORT).show();
-
-	}
-
-	int clicki = 0;
-
-	/**
-	 * 提示用户的 dialog
-	 */
-	protected void showMissingPermissionDialog()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("提示");
-		builder.setMessage("当前应用缺少联系人权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。");
-		// 拒绝, 退出应用
-		builder.setNegativeButton("关闭" ,new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog , int which )
-			{
-				Log.i("info" ,"8--权限被拒绝,此时不会再回调onRequestPermissionsResult方法");
-			}
-		});
-		builder.setPositiveButton("设置" ,new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialog , int which )
-			{
-				Log.i("info" ,"4,需要用户手动设置，开启当前app设置界面");
-				startAppSettings();
-			}
-		});
-		builder.setCancelable(false);
-		builder.show();
-	}
-
-	/**
-	 * 打开 App设置界面
-	 */
-	private void startAppSettings()
-	{
-		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-		intent.setData(Uri.parse("package:" + getPackageName()));
-		startActivity(intent);
-	}
-
-	/**
-	 * 直接 请求 权限
-	 * 
-	 * @param permission
-	 *            权限
-	 * @param resultCode
-	 *            结果码
-	 */
-	protected void directRequestPermisssion(String permission , int resultCode )
-	{
-		ActivityCompat.requestPermissions(this ,new String []
-		{ permission } ,resultCode);
 	}
 
 	private void initView()

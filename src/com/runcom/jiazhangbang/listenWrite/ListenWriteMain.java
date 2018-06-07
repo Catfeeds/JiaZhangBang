@@ -243,13 +243,12 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		newWordsList.clear();
 		newWordsListStar.clear();
 		playList.clear();
+		String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 		for(int i = 0 ; i < phraseContent.length ; i ++ )
 		{
 			for(int k = 0 ; k < frequencyValue ; k ++ )
 			{
-				playList.add(Util.RESOURCESERVER + voiceContent[i]);
-				// System.out.println("*******************************" +
-				// Util.RESOURCESERVER + voiceContent[i]);
+				playList.add(resourceServer + voiceContent[i]);
 			}
 			// Log.d("log*********" ,"0***" + playList.get(i).toString());
 

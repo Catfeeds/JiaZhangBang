@@ -16,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.FutureTask;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -45,6 +46,7 @@ import android.widget.Toast;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.GetLrcContents;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
 
@@ -138,6 +140,7 @@ public class ReciteTextMain extends Activity implements Checkable
 
 		Arrays.fill(scores ,"");
 		initView();
+		new PermissionUtil(this , Manifest.permission.RECORD_AUDIO);
 	}
 
 	public void reciteSwitching(View v )

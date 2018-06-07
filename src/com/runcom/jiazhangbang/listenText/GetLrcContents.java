@@ -26,7 +26,7 @@ public class GetLrcContents implements Callable < String >
 			while((line = reader.readLine()) != null)
 			{
 				content += (line + "\n");
-				System.out.println(line + "\n");
+				// System.out.println(line + "\n");
 			}
 		}
 		catch(Exception e)
