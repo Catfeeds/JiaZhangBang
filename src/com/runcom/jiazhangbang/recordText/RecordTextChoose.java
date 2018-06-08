@@ -9,6 +9,7 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,6 +29,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.reciteText.MyText;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -73,7 +75,7 @@ public class RecordTextChoose extends Activity
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage("正在获取数据......");
 		progressDialog.show();
-
+		new PermissionUtil(this , Manifest.permission.RECORD_AUDIO);
 		initData();
 	}
 
@@ -87,6 +89,7 @@ public class RecordTextChoose extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
@@ -185,7 +188,6 @@ public class RecordTextChoose extends Activity
 			@Override
 			public void onItemClick(AdapterView < ? > parent , View view , int position , long id )
 			{
-				Toast.makeText(getApplicationContext() ,textList.get(position).getName() ,Toast.LENGTH_SHORT).show();
 				// TODO
 				Intent intent = new Intent(getApplicationContext() , RecordTextMain.class);
 				intent.putExtra("textid" ,textList.get(position).getId());

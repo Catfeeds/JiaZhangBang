@@ -96,6 +96,7 @@ public class ListenWriteTips extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");

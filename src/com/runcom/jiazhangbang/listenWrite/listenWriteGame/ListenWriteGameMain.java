@@ -309,6 +309,7 @@ public class ListenWriteGameMain extends Activity
 	private void initData()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
@@ -365,7 +366,7 @@ public class ListenWriteGameMain extends Activity
 				voiceContent = new String [leng];
 				pinyinContent = new String [leng];
 				gameItemBeanList = new ArrayList < ListenWriteGameItemBean >();
-				String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+				String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 				for(int i = 0 ; i < leng ; i ++ )
 				{
 					gameItemBean = new ListenWriteGameItemBean();

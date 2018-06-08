@@ -127,6 +127,7 @@ public class FindNewWords extends Activity
 	private void initData1()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
@@ -195,6 +196,7 @@ public class FindNewWords extends Activity
 	private void initData2()
 	{
 		TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");

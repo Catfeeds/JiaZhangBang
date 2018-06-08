@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.util.AttributeSet;
 import android.view.View;
@@ -70,6 +71,8 @@ public class LrcView extends View
 	public LrcView(Context context , AttributeSet attrs)
 	{
 		this(context , attrs , 0);
+		setFocusable(true);
+		setFocusableInTouchMode(true);
 	}
 
 	public LrcView(Context context , AttributeSet attrs , int defStyleAttr)
@@ -93,6 +96,7 @@ public class LrcView extends View
 		hPaint.setColor(highLineColor);
 		hPaint.setTextSize(TEXTSIZE);
 		hPaint.setTextAlign(Paint.Align.CENTER);
+
 	}
 
 	@Override
@@ -214,5 +218,36 @@ public class LrcView extends View
 			System.out.println("com.runcom.jiazhangbang.listenText.lrcView.LrcView.getCurrentPosition():" + e);
 			postInvalidateDelayed(100);
 		}
+	}
+
+	/*
+	 * 这个属性这个View得到焦点,在这里我们设置为true,这个View就永远是有焦点的
+	 */
+	@Override
+	public boolean isFocused()
+	{
+		return true;
+	}
+
+	/*
+	 * 用于EditText抢注焦点的问题
+	 */
+	@Override
+	protected void onFocusChanged(boolean focused , int direction , Rect previouslyFocusedRect )
+	{
+		if(focused)
+		{
+			super.onFocusChanged(focused ,direction ,previouslyFocusedRect);
+		}
+	}
+
+	/*
+	 * Window与Window间焦点发生改变时的回调
+	 */
+	@Override
+	public void onWindowFocusChanged(boolean hasWindowFocus )
+	{
+		if(hasWindowFocus)
+			super.onWindowFocusChanged(hasWindowFocus);
 	}
 }

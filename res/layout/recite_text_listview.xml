@@ -2,13 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B3A981"
     android:orientation="vertical" >
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/recitText_swipeMenu_listView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#B3A981" />
+        android:layout_height="wrap_content" />
 
-</LinearLayout>
+</LinearLayout><!-- android:background="#B3A981" -->

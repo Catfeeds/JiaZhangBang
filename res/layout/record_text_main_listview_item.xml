@@ -27,6 +27,7 @@
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:background="@drawable/activity_chinese_background_shape"
+        android:clickable="true"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"

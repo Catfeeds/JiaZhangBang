@@ -9,6 +9,7 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,6 +26,7 @@ import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.reciteText.MyText;
 import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.NetUtil;
+import com.runcom.jiazhangbang.util.PermissionUtil;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -33,10 +35,11 @@ public class RecordTextMain extends Activity
 {
 	private int course , grade , phase , unit;
 	private ProgressDialog progressDialog;
-	private String textid;
+	private String textid , textname;
 	private MyText myText = new MyText();
 	private ArrayList < MyText > textList = new ArrayList < MyText >();
 	private ListView record_text_main_listView;
+	private RecordTextMainListViewAdapter recordTextMainListViewAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -61,7 +64,8 @@ public class RecordTextMain extends Activity
 		actionbar.setDisplayUseLogoEnabled(true);
 		actionbar.setDisplayShowTitleEnabled(true);
 		actionbar.setDisplayShowCustomEnabled(true);
-		actionbar.setTitle(getIntent().getStringExtra("textname"));
+		textname = getIntent().getStringExtra("textname");
+		actionbar.setTitle(textname);
 
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setCancelable(false);
@@ -70,6 +74,8 @@ public class RecordTextMain extends Activity
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage("正在获取数据......");
 		progressDialog.show();
+
+		new PermissionUtil(this , Manifest.permission.RECORD_AUDIO);
 
 		initData();
 	}
@@ -84,6 +90,7 @@ public class RecordTextMain extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("textid" ,textid);
 			System.out.println(Util.REALSERVER + "getslice.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getslice.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
@@ -92,13 +99,16 @@ public class RecordTextMain extends Activity
 				@Override
 				public void onError(Call arg0 , Exception arg1 , int arg2 )
 				{
-					Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
+					// Toast.makeText(getApplicationContext()
+					// ,Util.okHttpUtilsConnectServerExceptionString
+					// ,Toast.LENGTH_LONG).show();
 					textList.clear();
+					// TODO
 					for(int i = 0 ; i < 17 ; i ++ )
 					{
 						myText = new MyText();
-						myText.setLyric(i + "texttexttexttexttexttexttext");
-						myText.setSource(i + "voice");
+						myText.setLyric(i + textname);
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/001_1.mp3");
 						textList.add(myText);
 					}
 					initView();
@@ -160,9 +170,10 @@ public class RecordTextMain extends Activity
 	{
 		// TODO textList
 		record_text_main_listView = (ListView) findViewById(R.id.record_text_main_listView);
-		RecordTextMainListViewAdapter recordTextMainListViewAdapter = new RecordTextMainListViewAdapter(getApplicationContext() , textList);
+		recordTextMainListViewAdapter = new RecordTextMainListViewAdapter(RecordTextMain.this , textList);
 		record_text_main_listView.setAdapter(recordTextMainListViewAdapter);
 		recordTextMainListViewAdapter.notifyDataSetChanged();
+
 		progressDialog.dismiss();
 	}
 
@@ -176,6 +187,9 @@ public class RecordTextMain extends Activity
 				{
 					progressDialog.dismiss();
 				}
+				recordTextMainListViewAdapter.setMediaPlayerCancle();
+				recordTextMainListViewAdapter.notifyDataSetChanged();
+
 				finish();
 				break;
 		}
@@ -192,6 +206,10 @@ public class RecordTextMain extends Activity
 			{
 				progressDialog.dismiss();
 			}
+
+			recordTextMainListViewAdapter.setMediaPlayerCancle();
+			recordTextMainListViewAdapter.notifyDataSetChanged();
+
 			finish();
 			return true;
 		}
@@ -219,6 +237,9 @@ public class RecordTextMain extends Activity
 		{
 			progressDialog.dismiss();
 		}
+
+		recordTextMainListViewAdapter.setMediaPlayerCancle();
+		recordTextMainListViewAdapter.notifyDataSetChanged();
 
 		super.onDestroy();
 	}

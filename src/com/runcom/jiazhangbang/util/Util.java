@@ -56,9 +56,9 @@ public class Util
 	public static final String [] unitSharedPreferencesKeyString =
 	{ "SettingChooseUnit", "SettingChooseUnitListenText", "SettingChooseUnitListenWrite", "SettingChooseUnitReciteText", "SettingChooseUnitRepeat", "SettingChooseUnitFindNewWords", "SettingChooseUnitPlayGame", "SettingChooseUnitRecord" };
 
+	public static final String resourceUrlHeadSharedPreferencesKey = "UtilResUrlHeadSharedPreferencesKeyString";
+	public static final String resourceUrlHeadSharedPreferencesKeyString = "UtilResUrlHead";
 
-	public static final String utilResUrlHeadSharedPreferencesKey = "UtilResUrlHeadSharedPreferencesKeyString";
-	public static final String utilResUrlHeadSharedPreferencesKeyString = "UtilResUrlHead";
 	public static void SetResUrlHead(Context context )
 	{
 		FutureTask < String > faeature = new FutureTask < String >(new GetResUrlHead(context));

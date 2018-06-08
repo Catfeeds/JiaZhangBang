@@ -163,6 +163,7 @@ public class Read extends Activity
 	private void initTitle()
 	{
 		final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+		map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 		map.put("course" ,course + "");
 		map.put("grade" ,grade + "");
 		map.put("phase" ,phase + "");
@@ -263,7 +264,7 @@ public class Read extends Activity
 		}
 		else
 		{
-			final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+			final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 			TreeMap < String , String > map = null;
 			play_list.clear();
 			// play_list_copy.clear();
@@ -272,6 +273,7 @@ public class Read extends Activity
 			{
 				final int ii = i;
 				map = Util.getMap(getApplicationContext());
+				map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 				map.put("textid" ,play_list_id.get(i));
 				System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
 				OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()

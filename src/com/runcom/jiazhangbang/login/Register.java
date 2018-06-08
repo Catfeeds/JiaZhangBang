@@ -29,6 +29,7 @@ import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.judge.Judge;
+import com.runcom.jiazhangbang.storage.MySharedPreferences;
 import com.runcom.jiazhangbang.util.URL;
 import com.runcom.jiazhangbang.util.Util;
 import com.umeng.analytics.MobclickAgent;
@@ -93,7 +94,7 @@ public class Register extends Activity implements OnClickListener
 		switch(v.getId())
 		{
 			case R.id.register_register_button:
-				String account = editText_account.getText().toString().trim();
+				final String account = editText_account.getText().toString().trim();
 				String nickname = editText_nickname.getText().toString().trim();
 				String phoneORemail = editText_register_phoneORemail.getText().toString().trim();
 				String password = editText_register_password.getText().toString().trim();
@@ -131,6 +132,7 @@ public class Register extends Activity implements OnClickListener
 							if(Util.okHttpUtilsResultOkStringValue.equalsIgnoreCase(arg0))
 							{
 								Toast.makeText(getApplicationContext() ,"×¢²á³É¹¦" ,Toast.LENGTH_LONG).show();
+								MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"account" ,account);
 								finish();
 							}
 							else
@@ -149,6 +151,14 @@ public class Register extends Activity implements OnClickListener
 							{
 								return jsonObject.getString("mesg");
 							}
+							/**
+							 * "uid": "12345", "score": "1600",
+							 * "coupon":"S88481234", "type": "1"
+							 */
+							MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,jsonObject.getString("uid"));
+							MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"score" ,jsonObject.getString("score"));
+							MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"coupon" ,jsonObject.getString("coupon"));
+							MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"type" ,jsonObject.getString("type"));
 
 							return Util.okHttpUtilsResultOkStringValue;
 						}

@@ -107,6 +107,7 @@ public class ReciteTextTextChoose extends Activity
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
@@ -196,7 +197,7 @@ public class ReciteTextTextChoose extends Activity
 
 	private void initTextLrc()
 	{
-		final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+		final String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 		TreeMap < String , String > map = null;
 		final int leng = textID.size();
 		textList.clear();
@@ -204,6 +205,7 @@ public class ReciteTextTextChoose extends Activity
 		{
 			final int ii = i;
 			map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("textid" ,textID.get(i).getId());
 			System.out.println(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map));
 			OkHttpUtils.get().url(Util.REALSERVER + "getfulltext.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
@@ -356,7 +358,7 @@ public class ReciteTextTextChoose extends Activity
 						// Toast.makeText(getApplicationContext() ,"ÕýÔÚ·ÖÏí" +
 						// textList.get(position).getName().toString() + "..."
 						// ,Toast.LENGTH_SHORT).show();
-						String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+						String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 						new ShareUtils(ReciteTextTextChoose.this).shareMultipleMusic(textList.get(position).getName() ," " ,resourceServer + textList.get(position).getLink() ,R.drawable.ic_launcher);
 						// Intent share_intent = new Intent(Intent.ACTION_SEND);
 						// share_intent.setType("text/*");

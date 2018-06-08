@@ -56,7 +56,7 @@ public class GetResUrlHead implements Callable < String >
 				}
 				JSONObject configJsonObject = new JSONObject(jsonObject.getString("config"));
 				String content = configJsonObject.getString("resUrlHead");
-				MySharedPreferences.putValue(context ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,content);
+				MySharedPreferences.putValue(context ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,content);
 				System.out.println("com.runcom.jiazhangbang.util.GetResUrlHead.call():" + content);
 				return null;
 			}

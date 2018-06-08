@@ -9,7 +9,6 @@ import okhttp3.Response;
 import org.json.JSONObject;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -57,7 +56,7 @@ public class Login extends Activity implements View.OnClickListener
 
 	private Boolean first = true;
 	private int FLAG_REQUEST = 3;
-	private int EXPIRES = 10;
+	private int EXPIRES = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -83,27 +82,21 @@ public class Login extends Activity implements View.OnClickListener
 		String content = "되쩌";
 		actionbar.setTitle(content);
 
-		initData();
 		initViews();
 		setupEvents();
+		initData();
 		new PermissionUtil(this , Manifest.permission.READ_PHONE_STATE);
-	}
-
-	// @Override
-	@SuppressLint("Override")
-	public void onRequestPermissionsResult(int requestCode , String permissions[] , int [] grantResults )
-	{
-		System.out.println(requestCode + ":" + permissions.toString() + ":" + grantResults.toString());
 	}
 
 	private void initData()
 	{
 		first = MySharedPreferences.getValue(getApplicationContext() ,loginSharedPrefrencesKey ,"first" ,true);
+		login_account_edittext.setText(MySharedPreferences.getValue(getApplicationContext() ,loginSharedPrefrencesKey ,"account" ,""));
 		if( !first)
 		{
 			long time = Long.valueOf(MySharedPreferences.getValue(getApplicationContext() ,loginSharedPrefrencesKey ,"expires" ,String.valueOf(System.currentTimeMillis())));
 
-			if(System.currentTimeMillis() - time >= EXPIRES * 24 * 60 * 60 * 1000)
+			if(System.currentTimeMillis() - time >= EXPIRES * 1 * 60 * 60 * 1000)
 			{
 
 				String loginMode = MySharedPreferences.getValue(getApplicationContext() ,loginSharedPrefrencesKey ,"loginMode" ,"");
@@ -422,6 +415,24 @@ public class Login extends Activity implements View.OnClickListener
 				{
 					return jsonObject.getString("mesg");
 				}
+
+				/**
+				 * "uid": "12345", "session":"88761234",
+				 * "expire":"2017-10-20 12:40:59", "type": "1"， "score": "1600",
+				 * "coupon": "S88481234", "email":"qwe@123.com",
+				 * "nickname":"율율", "access_token":
+				 * " 10_QesGsu-0RJCShAl7v-luSEyayeKA35g9TWy32CeL5XA6ph2m1LD1TFDC4aIePjZJvrrgO4rH1I-_DYASxwVNT1Ayq_SQTf8QRRv5LV2cqs0 "
+				 */
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,jsonObject.getString("uid"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"session" ,jsonObject.getString("session"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"expire" ,jsonObject.getString("expire"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"type" ,jsonObject.getString("type"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"score" ,jsonObject.getString("score"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"coupon" ,jsonObject.getString("coupon"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"email" ,jsonObject.getString("email"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"nickname" ,jsonObject.getString("nickname"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"access_token" ,jsonObject.getString("access_token"));
+
 				return Util.okHttpUtilsResultOkStringValue;
 			}
 		});
@@ -502,6 +513,20 @@ public class Login extends Activity implements View.OnClickListener
 				{
 					return jsonObject.getString("mesg");
 				}
+
+				/**
+				 * "uid": "12345", "session":"88761234",
+				 * "expire":"2017-10-20 12:40:59", "type": "1"， "score": "1600",
+				 * "coupon": "S88481234", "email":"qwe@123.com", "nickname":"율율"
+				 */
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,jsonObject.getString("uid"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"session" ,jsonObject.getString("session"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"expire" ,jsonObject.getString("expire"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"type" ,jsonObject.getString("type"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"score" ,jsonObject.getString("score"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"coupon" ,jsonObject.getString("coupon"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"email" ,jsonObject.getString("email"));
+				MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"nickname" ,jsonObject.getString("nickname"));
 				return Util.okHttpUtilsResultOkStringValue;
 			}
 		});
@@ -596,6 +621,17 @@ public class Login extends Activity implements View.OnClickListener
 						{
 							return jsonObject.getString("mesg");
 						}
+						/**
+						 * "uid": "12345", "score": "1600",
+						 * "coupon":"S88481234", "email": "123@abc.com",
+						 * "session":"88761234", "type": "1"
+						 */
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,jsonObject.getString("uid"));
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"score" ,jsonObject.getString("score"));
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"coupon" ,jsonObject.getString("coupon"));
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"email" ,jsonObject.getString("email"));
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"session" ,jsonObject.getString("session"));
+						MySharedPreferences.putValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"type" ,jsonObject.getString("type"));
 						return Util.okHttpUtilsResultOkStringValue;
 					}
 				});

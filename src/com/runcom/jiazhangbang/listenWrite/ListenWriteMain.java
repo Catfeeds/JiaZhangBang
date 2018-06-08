@@ -171,6 +171,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		else
 		{
 			final TreeMap < String , String > map = Util.getMap(getApplicationContext());
+			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("course" ,course + "");
 			map.put("grade" ,grade + "");
 			map.put("phase" ,phase + "");
@@ -243,7 +244,7 @@ public class ListenWriteMain extends Activity implements OnCompletionListener , 
 		newWordsList.clear();
 		newWordsListStar.clear();
 		playList.clear();
-		String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.utilResUrlHeadSharedPreferencesKey ,Util.utilResUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
+		String resourceServer = MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER);
 		for(int i = 0 ; i < phraseContent.length ; i ++ )
 		{
 			for(int k = 0 ; k < frequencyValue ; k ++ )

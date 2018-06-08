@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/register_account_imageview"
-            android:layout_width="@dimen/dp_19"
+            android:layout_width="@dimen/dp_18"
             android:layout_height="@dimen/dp_20"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_tiny"
@@ -44,7 +44,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
         <View
@@ -65,13 +65,13 @@
 
         <ImageView
             android:id="@+id/register_nickname_imageview"
-            android:layout_width="@dimen/dp_19"
+            android:layout_width="@dimen/dp_18"
             android:layout_height="@dimen/dp_20"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_tiny"
             android:layout_marginLeft="@dimen/margin_tiny"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_login_account" />
+            android:src="@drawable/icon_login_nickname" />
 
         <EditText
             android:id="@+id/register_nickname_edittext"
@@ -88,7 +88,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
         <View
@@ -109,13 +109,13 @@
 
         <ImageView
             android:id="@+id/register_number_imageview"
-            android:layout_width="@dimen/dp_19"
+            android:layout_width="@dimen/dp_18"
             android:layout_height="@dimen/dp_20"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_tiny"
             android:layout_marginLeft="@dimen/margin_tiny"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_login_account" />
+            android:src="@drawable/icon_login_phone" />
 
         <EditText
             android:id="@+id/register_phone_or_email_edittext"
@@ -132,7 +132,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
         <View
@@ -177,7 +177,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
         <View
@@ -222,7 +222,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
         <View
@@ -249,7 +249,7 @@
             android:layout_marginBottom="@dimen/margin_tiny"
             android:layout_marginLeft="@dimen/margin_tiny"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_login_pw" />
+            android:src="@drawable/icon_login_checkcode" />
 
         <EditText
             android:id="@+id/register_checknumber_edittext"
@@ -268,8 +268,9 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@android:color/black"
-            android:textColorHint="@color/tv_gray_deep"
+            android:textColorHint="@color/white"
             android:textSize="@dimen/text_size_normal" />
+        <!-- android:textColorHint="@color/tv_gray_deep" -->
 
         <TextView
             android:id="@+id/register_getchecknumber_textview"
