@@ -3,6 +3,17 @@ package com.runcom.jiazhangbang.reciteText;
 public class MyText
 {
 	private String id , name , mode , link , source , lyric , other;
+	private boolean selected;
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(boolean selected )
+	{
+		this.selected = selected;
+	}
 
 	public String getId()
 	{

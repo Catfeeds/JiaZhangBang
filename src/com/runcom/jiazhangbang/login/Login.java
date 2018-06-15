@@ -359,6 +359,7 @@ public class Login extends Activity implements View.OnClickListener
 			public void onError(Call arg0 , Exception arg1 , int arg2 )
 			{
 				hideLoading();
+				System.out.println("wxapplogin.php:" + arg1);
 				Toast.makeText(getApplicationContext() ,Util.okHttpUtilsConnectServerExceptionString ,Toast.LENGTH_LONG).show();
 			}
 

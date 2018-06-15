@@ -37,7 +37,7 @@ public class RecordTextMain extends Activity
 	private ProgressDialog progressDialog;
 	private String textid , textname;
 	private MyText myText = new MyText();
-	private ArrayList < MyText > textList = new ArrayList < MyText >();
+	private final ArrayList < MyText > textList = new ArrayList < MyText >();
 	private ListView record_text_main_listView;
 	private RecordTextMainListViewAdapter recordTextMainListViewAdapter;
 
@@ -104,13 +104,116 @@ public class RecordTextMain extends Activity
 					// ,Toast.LENGTH_LONG).show();
 					textList.clear();
 					// TODO
-					for(int i = 0 ; i < 17 ; i ++ )
+
+					for(int i = 0 ; i < 1 ; i ++ )
 					{
 						myText = new MyText();
-						myText.setLyric(i + textname);
+						myText.setLyric("独坐敬亭山001-1");
 						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/001_1.mp3");
 						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("唐 李白001-2");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/001_2.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("众鸟高飞尽001-3");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/001_3.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("孤云独去闲002");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/002.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("相看两不厌003");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/003.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("只有敬亭山004");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/004.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("第二课 桂林山水005");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/005.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("人们都说：“桂林山水甲天下。”006");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/006.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("我们乘着木船，荡漾在漓江上，007");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/007.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("来观赏桂林的山水。008");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/008.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("我看见过波澜壮阔的大海，009");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/009.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("欣赏过水平如镜的西湖，010");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/010.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("却从没看见过漓江这样的水。011");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/011.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("漓江的水真静啊，012");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/012.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("静得让你感觉不到它在流动；013");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/013.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("漓江的水真清啊014");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/014.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("清得可以看见江底的沙石；015");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/015.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("漓江的水真绿啊016");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/016.mp3");
+						textList.add(myText);
+
+						myText = new MyText();
+						myText.setLyric("桂林的山真险啊，危峰兀立，怪石嶙峋，017");
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + "cn/4-2/mp3/017.mp3");
+						textList.add(myText);
+
+						System.out.println(textList);
 					}
+					// for(int i = 0 ; i < 17 ; i ++ )
+					// {
+					// myText = new MyText();
+					// myText.setLyric(i + textname + textname);
+					// myText.setSource(MySharedPreferences.getValue(getApplicationContext()
+					// ,Util.resourceUrlHeadSharedPreferencesKey
+					// ,Util.resourceUrlHeadSharedPreferencesKeyString
+					// ,Util.RESOURCESERVER) + "cn/4-2/mp3/001_1.mp3");
+					// textList.add(myText);
+					// }
 					initView();
 					// finish();
 				}
@@ -172,6 +275,7 @@ public class RecordTextMain extends Activity
 		record_text_main_listView = (ListView) findViewById(R.id.record_text_main_listView);
 		recordTextMainListViewAdapter = new RecordTextMainListViewAdapter(RecordTextMain.this , textList);
 		record_text_main_listView.setAdapter(recordTextMainListViewAdapter);
+		record_text_main_listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
 		recordTextMainListViewAdapter.notifyDataSetChanged();
 
 		progressDialog.dismiss();

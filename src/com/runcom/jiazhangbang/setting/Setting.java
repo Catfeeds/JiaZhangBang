@@ -213,7 +213,7 @@ public class Setting extends Activity
 				file.delete();
 			}
 			else
-				if(file.toString().endsWith(".lrc") || file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk"))
+				if(file.toString().endsWith(".lrc") || file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk") || file.toString().endsWith("mp3"))
 				{
 					fileSizeCount += file.length();
 					file.delete();
@@ -236,7 +236,7 @@ public class Setting extends Activity
 				// System.out.println("1:" + file.toString() + fileSizeCount);
 			}
 			else
-				if(file.toString().endsWith(".lrc") || file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk"))
+				if(file.toString().endsWith(".lrc") || file.toString().endsWith(".wav") || file.toString().endsWith(".amr") || file.toString().endsWith(".apk") || file.toString().endsWith("mp3"))
 				{
 					fileSizeCount += file.length();
 					// System.out.println("2:" + file.toString() +

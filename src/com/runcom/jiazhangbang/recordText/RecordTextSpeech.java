@@ -104,8 +104,8 @@ public class RecordTextSpeech
 				 * 查找本地文件中是否包含识别到的词语
 				 */
 				// TODO
-				Toast.makeText(context ,"录制完成" ,Toast.LENGTH_SHORT).show();
-				System.out.println("录制完成");
+				Toast.makeText(context ,resultBuffer + "录制完成" ,Toast.LENGTH_SHORT).show();
+				System.out.println(resultBuffer + "录制完成");
 			}
 			else
 			{
