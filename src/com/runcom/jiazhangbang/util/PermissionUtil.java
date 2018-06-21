@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class PermissionUtil
 {
 
-	private String [] mPermissionList = new String []
+	private final String [] mPermissionList = new String []
 	{
 	// Manifest.permission.ACCESS_NETWORK_STATE, // Normal Permissions
 	// Manifest.permission.ACCESS_WIFI_STATE, // Normal Permissions
@@ -60,7 +60,7 @@ public class PermissionUtil
 		{
 			if(Util.debug)
 			{
-				Toast.makeText(activity ,"1" ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(activity ,"1" ,Toast.LENGTH_SHORT).show();
 			}
 			ActivityCompat.requestPermissions(activity ,new String []
 			{ permission } ,1);
@@ -80,7 +80,7 @@ public class PermissionUtil
 		{
 			if(Util.debug)
 			{
-				Toast.makeText(activity ,"2" ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(activity ,"2" ,Toast.LENGTH_SHORT).show();
 			}
 			ActivityCompat.requestPermissions(activity ,permission ,2);
 			checkPermissions(activity ,permission ,2);
@@ -115,7 +115,8 @@ public class PermissionUtil
 		{
 			if(Util.debug)
 			{
-				Toast.makeText(activity ,permission + "已被授权" ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(activity ,permission + "已被授权"
+				// ,Toast.LENGTH_SHORT).show();
 				System.out.println(permission + "已被授权");
 			}
 		}

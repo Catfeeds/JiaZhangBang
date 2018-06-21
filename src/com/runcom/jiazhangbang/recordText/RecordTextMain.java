@@ -93,7 +93,9 @@ public class RecordTextMain extends Activity
 			map.put("uid" ,MySharedPreferences.getValue(getApplicationContext() ,Util.loginSharedPrefrencesKey ,"uid" ,null));
 			map.put("textid" ,textid);
 			System.out.println(Util.REALSERVER + "getslice.php?" + URL.getParameter(map));
-			OkHttpUtils.get().url(Util.REALSERVER + "getslice.php?" + URL.getParameter(map)).build().execute(new Callback < String >()
+			// OkHttpUtils.get().url("http://test.nutnet.cn:8800/interface/getslice.php?dev=1&os=2&term=3&textid=4&sign=1e905f32a4ac451d8388c64496e38fe7").build().execute(new
+			// Callback < String >()
+			OkHttpUtils.get().url("http://test.nutnet.cn:8800/interface/getslice.php?dev=1&os=2&term=3&textid=6&sign=8f47241932dd6127cd094b0f78377f60").build().execute(new Callback < String >()
 			{
 
 				@Override
@@ -260,7 +262,7 @@ public class RecordTextMain extends Activity
 						textListJsonObject = new JSONObject(jsonArray.getString(i));
 						myText = new MyText();
 						myText.setLyric(textListJsonObject.getString("text"));
-						myText.setSource(textListJsonObject.getString("voice"));
+						myText.setSource(MySharedPreferences.getValue(getApplicationContext() ,Util.resourceUrlHeadSharedPreferencesKey ,Util.resourceUrlHeadSharedPreferencesKeyString ,Util.RESOURCESERVER) + textListJsonObject.getString("voice"));
 						textList.add(myText);
 					}
 					return Util.okHttpUtilsResultOkStringValue;

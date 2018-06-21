@@ -27,7 +27,7 @@ public class RecordTextSpeech
 	private RecognizerDialog mIatDialog;
 	private SpeechRecognizer mIat;
 
-	private HashMap < String , String > mIatResults = new LinkedHashMap < String , String >();
+	private final HashMap < String , String > mIatResults = new LinkedHashMap < String , String >();
 
 	public RecordTextSpeech()
 	{
@@ -59,7 +59,7 @@ public class RecordTextSpeech
 	/**
 	 * 初始化监听器。
 	 */
-	private InitListener mInitListener = new InitListener()
+	private final InitListener mInitListener = new InitListener()
 	{
 		@Override
 		public void onInit(int code )
@@ -77,6 +77,7 @@ public class RecordTextSpeech
 	 */
 	RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener()
 	{
+		@Override
 		public void onResult(RecognizerResult results , boolean isLast )
 		{
 			String text = JsonParser.parseIatResult(results.getResultString());
@@ -104,7 +105,8 @@ public class RecordTextSpeech
 				 * 查找本地文件中是否包含识别到的词语
 				 */
 				// TODO
-				Toast.makeText(context ,resultBuffer + "录制完成" ,Toast.LENGTH_SHORT).show();
+				// Toast.makeText(context ,resultBuffer + "录制完成"
+				// ,Toast.LENGTH_SHORT).show();
 				System.out.println(resultBuffer + "录制完成");
 			}
 			else
@@ -116,6 +118,7 @@ public class RecordTextSpeech
 		/**
 		 * 识别回调错误.
 		 */
+		@Override
 		public void onError(SpeechError error )
 		{
 			// Toast.makeText(context , "阿斯顿发生大事的发生的发生的发生发送到发送到发送到发送到发送到分" +

@@ -56,9 +56,8 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 	public View getView(final int position , View convertView , ViewGroup parent )
 	{
 		final Holder holder;
-		mediaPlayer_record = new MediaPlayer();
 		mediaPlayer_resource = new MediaPlayer();
-		final String filePath = Util.S2TPATH + textList.get(position).getSource().substring(textList.get(position).getSource().indexOf("8800/") + 5 ,textList.get(position).getSource().lastIndexOf(".")) + ".wav";
+		mediaPlayer_record = new MediaPlayer();
 		if(convertView == null)
 		{
 			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,7 +65,7 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 			holder = new Holder();
 			holder.name = (TextView) convertView.findViewById(R.id.record_text_main_listview_item_name);
 			holder.playRecord_button = (ImageView) convertView.findViewById(R.id.record_text_main_listview_item_record);
-
+			holder.voice = (TextView) convertView.findViewById(R.id.record_text_main_listview_item_marqueetext_name);
 			holder.name.setOnClickListener(new OnClickListener()
 			{
 
@@ -75,7 +74,13 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 				{
 					if(mediaPlayer_record.isPlaying())
 					{
-						Toast.makeText(context ,"录制播放：" + position + "未结束" ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(context ,"录制播放未结束" ,Toast.LENGTH_SHORT).show();
+						return;
+					}
+
+					if(mediaPlayer_resource.isPlaying())
+					{
+						Toast.makeText(context ,"资源播放未结束" ,Toast.LENGTH_SHORT).show();
 						return;
 					}
 
@@ -85,12 +90,18 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 						@Override
 						public void onCompletion(MediaPlayer mp )
 						{
-							Toast.makeText(context ,"资源播放：" + textList.get(position).getLyric() + "完成" ,Toast.LENGTH_SHORT).show();
-							System.out.println("资源播放：" + textList.get(position).getLyric() + "完成");
-							new RecordTextSpeech(context , filePath).play();
-							holder.playRecord_button.setVisibility(View.VISIBLE);
+							holder.name.setBackgroundResource(R.drawable.activity_chinese_background_shape);
+							String webVoice = holder.voice.getText().toString();
+							// Toast.makeText(context ,"资源播放：" + webVoice + "完成"
+							// ,Toast.LENGTH_SHORT).show();
+							System.out.println("资源播放：" + webVoice + "完成");
+							webVoice = Util.S2TPATH + webVoice.substring(webVoice.indexOf("8800/") + 5 ,webVoice.lastIndexOf(".")) + ".wav";
+							new RecordTextSpeech(context , webVoice).play();
+							// holder.playRecord_button.setVisibility(View.VISIBLE);
 						}
 					});
+
+					holder.name.setBackgroundResource(R.color.white_pressed);
 
 					new Thread(new Runnable()
 					{
@@ -100,7 +111,7 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 							try
 							{
 								mediaPlayer_resource.reset();
-								mediaPlayer_resource.setDataSource(textList.get(position).getSource());
+								mediaPlayer_resource.setDataSource(holder.voice.getText().toString());
 								mediaPlayer_resource.prepare();
 								mediaPlayer_resource.start();
 							}
@@ -121,11 +132,19 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 				{
 					if(mediaPlayer_resource.isPlaying())
 					{
-						Toast.makeText(context ,"资源播放：" + position + "未结束" ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(context ,"资源播放未结束" ,Toast.LENGTH_SHORT).show();
 						return;
 					}
 
-					if( !new File(filePath).exists())
+					if(mediaPlayer_record.isPlaying())
+					{
+						Toast.makeText(context ,"录制播放未结束" ,Toast.LENGTH_SHORT).show();
+						return;
+					}
+
+					String voice = holder.voice.getText().toString();
+					final String localVoicePath = Util.S2TPATH + voice.substring(voice.indexOf("8800/") + 5 ,voice.lastIndexOf(".")) + ".wav";
+					if( !new File(localVoicePath).exists())
 					{
 						Toast.makeText(context ,"录音文件失效" ,Toast.LENGTH_SHORT).show();
 						return;
@@ -143,7 +162,7 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 							{
 								animationDrawable.start();
 								mediaPlayer_record.reset();
-								mediaPlayer_record.setDataSource(filePath);
+								mediaPlayer_record.setDataSource(localVoicePath);
 								mediaPlayer_record.prepare();
 								mediaPlayer_record.start();
 								mediaPlayer_record.setOnCompletionListener(new OnCompletionListener()
@@ -154,8 +173,10 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 									{
 										animationDrawable.stop();
 										holder.playRecord_button.setImageResource(R.drawable.find_new_words_text2speech);
-										Toast.makeText(context ,"录制播放：" + textList.get(position).getSource() + "完成" ,Toast.LENGTH_SHORT).show();
-										System.out.println("录制播放：" + textList.get(position).getSource() + "完成");
+										// Toast.makeText(context ,"播放：" +
+										// holder.voice.getText() + "完成"
+										// ,Toast.LENGTH_SHORT).show();
+										System.out.println("播放：" + holder.voice.getText() + "完成");
 									}
 								});
 							}
@@ -184,7 +205,10 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 		else
 		{
 			holder.name.setText(textList.get(position).getLyric());
-			if( !new File(filePath).exists())
+			holder.voice.setText(textList.get(position).getSource());
+			String localVoicePath = holder.voice.getText().toString();
+			localVoicePath = Util.S2TPATH + localVoicePath.substring(localVoicePath.indexOf("8800/") + 5 ,localVoicePath.lastIndexOf(".")) + ".wav";
+			if( !new File(localVoicePath).exists())
 			{
 				holder.playRecord_button.setVisibility(View.GONE);
 				// holder.playRecord_button.getBackground().setAlpha(0);
@@ -206,20 +230,22 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 		{
 			mediaPlayer_resource.release();
 			mediaPlayer_resource = null;
-			Toast.makeText(context ,"mediaPlayer_resource结束了" ,Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context ,"mediaPlayer_resource结束了"
+			// ,Toast.LENGTH_SHORT).show();
 		}
 
 		if(mediaPlayer_record.isPlaying())
 		{
 			mediaPlayer_record.release();
 			mediaPlayer_record = null;
-			Toast.makeText(context ,"mediaPlayer_record结束了" ,Toast.LENGTH_SHORT).show();
+			// Toast.makeText(context ,"mediaPlayer_record结束了"
+			// ,Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	class Holder
 	{
-		private TextView name;
+		private TextView name , voice;
 		private ImageView playRecord_button;
 	}
 
