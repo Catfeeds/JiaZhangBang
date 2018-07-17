@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.view.LayoutInflater;
@@ -56,8 +55,14 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 	public View getView(final int position , View convertView , ViewGroup parent )
 	{
 		final Holder holder;
-		mediaPlayer_resource = new MediaPlayer();
-		mediaPlayer_record = new MediaPlayer();
+		if(mediaPlayer_resource == null)
+		{
+			mediaPlayer_resource = new MediaPlayer();
+		}
+		if(mediaPlayer_record == null)
+		{
+			mediaPlayer_record = new MediaPlayer();
+		}
 		if(convertView == null)
 		{
 			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -66,6 +71,7 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 			holder.name = (TextView) convertView.findViewById(R.id.record_text_main_listview_item_name);
 			holder.playRecord_button = (ImageView) convertView.findViewById(R.id.record_text_main_listview_item_record);
 			holder.voice = (TextView) convertView.findViewById(R.id.record_text_main_listview_item_marqueetext_name);
+			holder.name.setBackgroundResource(R.drawable.activity_chinese_background_shape);
 			holder.name.setOnClickListener(new OnClickListener()
 			{
 
@@ -92,12 +98,10 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 						{
 							holder.name.setBackgroundResource(R.drawable.activity_chinese_background_shape);
 							String webVoice = holder.voice.getText().toString();
-							// Toast.makeText(context ,"资源播放：" + webVoice + "完成"
-							// ,Toast.LENGTH_SHORT).show();
 							System.out.println("资源播放：" + webVoice + "完成");
 							webVoice = Util.S2TPATH + webVoice.substring(webVoice.indexOf("8800/") + 5 ,webVoice.lastIndexOf(".")) + ".wav";
 							new RecordTextSpeech(context , webVoice).play();
-							// holder.playRecord_button.setVisibility(View.VISIBLE);
+							holder.playRecord_button.setVisibility(View.VISIBLE);
 						}
 					});
 
@@ -114,6 +118,7 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 								mediaPlayer_resource.setDataSource(holder.voice.getText().toString());
 								mediaPlayer_resource.prepare();
 								mediaPlayer_resource.start();
+								System.out.println("资源播放" + holder.voice.getText());
 							}
 							catch(Exception e)
 							{
@@ -146,12 +151,14 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 					final String localVoicePath = Util.S2TPATH + voice.substring(voice.indexOf("8800/") + 5 ,voice.lastIndexOf(".")) + ".wav";
 					if( !new File(localVoicePath).exists())
 					{
-						Toast.makeText(context ,"录音文件失效" ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(context ,"录音文件失效，请重新录制！" ,Toast.LENGTH_SHORT).show();
 						return;
 					}
 
-					holder.playRecord_button.setImageResource(R.drawable.button_play_animation);
-					final AnimationDrawable animationDrawable = (AnimationDrawable) holder.playRecord_button.getDrawable();
+					// holder.playRecord_button.setImageResource(R.drawable.button_play_animation);
+					// final AnimationDrawable animationDrawable =
+					// (AnimationDrawable)
+					// holder.playRecord_button.getDrawable();
 					new Thread(new Runnable()
 					{
 
@@ -160,7 +167,8 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 						{
 							try
 							{
-								animationDrawable.start();
+								System.out.println("播放" + holder.voice.getText() + "的录音");
+								// animationDrawable.start();
 								mediaPlayer_record.reset();
 								mediaPlayer_record.setDataSource(localVoicePath);
 								mediaPlayer_record.prepare();
@@ -171,19 +179,16 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 									@Override
 									public void onCompletion(MediaPlayer mp )
 									{
-										animationDrawable.stop();
+										// animationDrawable.stop();
 										holder.playRecord_button.setImageResource(R.drawable.find_new_words_text2speech);
-										// Toast.makeText(context ,"播放：" +
-										// holder.voice.getText() + "完成"
-										// ,Toast.LENGTH_SHORT).show();
-										System.out.println("播放：" + holder.voice.getText() + "完成");
+										System.out.println("播放：" + localVoicePath + "完成");
 									}
 								});
 							}
 							catch(Exception e)
 							{
-								animationDrawable.stop();
-								holder.playRecord_button.setImageResource(R.drawable.find_new_words_text2speech);
+								// animationDrawable.stop();
+								// holder.playRecord_button.setImageResource(R.drawable.find_new_words_text2speech);
 								System.out.println("com.runcom.jiazhangbang.recordText.RecordTextMainListViewAdapter.getView():" + e);
 							}
 						}
@@ -211,12 +216,10 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 			if( !new File(localVoicePath).exists())
 			{
 				holder.playRecord_button.setVisibility(View.GONE);
-				// holder.playRecord_button.getBackground().setAlpha(0);
 			}
 			else
 			{
 				holder.playRecord_button.setVisibility(View.VISIBLE);
-				// holder.playRecord_button.getBackground().setAlpha(255);
 			}
 		}
 

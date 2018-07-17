@@ -15,10 +15,10 @@ import com.runcom.jiazhangbang.R;
 
 public class MAdapter extends BaseAdapter
 {
-	private LayoutInflater inflater;
-	private Context mContext;
-	private ArrayList < String > list;
-	private HashMap < Integer , Boolean > isSelectedMap;
+	private final LayoutInflater inflater;
+	private final Context mContext;
+	private final ArrayList < String > list;
+	private final HashMap < Integer , Boolean > isSelectedMap;
 
 	@SuppressLint("UseSparseArrays")
 	public MAdapter(Context c , ArrayList < String > i)
@@ -58,7 +58,9 @@ public class MAdapter extends BaseAdapter
 		{
 			convertView = inflater.inflate(R.layout.repeat_record_listview_item ,null);
 			holder = new Holder();
-			holder.name = (TextView) convertView.findViewById(R.id.tv);
+			holder.name = (TextView) convertView.findViewById(R.id.repeat_record_listview_item_tv);
+			// holder.progressBar = (ProgressBar)
+			// convertView.findViewById(R.id.repeat_record_listview_item_progressbar);
 			convertView.setTag(holder);
 		}
 		else
@@ -94,8 +96,15 @@ public class MAdapter extends BaseAdapter
 		notifyDataSetChanged();
 	}
 
+	public void setProgressBar(int position , float progress )
+	{
+
+		notifyDataSetChanged();
+	}
+
 	class Holder
 	{
-		TextView name;
+		private TextView name;
+		// ProgressBar progressBar;
 	}
 }

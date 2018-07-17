@@ -68,6 +68,7 @@
             android:id="@+id/listenText_lyricShow_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusable="true"
             android:gravity="center_horizontal|center_vertical"
             android:lineSpacingExtra="10dp"
             android:padding="5dp"

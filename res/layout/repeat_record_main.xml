@@ -24,8 +24,19 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@color/no"
-        android:visibility="visible" >
+        android:visibility="gone" >
     </ListView>
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/repeat_record_main_swipeMenu_listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/repeat_record_main_linear_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/no"
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/repeat_record_main_textView"
@@ -49,7 +60,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <Button
             android:id="@+id/startRecord"

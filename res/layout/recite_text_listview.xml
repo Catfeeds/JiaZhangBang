@@ -9,4 +9,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-</LinearLayout><!-- android:background="#B3A981" -->
+    <TextView
+        android:id="@+id/recitText_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="服务器异常"
+        android:textSize="17sp"
+        android:visibility="gone" />
+
+</LinearLayout> <!-- android:background="#B3A981" -->

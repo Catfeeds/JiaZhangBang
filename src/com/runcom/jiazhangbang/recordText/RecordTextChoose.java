@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gr.okhttp.OkHttpUtils;
@@ -40,7 +41,8 @@ public class RecordTextChoose extends Activity
 	private ProgressDialog progressDialog;
 	private ListView recordTextChooseListView;
 	private MyText myText = new MyText();
-	private ArrayList < MyText > textList = new ArrayList < MyText >();
+	private final ArrayList < MyText > textList = new ArrayList < MyText >();
+	private TextView textView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -177,11 +179,18 @@ public class RecordTextChoose extends Activity
 
 	private void initView()
 	{
+		textView = (TextView) findViewById(R.id.record_text_choose_textview);
 		recordTextChooseListView = (ListView) findViewById(R.id.record_text_choose_listview);
 		RecordTextChooseAdapter recordTextChooseAdapter = new RecordTextChooseAdapter(getApplication() , textList);
 		recordTextChooseListView.setAdapter(recordTextChooseAdapter);
 		recordTextChooseAdapter.notifyDataSetChanged();
 		progressDialog.dismiss();
+		if(textList.size() <= 0)
+		{
+			recordTextChooseListView.setVisibility(View.GONE);
+			textView.setVisibility(View.VISIBLE);
+			return;
+		}
 		recordTextChooseListView.setOnItemClickListener(new OnItemClickListener()
 		{
 

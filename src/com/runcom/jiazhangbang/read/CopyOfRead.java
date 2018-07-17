@@ -4,6 +4,9 @@
 package com.runcom.jiazhangbang.read;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,20 +30,17 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PointF;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.FloatMath;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -50,10 +50,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.lamemp3.MP3Recorder;
 import com.gr.okhttp.OkHttpUtils;
 import com.gr.okhttp.callback.Callback;
-import com.hxl.pauserecord.record.AudioRecorder;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.judge.Judge;
 import com.runcom.jiazhangbang.listenText.GetLrcContents;
@@ -81,14 +79,11 @@ import com.umeng.analytics.MobclickAgent;
  * 
  */
 
-@SuppressLint(
-{ "FloatMath", "ClickableViewAccessibility" })
-public class Read extends Activity
+public class CopyOfRead extends Activity
 {
-	private MP3Recorder mp3Recorder;
-	private AudioRecorder audioRecorder;
-	private String fileName = null;
+	private MediaRecorder mediaRecorder = null;// 录音器
 	private Timer timer;
+	private String fileAllNameAmr = null;
 	private final String recordPath = Util.RECORDPATH_READ;
 	private final ArrayList < String > myRecordList = new ArrayList < String >();// 待合成的录音片段
 	private int second = 0;
@@ -115,12 +110,6 @@ public class Read extends Activity
 	private int course , grade , phase , unit;
 	private ProgressDialog progressDialog;
 	private TextView textView_lrcView;
-
-	private int textSize = 0;
-	@SuppressWarnings("unused")
-	private final float oldDist = 0;
-	@SuppressWarnings("unused")
-	private final int mode = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -166,7 +155,6 @@ public class Read extends Activity
 		stopRecord = (ImageButton) findViewById(R.id.media_stop);
 		time = (TextView) findViewById(R.id.listen_write_textView_nameShow);
 		textView_lrcView = (TextView) findViewById(R.id.listenText_lyricShow_textView);
-		audioRecorder = AudioRecorder.getInstance(recordPath);
 		initTitle();
 	}
 
@@ -403,28 +391,8 @@ public class Read extends Activity
 		});
 	}
 
-	@SuppressWarnings("unused")
-	private float mLastMotionY;
-	/**
-	 * 第一个手指的坐标
-	 **/
-	private final PointF mPointerOneLastMotion = new PointF();
-	/**
-	 * 第二个手指的坐标
-	 **/
-	private final PointF mPointerTwoLastMotion = new PointF();
-	/**
-	 * 是否是第一次移动，当一个手指按下后开始移动的时候，设置为true, 当第二个手指按下的时候，即两个手指同时移动的时候，设置为false
-	 */
-	private boolean mIsFirstMove = false;
-
 	private void initLyric()
 	{
-		if(play_list.size() <= 0)
-		{
-			Toast.makeText(Read.this ,"服务器异常" ,Toast.LENGTH_SHORT).show();
-			return;
-		}
 		lyricsPath = play_list.get(currIndex).getLyric();
 		String content = "";
 		// content = Util.getLrcContents(lyricsPath);
@@ -484,213 +452,18 @@ public class Read extends Activity
 		// }
 		// }
 		textView_lrcView.setText(content);
-		textView_lrcView.setFocusable(true);
-		// 缩放字体大小
-		textView_lrcView.setOnTouchListener(new OnTouchListener()
-		{
 
-			@Override
-			public boolean onTouch(View v , MotionEvent event )
-			{
-				if(textSize == 0)
-				{
-					textSize = (int) textView_lrcView.getTextSize();
-				}
-
-				switch(event.getAction() & MotionEvent.ACTION_MASK)
-				{
-
-				// 手指按下
-					case MotionEvent.ACTION_DOWN:
-						mLastMotionY = event.getY();
-						mIsFirstMove = true;
-						break;
-					// 手指移动
-					case MotionEvent.ACTION_MOVE:
-						if(event.getPointerCount() == 2)
-						{
-							doScale(event);
-							return true;
-						}
-						break;
-					case MotionEvent.ACTION_CANCEL:
-						// 手指抬起
-					case MotionEvent.ACTION_UP:
-						break;
-
-				// case MotionEvent.ACTION_DOWN:
-				// mode = 1;
-				// break;
-				//
-				// case MotionEvent.ACTION_UP:
-				// mode = 0;
-				// break;
-				//
-				// case MotionEvent.ACTION_POINTER_DOWN:
-				// mode += 1;
-				// oldDist = spacing(event);
-				// break;
-				//
-				// case MotionEvent.ACTION_POINTER_UP:
-				// mode -= 1;
-				// break;
-				//
-				// case MotionEvent.ACTION_MOVE:
-				// if(mode == 2)
-				// {
-				// float newDist = spacing(event);
-				//
-				// if(newDist > oldDist + 1)
-				// { // 放大
-				// draw(newDist / oldDist);
-				// oldDist = newDist;
-				// }
-				// if(newDist < oldDist - 1)
-				// { // 缩小
-				// draw(newDist / oldDist);
-				// oldDist = newDist;
-				// }
-				// }
-				// break;
-				}
-
-				return true;
-			}
-		});
-
-	}
-
-	/**
-	 * 处理双指在屏幕移动时的，歌词大小缩放
-	 */
-	private void doScale(MotionEvent event )
-	{
-		if(mIsFirstMove)
-		{
-			mIsFirstMove = false;
-			// 两个手指的x坐标和y坐标
-			setTwoPointerLocation(event);
-		}
-		// 获取歌词大小要缩放的比例
-		int scaleSize = getScale(event);
-		// 如果缩放大小不等于0，进行缩放，重绘LrcView
-		if(scaleSize != 0)
-		{
-			setNewFontSize(scaleSize);
-		}
-		setTwoPointerLocation(event);
-	}
-
-	/**
-	 * 设置当前两个手指的x坐标和y坐标
-	 */
-	private void setTwoPointerLocation(MotionEvent event )
-	{
-		mPointerOneLastMotion.x = event.getX(0);
-		mPointerOneLastMotion.y = event.getY(0);
-		mPointerTwoLastMotion.x = event.getX(1);
-		mPointerTwoLastMotion.y = event.getY(1);
-	}
-
-	/**
-	 * 获取歌词大小要缩放的比例
-	 */
-	private int getScale(MotionEvent event )
-	{
-		float x0 = event.getX(0);
-		float y0 = event.getY(0);
-		float x1 = event.getX(1);
-		float y1 = event.getY(1);
-
-		float maxOffset = 0; // max offset between x or y axis,used to decide
-		                     // scale size
-
-		boolean zoomin = false;
-		// 第一次双指之间的x坐标的差距
-		float oldXOffset = Math.abs(mPointerOneLastMotion.x - mPointerTwoLastMotion.x);
-		// 第二次双指之间的x坐标的差距
-		float newXoffset = Math.abs(x1 - x0);
-
-		// 第一次双指之间的y坐标的差距
-		float oldYOffset = Math.abs(mPointerOneLastMotion.y - mPointerTwoLastMotion.y);
-		// 第二次双指之间的y坐标的差距
-		float newYoffset = Math.abs(y1 - y0);
-
-		// 双指移动之后，判断双指之间移动的最大差距
-		maxOffset = Math.max(Math.abs(newXoffset - oldXOffset) ,Math.abs(newYoffset - oldYOffset));
-		// 如果x坐标移动的多一些
-		if(maxOffset == Math.abs(newXoffset - oldXOffset))
-		{
-			// 如果第二次双指之间的x坐标的差距大于第一次双指之间的x坐标的差距则是放大，反之则缩小
-			zoomin = newXoffset > oldXOffset ? true : false;
-		}
-		// 如果y坐标移动的多一些
-		else
-		{
-			// 如果第二次双指之间的y坐标的差距大于第一次双指之间的y坐标的差距则是放大，反之则缩小
-			zoomin = newYoffset > oldYOffset ? true : false;
-		}
-		if(zoomin)
-		{
-			return (int) (maxOffset / 10);// 放大双指之间移动的最大差距的1/10
-		}
-		else
-		{
-			return -(int) (maxOffset / 10);// 缩小双指之间移动的最大差距的1/10
-		}
-	}
-
-	/**
-	 * 设置缩放后的字体大小
-	 */
-	private void setNewFontSize(int scaleSize )
-	{
-		// 设置歌词缩放后的的最新字体大小
-		textSize += scaleSize;
-		textSize = Math.max(textSize ,12);
-		textSize = Math.min(textSize ,57);
-		textView_lrcView.setTextSize(textSize);
-
-	}
-
-	// 绘制TextView
-	@SuppressWarnings("unused")
-	private void draw(float f )
-	{
-		textSize *= f;
-		if(textSize < 12)
-		{
-			textSize = 12;
-		}
-
-		if(textSize > 57)
-		{
-			textSize = 57;
-		}
-
-		textView_lrcView.setTextSize(textSize);
-
-	}
-
-	// 获取两指间的距离
-	@SuppressWarnings("unused")
-	private float spacing(MotionEvent event )
-	{
-
-		float x = event.getX(0) - event.getX(1);
-		float y = event.getY(0) - event.getY(1);
-
-		return FloatMath.sqrt(x * x + y * y);
 	}
 
 	public void onDetailSetting(View v )
 	{
 		intent = new Intent();
 		intent.putExtra("selected" ,grade);
-		intent.setClass(Read.this ,ReadList.class);
+		intent.setClass(CopyOfRead.this ,ReadList.class);
 		startActivity(intent);
 	}
 
+	// int flag = 3;
 	public void repeatSwitching(View v )
 	{
 		switch(play_currentState)
@@ -733,27 +506,18 @@ public class Read extends Activity
 
 				break;
 			case PAUSE:
-				try
-				{
-					// audioRecorder.pauseRecord();
-					mp3Recorder.pause();
-					play_currentState = START;
-					startRecord.setImageResource(R.drawable.record_pause);
-				}
-				catch(IllegalStateException e)
-				{
-				}
-				if(timer != null)
-				{
-					timer.cancel();
-				}
+				play_currentState = START;
+				startRecord.setImageResource(R.drawable.record_pause);
+				mediaRecorder.stop();
+				mediaRecorder.release();
+				timer.cancel();
+				myRecordList.add(fileAllNameAmr);
 
 				break;
 			case START:
 				play_currentState = PAUSE;
 				startRecord.setImageResource(R.drawable.play);
-				// audioRecorder.startRecord(null);
-				mp3Recorder.restore();
+				startRecord();
 				recordTime();
 				break;
 			default:
@@ -765,102 +529,134 @@ public class Read extends Activity
 	// 完成录音
 	private void stopRecord()
 	{
-		if(timer != null)
+		play_currentState = IDLE;
+		mediaRecorder.release();
+		mediaRecorder = null;
+		myRecordList.add(fileAllNameAmr);
+		startRecord.setImageResource(R.drawable.record_pause);
+		timer.cancel();
+
+		final EditText editText = new EditText(CopyOfRead.this);
+		final AlertDialog.Builder inputDialog = new AlertDialog.Builder(CopyOfRead.this);
+		inputDialog.setTitle("要保存录音吗？").setView(editText);
+		inputDialog.setPositiveButton("保存" ,new DialogInterface.OnClickListener()
 		{
-			timer.cancel();
-		}
+			@Override
+			public void onClick(DialogInterface dialog , int which )
+			{
+			}
+		});
 
-		try
+		inputDialog.setNegativeButton("放弃" ,new DialogInterface.OnClickListener()
 		{
-			// audioRecorder.stopRecord();
-			mp3Recorder.stop();
-			play_currentState = IDLE;
-			startRecord.setImageResource(R.drawable.record_pause);
 
-			final EditText editText = new EditText(Read.this);
-			final AlertDialog.Builder inputDialog = new AlertDialog.Builder(Read.this);
-			inputDialog.setTitle("要保存录音吗？").setView(editText);
-			inputDialog.setPositiveButton("保存" ,new DialogInterface.OnClickListener()
+			@Override
+			public void onClick(DialogInterface dialog , int which )
 			{
-				@Override
-				public void onClick(DialogInterface dialog , int which )
+				time.setText("");
+				for(int i = 0 ; i < myRecordList.size() ; i ++ )
 				{
-				}
-			});
-
-			inputDialog.setNegativeButton("放弃" ,new DialogInterface.OnClickListener()
-			{
-
-				@Override
-				public void onClick(DialogInterface dialog , int which )
-				{
-					time.setText("");
-					// new File(recordPath + fileName + ".wav").delete();
-					new File(recordPath + fileName + ".mp3").delete();
-					File files[] = new File(recordPath).listFiles();
-					for(File file : files)
+					File file = new File(myRecordList.get(i));
+					if(file.exists())
 					{
-						if(file.toString().endsWith(".pcm"))
-						{
-							file.delete();
-						}
-					}
-
-					for(int i = 0 ; i < myRecordList.size() ; i ++ )
-					{
-						File file = new File(myRecordList.get(i));
-						if(file.exists())
-						{
-							file.delete();
-						}
+						file.delete();
 					}
 				}
-			});
+			}
+		});
 
-			minute = 0;
-			hour = 0;
-			second = 0;
+		minute = 0;
+		hour = 0;
+		second = 0;
 
-			final AlertDialog dialog = inputDialog.create();
-			dialog.setCanceledOnTouchOutside(false);
-			dialog.show();
-			dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+		final AlertDialog dialog = inputDialog.create();
+		dialog.setCanceledOnTouchOutside(false);
+		dialog.show();
+		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View view )
 			{
-				@Override
-				public void onClick(View view )
+				String playName = editText.getText().toString().trim();
+				if(playName.isEmpty() || Judge.isNotName(playName))
 				{
-					String playName = editText.getText().toString().trim();
-					if(playName.isEmpty() || Judge.isNotName(playName))
+					Toast.makeText(getApplicationContext() ,"输入名字不符合要求，请重新命名" ,Toast.LENGTH_SHORT).show();
+				}
+				else
+					if(isExit(playName))
 					{
-						Toast.makeText(getApplicationContext() ,"输入名字不符合要求，请重新命名" ,Toast.LENGTH_SHORT).show();
+						Toast.makeText(getApplicationContext() ,"文件名重复，请重新命名" ,Toast.LENGTH_SHORT).show();
 					}
 					else
-						if(isExit(playName))
+					{
+						fileAllNameAmr = recordPath + playName + ".amr";
+						FileOutputStream fileOutputStream = null;
+						try
 						{
-							Toast.makeText(getApplicationContext() ,"文件名重复，请重新命名" ,Toast.LENGTH_SHORT).show();
+							fileOutputStream = new FileOutputStream(fileAllNameAmr);
 						}
-						else
+						catch(FileNotFoundException e)
 						{
-							new File(recordPath + fileName + ".mp3").renameTo(new File(recordPath + playName + ".mp3"));
-							Toast.makeText(getApplicationContext() ,playName + "录音完成" ,Toast.LENGTH_SHORT).show();
-							time.setText("录音完成");
+						}
+						FileInputStream fileInputStream = null;
+						try
+						{
 							for(int i = 0 ; i < myRecordList.size() ; i ++ )
 							{
 								File file = new File(myRecordList.get(i));
-								if(file.exists())
+								fileInputStream = new FileInputStream(file);
+								byte [] mByte = new byte [fileInputStream.available()];
+								int length = mByte.length;
+								if(i == 0)
 								{
-									file.delete();
+									while(fileInputStream.read(mByte) != -1)
+									{
+										fileOutputStream.write(mByte ,0 ,length);
+									}
+								}
+								else
+								{
+									while(fileInputStream.read(mByte) != -1)
+									{
+										fileOutputStream.write(mByte ,6 ,length - 6);
+									}
 								}
 							}
-							dialog.dismiss();
+							Toast.makeText(getApplicationContext() ,"录音完成" ,Toast.LENGTH_SHORT).show();
+							time.setText("录音完成");
 						}
-				}
-			});
+						catch(Exception e)
+						{
+							Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+							time.setText("录音合成出错，请重试！");
+							System.out.println(e);
+						}
+						finally
+						{
+							try
+							{
+								fileOutputStream.flush();
+								fileInputStream.close();
+							}
+							catch(Exception e)
+							{
+								System.out.println(e);
+							}
+						}
 
-		}
-		catch(IllegalStateException e)
-		{
-		}
+						for(int i = 0 ; i < myRecordList.size() ; i ++ )
+						{
+							File file = new File(myRecordList.get(i));
+							if(file.exists())
+							{
+								file.delete();
+							}
+						}
+						dialog.dismiss();
+					}
+			}
+		});
+
 	}
 
 	private Boolean isExit(String name )
@@ -892,7 +688,7 @@ public class Read extends Activity
 			for(File childFile : files)
 			{
 				childFileName = childFile.toString();
-				if(childFileName.length() > 0 && (childFileName.endsWith(".wav") || childFileName.endsWith(".mp3")))
+				if(childFileName.length() > 0 && (childFileName.endsWith(".amr")))
 				{
 					if((childFileName.substring(childFileName.lastIndexOf("/") + 1 ,childFileName.lastIndexOf("."))).equals(name))
 					{
@@ -905,21 +701,38 @@ public class Read extends Activity
 	}
 
 	// 开始录音
+	@SuppressWarnings("deprecation")
 	private void startRecord()
 	{
+		myRecordList.clear();
 		File file = new File(recordPath);
 		if( !file.exists())
 		{
 			file.mkdirs();
 		}
-
-		fileName = getTime();
-
-		mp3Recorder = new MP3Recorder(recordPath , fileName);
-		mp3Recorder.start();
-
-		// audioRecorder.createDefaultAudio(fileName);
-		// audioRecorder.startRecord(null);
+		fileAllNameAmr = recordPath + getTime() + ".amr";
+		mediaRecorder = new MediaRecorder();
+		mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+		// 选择amr格式
+		mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+		mediaRecorder.setOutputFile(fileAllNameAmr);
+		mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		try
+		{
+			mediaRecorder.prepare();
+		}
+		catch(Exception e)
+		{
+			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件。 否则会出现各种异常。
+			Toast.makeText(this ,"录音器启动失败，请返回重试！" ,Toast.LENGTH_LONG).show();
+			mediaRecorder.release();
+			mediaRecorder = null;
+			this.finish();
+		}
+		if(mediaRecorder != null)
+		{
+			mediaRecorder.start();
+		}
 
 	}
 
@@ -985,7 +798,11 @@ public class Read extends Activity
 		switch(item.getItemId())
 		{
 			case android.R.id.home:
-				audioRecorder.release();
+				if(mediaRecorder != null)
+				{
+					mediaRecorder.release();
+					mediaRecorder = null;
+				}
 				onBackPressed();
 				break;
 		}
@@ -998,7 +815,11 @@ public class Read extends Activity
 	{
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
 		{
-			audioRecorder.release();
+			if(mediaRecorder != null)
+			{
+				mediaRecorder.release();
+				mediaRecorder = null;
+			}
 			finish();
 			return true;
 		}
@@ -1017,21 +838,16 @@ public class Read extends Activity
 	{
 		super.onPause();
 		MobclickAgent.onPause(this);
-		if(audioRecorder.getStatus() == AudioRecorder.Status.STATUS_START)
-		{
-			audioRecorder.pauseRecord();
-		}
 	}
 
 	@Override
 	protected void onDestroy()
 	{
-		super.onDestroy();
 		if(progressDialog != null)
 		{
 			progressDialog.dismiss();
 		}
-		audioRecorder.release();
+		super.onDestroy();
 	}
 
 }

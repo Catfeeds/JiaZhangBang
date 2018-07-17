@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -55,10 +56,11 @@ public class ReciteTextTextChoose extends Activity
 	private int course , grade , phase , unit;
 	private SwipeMenuListView listView;
 	private MyText myText = new MyText();
-	private ArrayList < MyText > textID = new ArrayList < MyText >();
-	private ArrayList < MyText > textList = new ArrayList < MyText >();
+	private final ArrayList < MyText > textID = new ArrayList < MyText >();
+	private final ArrayList < MyText > textList = new ArrayList < MyText >();
 	private MyListViewAdapter adapter;
 	private ProgressDialog progressDialog;
+	private TextView textView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -263,11 +265,18 @@ public class ReciteTextTextChoose extends Activity
 
 	private void initListView()
 	{
+		textView = (TextView) findViewById(R.id.recitText_textview);
 		listView = (SwipeMenuListView) findViewById(R.id.recitText_swipeMenu_listView);
 		adapter = new MyListViewAdapter(getApplicationContext() , textList);
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 		progressDialog.dismiss();
+		if(textList.size() <= 0)
+		{
+			listView.setVisibility(View.GONE);
+			textView.setVisibility(View.VISIBLE);
+			return;
+		}
 
 		listView.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -370,7 +379,7 @@ public class ReciteTextTextChoose extends Activity
 						// ,"·ÖÏí"));
 						break;
 				}
-				return false;
+				return true;
 			}
 		});
 	}

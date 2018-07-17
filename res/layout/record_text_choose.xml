@@ -7,7 +7,19 @@
     <ListView
         android:id="@+id/record_text_choose_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:visibility="visible" >
     </ListView>
+
+    <TextView
+        android:id="@+id/record_text_choose_textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="服务器异常"
+        android:textSize="17sp"
+        android:visibility="gone" >
+    </TextView>
 
 </LinearLayout>

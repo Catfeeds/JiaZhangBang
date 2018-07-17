@@ -127,6 +127,8 @@ public class Util
 
 	public static final String recordPath = "record/";
 	public static final String RECORDPATH = APPPATH + recordPath;
+	public static final String RECORDPATH_READ = APPPATH + recordPath + "read/";
+	public static final String RECORDPATH_RECITE_TEXT = APPPATH + recordPath + "recite/";
 
 	public static final int lyricEnglishEnglish = 0;
 	public static final int lyricEnglishChinese = 1;

@@ -279,7 +279,6 @@ public class RecordTextMain extends Activity
 		record_text_main_listView.setAdapter(recordTextMainListViewAdapter);
 		record_text_main_listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
 		recordTextMainListViewAdapter.notifyDataSetChanged();
-
 		progressDialog.dismiss();
 	}
 

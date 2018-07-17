@@ -4,6 +4,9 @@
 package com.runcom.jiazhangbang.reciteText;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +43,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hxl.pauserecord.record.AudioRecorder;
 import com.runcom.jiazhangbang.R;
 import com.runcom.jiazhangbang.listenText.GetLrcContents;
 import com.runcom.jiazhangbang.util.NetUtil;
@@ -63,7 +66,7 @@ import com.umeng.analytics.MobclickAgent;
  * 
  */
 
-public class ReciteTextMain extends Activity implements Checkable
+public class CopyOfReciteTextMain extends Activity implements Checkable
 {
 	private int flag = 0;
 	private Intent intent;
@@ -100,7 +103,7 @@ public class ReciteTextMain extends Activity implements Checkable
 	private static final int START_play = 2;
 	private int play_currentState = IDLE_play;
 
-	private AudioRecorder audioRecorder;
+	private MediaRecorder mediaRecorder = null;// 录音器
 	private final ArrayList < String > myRecordList = new ArrayList < String >();// 待合成的录音片段
 	private String fileAllNameAmr = null;
 	private final String recordPath = Util.RECORDPATH_RECITE_TEXT;
@@ -108,7 +111,7 @@ public class ReciteTextMain extends Activity implements Checkable
 	private Boolean isRecord = true;
 	String playName;
 	private MediaPlayer mediaPlayer = null;// 播放器
-	private String finalPlayName;
+	private final String finalPlayName = "wgc";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState )
@@ -167,29 +170,21 @@ public class ReciteTextMain extends Activity implements Checkable
 					recordTime();
 					break;
 				case PAUSE_record:
-					try
-					{
-						audioRecorder.pauseRecord();
-						record_currentState = START_record;
-						startRecord.setImageResource(R.drawable.record_pause);
-						textView_record_pause.setText("开始录音");
-						textView_listView_tips.setText("暂停录制...");
-					}
-					catch(IllegalStateException e)
-					{
-					}
-					if(timer != null)
-					{
-						timer.cancel();
-					}
-
+					record_currentState = START_record;
+					startRecord.setImageResource(R.drawable.record_pause);
+					textView_record_pause.setText("开始录音");
+					mediaRecorder.stop();
+					textView_listView_tips.setText("暂停录制...");
+					mediaRecorder.release();
+					timer.cancel();
+					myRecordList.add(fileAllNameAmr);
 					break;
 				case START_record:
 					record_currentState = PAUSE_record;
 					startRecord.setImageResource(R.drawable.play);
 					textView_record_pause.setText("暂停录音");
 					textView_listView_tips.setText("录制中...");
-					audioRecorder.startRecord(null);
+					startRecord();
 					recordTime();
 					break;
 				default:
@@ -301,7 +296,7 @@ public class ReciteTextMain extends Activity implements Checkable
 							right ++ ;
 					ans = (float) (right * 1.0 / dataMax) * 100;
 					ans = Float.valueOf(new DecimalFormat("##0.0").format(ans));// 保留一位小数
-					AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this);
+					AlertDialog.Builder builder = new AlertDialog.Builder(CopyOfReciteTextMain.this);
 					builder.setTitle("确定提交本次成绩：" + ans);
 					builder.setNegativeButton("确定" ,new DialogInterface.OnClickListener()
 					{
@@ -340,7 +335,7 @@ public class ReciteTextMain extends Activity implements Checkable
 			@Override
 			public void onClick(View v )
 			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(ReciteTextMain.this , R.style.NoBackGroundDialog);
+				AlertDialog.Builder builder = new AlertDialog.Builder(CopyOfReciteTextMain.this , R.style.NoBackGroundDialog);
 				builder.setIcon(R.drawable.ic_launcher);
 				getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 				builder.setTitle("历史成绩");
@@ -430,7 +425,7 @@ public class ReciteTextMain extends Activity implements Checkable
 			initListview();
 
 		}
-		audioRecorder = AudioRecorder.getInstance(recordPath);
+
 	}
 
 	public void onCompletion(MediaPlayer mp )
@@ -466,7 +461,7 @@ public class ReciteTextMain extends Activity implements Checkable
 		try
 		{
 			// 播放所选中的录音
-			mediaPlayer.setDataSource(recordPath + finalPlayName + ".wav");
+			mediaPlayer.setDataSource(recordPath + finalPlayName + ".amr");
 			System.out.println();
 			mediaPlayer.prepare();
 			mediaPlayer.start();
@@ -485,21 +480,45 @@ public class ReciteTextMain extends Activity implements Checkable
 	}
 
 	// 开始录音
+	@SuppressWarnings("deprecation")
 	private void startRecord()
 	{
 		if(menuItem != null)
 		{
 			menuItem.setTitle("");
 		}
+		myRecordList.clear();
 		File file = new File(recordPath);
 		if( !file.exists())
 		{
 			file.mkdirs();
 		}
-		finalPlayName = getTime();
+		fileAllNameAmr = recordPath + getTime() + ".amr";
+		mediaRecorder = new MediaRecorder();
+		mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+		// 选择amr格式
+		mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.RAW_AMR);
+		mediaRecorder.setOutputFile(fileAllNameAmr);
+		mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+		try
+		{
+			mediaRecorder.prepare();
+		}
+		catch(Exception e)
+		{
+			// 若录音器启动失败就需要重启应用，屏蔽掉按钮的点击事件。 否则会出现各种异常。
+			if(Util.debug)
+				Toast.makeText(this ,"录音器启动失败，请稍后重试！" ,Toast.LENGTH_LONG).show();
+			time.setText("录音器启动失败，请稍后重试！");
+			mediaRecorder.release();
+			mediaRecorder = null;
+			this.finish();
+		}
+		if(mediaRecorder != null)
+		{
+			mediaRecorder.start();
+		}
 
-		audioRecorder.createDefaultAudio(finalPlayName);
-		audioRecorder.startRecord(null);
 	}
 
 	// 计时器异步更新界面
@@ -545,57 +564,104 @@ public class ReciteTextMain extends Activity implements Checkable
 	// 完成录音
 	private void stopRecord()
 	{
-		if(timer != null)
-		{
-			timer.cancel();
-		}
-
 		if(menuItem != null)
 		{
 			menuItem.setTitle("正确行数：" + flag + "/" + flag);
 		}
+		imageButton_play_record.setVisibility(View.VISIBLE);
+		textView_play_record.setVisibility(View.VISIBLE);// TODO
+		imageButton_submit_score.setVisibility(View.VISIBLE);
+		textView_submit.setVisibility(View.VISIBLE);
+		imageButton_score_list.setVisibility(View.VISIBLE);
+		textView_grade.setVisibility(View.VISIBLE);
+		isRecord = false;
+		play_currentState = IDLE_play;
+		textView_listView_tips.setVisibility(View.GONE);
+		listView.setVisibility(View.VISIBLE);
+		record_currentState = IDLE_record;
+		mediaRecorder.release();
+		mediaRecorder = null;
+		myRecordList.add(fileAllNameAmr);
 
+		startRecord.setImageResource(R.drawable.record_pause);
+		textView_record_pause.setText("开始录音");
+		timer.cancel();
+
+		// playName = getTime();
+		// fileAllNameAmr = recordPath + playName + ".amr";
+		fileAllNameAmr = recordPath + finalPlayName + ".amr";
+		if(new File(fileAllNameAmr).exists())
+		{
+			new File(fileAllNameAmr).delete();
+		}
+		FileOutputStream fileOutputStream = null;
 		try
 		{
-			fileAllNameAmr = recordPath + finalPlayName + ".wav";
-			if(new File(fileAllNameAmr).exists())
-			{
-				new File(fileAllNameAmr).delete();
-			}
-
-			audioRecorder.stopRecord();
-
-			imageButton_play_record.setVisibility(View.VISIBLE);
-			textView_play_record.setVisibility(View.VISIBLE);// TODO
-			imageButton_submit_score.setVisibility(View.VISIBLE);
-			textView_submit.setVisibility(View.VISIBLE);
-			imageButton_score_list.setVisibility(View.VISIBLE);
-			textView_grade.setVisibility(View.VISIBLE);
-			isRecord = false;
-			play_currentState = IDLE_play;
-			textView_listView_tips.setVisibility(View.GONE);
-			listView.setVisibility(View.VISIBLE);
-			record_currentState = IDLE_record;
-
-			startRecord.setImageResource(R.drawable.record_pause);
-			textView_record_pause.setText("开始录音");
-			time.setText("录音完成");
+			fileOutputStream = new FileOutputStream(fileAllNameAmr);
+		}
+		catch(FileNotFoundException e)
+		{
+		}
+		FileInputStream fileInputStream = null;
+		try
+		{
 			for(int i = 0 ; i < myRecordList.size() ; i ++ )
 			{
 				File file = new File(myRecordList.get(i));
-				if(file.exists())
+				// 把因为暂停所录出的多段录音进行读取
+				fileInputStream = new FileInputStream(file);
+				byte [] mByte = new byte [fileInputStream.available()];
+				int length = mByte.length;
+				// 第一个录音文件的前六位是不需要删除的
+				if(i == 0)
 				{
-					file.delete();
+					while(fileInputStream.read(mByte) != -1)
+					{
+						fileOutputStream.write(mByte ,0 ,length);
+					}
+				}
+				// 之后的文件，去掉前六位
+				else
+				{
+					while(fileInputStream.read(mByte) != -1)
+					{
+						fileOutputStream.write(mByte ,6 ,length - 6);
+					}
 				}
 			}
-
-			minute = 0;
-			hour = 0;
-			second = 0;
+			time.setText("录音完成");
 		}
 		catch(Exception e)
 		{
+			if(Util.debug)
+				Toast.makeText(getApplicationContext() ,"录音合成出错，请重试！" ,Toast.LENGTH_LONG).show();
+			time.setText("录音合成出错，请重试！");
+			System.out.println(e);
 		}
+		finally
+		{
+			try
+			{
+				fileOutputStream.flush();
+				fileInputStream.close();
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+		}
+		for(int i = 0 ; i < myRecordList.size() ; i ++ )
+		{
+			File file = new File(myRecordList.get(i));
+			if(file.exists())
+			{
+				file.delete();
+			}
+		}
+
+		minute = 0;
+		hour = 0;
+		second = 0;
 
 	}
 

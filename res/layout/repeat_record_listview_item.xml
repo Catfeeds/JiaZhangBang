@@ -5,12 +5,20 @@
     android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/repeat_record_listview_item_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
         android:gravity="center_vertical|center_horizontal"
         android:padding="10dp"
+        android:text="adsf"
         android:textSize="20sp" />
+
+    <ProgressBar
+        android:id="@+id/repeat_record_listview_item_progressbar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </LinearLayout>
