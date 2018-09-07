@@ -100,8 +100,9 @@ public class RecordTextMainListViewAdapter extends BaseAdapter
 							String webVoice = holder.voice.getText().toString();
 							System.out.println("资源播放：" + webVoice + "完成");
 							webVoice = Util.S2TPATH + webVoice.substring(webVoice.indexOf("8800/") + 5 ,webVoice.lastIndexOf(".")) + ".wav";
-							new RecordTextSpeech(context , webVoice).play();
+							new RecordTextSpeech(context , webVoice , holder.name.getText().toString()).play();
 							holder.playRecord_button.setVisibility(View.VISIBLE);
+
 						}
 					});
 

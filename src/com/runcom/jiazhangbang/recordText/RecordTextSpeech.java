@@ -1,16 +1,24 @@
 package com.runcom.jiazhangbang.recordText;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.EvaluatorListener;
+import com.iflytek.cloud.EvaluatorResult;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
@@ -18,14 +26,18 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+import com.iflytek.ise.AudioRecordUtil;
+import com.iflytek.ise.SpeechEvaluatorUtil;
 import com.iflytek.voice.JsonParser;
 
 public class RecordTextSpeech
 {
 	private Context context;
 	private String fileName;
+	private String content;
 	private RecognizerDialog mIatDialog;
 	private SpeechRecognizer mIat;
+	private final String TAG = "RecordTextSpeech";
 
 	private final HashMap < String , String > mIatResults = new LinkedHashMap < String , String >();
 
@@ -38,10 +50,11 @@ public class RecordTextSpeech
 		this.context = context;
 	}
 
-	public RecordTextSpeech(Context context , String fileName)
+	public RecordTextSpeech(Context context , String fileName , String content)
 	{
 		this.context = context;
 		this.fileName = fileName;
+		this.content = content;
 	}
 
 	public void play()
@@ -108,6 +121,78 @@ public class RecordTextSpeech
 				// Toast.makeText(context ,resultBuffer + "录制完成"
 				// ,Toast.LENGTH_SHORT).show();
 				System.out.println(resultBuffer + "录制完成");
+
+				try
+				{
+					Thread.sleep(3 * 1000);
+				}
+				catch(InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				// TODO
+				Log.d(TAG ,fileName);
+				SpeechEvaluatorUtil.init(context);
+				SpeechEvaluatorUtil.startEva(fileName ,AudioRecordUtil.getAudioData(fileName) ,content ,new EvaluatorListener()
+				{
+					@Override
+					public void onVolumeChanged(int i , byte [] bytes )
+					{
+
+					}
+
+					@Override
+					public void onBeginOfSpeech()
+					{
+						Log.d(TAG ,"onBeginOfSpeech...");
+					}
+
+					@Override
+					public void onEndOfSpeech()
+					{
+						Log.d(TAG ,"onEndOfSpeech...");
+					}
+
+					@Override
+					public void onResult(EvaluatorResult result , boolean isLast )
+					{
+						Log.d(TAG ,"onResult : isLast == " + isLast);
+						if(isLast)
+						{
+							StringBuilder builder = new StringBuilder();
+							builder.append(result.getResultString());
+							float grad = parseXml(builder.toString());
+							Log.d(TAG ,"分数:" + grad);
+
+							Toast.makeText(context ,"分数：" + String.valueOf(grad) ,Toast.LENGTH_SHORT).show();
+						}
+					}
+
+					@Override
+					public void onError(SpeechError speechError )
+					{
+						Log.d(TAG ,"onError ...");
+						if(speechError != null)
+						{
+							Log.d(TAG ,"speechError:" + speechError.getErrorCode() + "," + speechError.getErrorDescription());
+							// Toast.makeText(context
+							// ,"speechError:" +
+							// speechError.getErrorCode() + "," +
+							// speechError.getErrorDescription()
+							// ,Toast.LENGTH_SHORT).show();
+						}
+						else
+						{
+							Log.d(TAG ,"evaluator over");
+						}
+					}
+
+					@Override
+					public void onEvent(int i , int i1 , int i2 , Bundle bundle )
+					{
+
+					}
+				});
 			}
 			else
 			{
@@ -150,5 +235,45 @@ public class RecordTextSpeech
 		// 注：AUDIO_FORMAT参数语记需要更新版本才能生效
 		mIat.setParameter(SpeechConstant.AUDIO_FORMAT ,"wav");
 		mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH ,fileName);
+	}
+
+	@SuppressWarnings("static-access")
+	private float parseXml(String xmlStr )
+	{
+		float totalScore = 0f;
+		try
+		{
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			XmlPullParser xmlPullParser = factory.newPullParser();
+			xmlPullParser.setInput(new StringReader(xmlStr));
+			int eventType = xmlPullParser.getEventType();
+			String value;
+			while(eventType != xmlPullParser.END_DOCUMENT)
+			{
+				String nodeName = xmlPullParser.getName();
+				switch(eventType)
+				{
+					case XmlPullParser.START_TAG:
+						if("total_score".equals(nodeName))
+						{
+							value = xmlPullParser.getAttributeValue(0);
+							totalScore = Float.parseFloat(value);
+						}
+						break;
+					case XmlPullParser.END_TAG:
+						break;
+				}
+				eventType = xmlPullParser.next();
+			}
+		}
+		catch(XmlPullParserException xppe)
+		{
+			Log.i(TAG ,xppe.toString());
+		}
+		catch(IOException ioe)
+		{
+			Log.i(TAG ,ioe.toString());
+		}
+		return totalScore;
 	}
 }
